@@ -31,6 +31,7 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, Pencil, Trash2, Package, AlertTriangle } from 'lucide-react';
 import { Ingredient } from '@/lib/types';
 import { supabase } from '@/lib/supabase';
+import { formatCurrency, formatNumber } from '@/lib/format';
 import {
     createIngredient,
     updateIngredient,
@@ -39,13 +40,13 @@ import {
 
 // Demo ingredients
 const demoIngredients: Ingredient[] = [
-    { id: '1', name: 'Espresso Beans', unit: 'gr', current_stock: 5000, cost_per_unit: 0.15, min_stock: 500, created_at: '', updated_at: '' },
-    { id: '2', name: 'Whole Milk', unit: 'ml', current_stock: 10000, cost_per_unit: 0.005, min_stock: 2000, created_at: '', updated_at: '' },
-    { id: '3', name: 'Oat Milk', unit: 'ml', current_stock: 5000, cost_per_unit: 0.01, min_stock: 1000, created_at: '', updated_at: '' },
-    { id: '4', name: 'Vanilla Syrup', unit: 'ml', current_stock: 200, cost_per_unit: 0.02, min_stock: 200, created_at: '', updated_at: '' },
-    { id: '5', name: 'Caramel Syrup', unit: 'ml', current_stock: 2000, cost_per_unit: 0.02, min_stock: 200, created_at: '', updated_at: '' },
-    { id: '6', name: 'Chocolate Powder', unit: 'gr', current_stock: 2000, cost_per_unit: 0.03, min_stock: 300, created_at: '', updated_at: '' },
-    { id: '7', name: 'Matcha Powder', unit: 'gr', current_stock: 50, cost_per_unit: 0.15, min_stock: 100, created_at: '', updated_at: '' },
+    { id: '1', name: 'Biji Espresso', unit: 'gr', current_stock: 5000, cost_per_unit: 150, min_stock: 500, created_at: '', updated_at: '' },
+    { id: '2', name: 'Susu Full Cream', unit: 'ml', current_stock: 10000, cost_per_unit: 25, min_stock: 2000, created_at: '', updated_at: '' },
+    { id: '3', name: 'Susu Oat', unit: 'ml', current_stock: 5000, cost_per_unit: 50, min_stock: 1000, created_at: '', updated_at: '' },
+    { id: '4', name: 'Sirup Vanilla', unit: 'ml', current_stock: 200, cost_per_unit: 100, min_stock: 200, created_at: '', updated_at: '' },
+    { id: '5', name: 'Sirup Caramel', unit: 'ml', current_stock: 2000, cost_per_unit: 100, min_stock: 200, created_at: '', updated_at: '' },
+    { id: '6', name: 'Bubuk Coklat', unit: 'gr', current_stock: 2000, cost_per_unit: 150, min_stock: 300, created_at: '', updated_at: '' },
+    { id: '7', name: 'Bubuk Matcha', unit: 'gr', current_stock: 50, cost_per_unit: 750, min_stock: 100, created_at: '', updated_at: '' },
 ];
 
 export default function InventoryPage() {
@@ -130,7 +131,7 @@ export default function InventoryPage() {
     }
 
     async function handleDelete(id: string) {
-        if (confirm('Are you sure you want to delete this ingredient?')) {
+        if (confirm('Apakah Anda yakin ingin menghapus bahan ini?')) {
             const result = await deleteIngredient(id);
             if (result.success) {
                 fetchIngredients();
@@ -144,15 +145,15 @@ export default function InventoryPage() {
 
     return (
         <PageLayout
-            title="Inventory"
-            description="Manage your ingredients and stock levels"
+            title="Inventaris"
+            description="Kelola bahan baku dan stok"
             actions={
                 <Button
                     onClick={openAddDialog}
                     className="bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
                 >
                     <Plus className="mr-2 h-4 w-4" />
-                    Add Ingredient
+                    Tambah Bahan
                 </Button>
             }
         >
@@ -164,7 +165,7 @@ export default function InventoryPage() {
                             <Package className="h-5 w-5 text-amber-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Total Ingredients</p>
+                            <p className="text-sm text-slate-400">Total Bahan</p>
                             <p className="text-2xl font-bold text-white">{ingredients.length}</p>
                         </div>
                     </div>
@@ -176,7 +177,7 @@ export default function InventoryPage() {
                             <AlertTriangle className="h-5 w-5 text-red-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Low Stock Items</p>
+                            <p className="text-sm text-slate-400">Stok Rendah</p>
                             <p className="text-2xl font-bold text-white">{lowStockCount}</p>
                         </div>
                     </div>
@@ -188,9 +189,9 @@ export default function InventoryPage() {
                             <Package className="h-5 w-5 text-emerald-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Total Value</p>
+                            <p className="text-sm text-slate-400">Total Nilai</p>
                             <p className="text-2xl font-bold text-white">
-                                ${ingredients.reduce((sum, i) => sum + i.current_stock * i.cost_per_unit, 0).toFixed(2)}
+                                {formatCurrency(ingredients.reduce((sum, i) => sum + i.current_stock * i.cost_per_unit, 0))}
                             </p>
                         </div>
                     </div>
@@ -202,26 +203,26 @@ export default function InventoryPage() {
                 <Table>
                     <TableHeader>
                         <TableRow className="border-slate-700 hover:bg-slate-800/50">
-                            <TableHead className="text-slate-400">Name</TableHead>
-                            <TableHead className="text-slate-400">Unit</TableHead>
-                            <TableHead className="text-slate-400">Current Stock</TableHead>
-                            <TableHead className="text-slate-400">Min Stock</TableHead>
-                            <TableHead className="text-slate-400">Cost/Unit</TableHead>
+                            <TableHead className="text-slate-400">Nama</TableHead>
+                            <TableHead className="text-slate-400">Satuan</TableHead>
+                            <TableHead className="text-slate-400">Stok Saat Ini</TableHead>
+                            <TableHead className="text-slate-400">Stok Minimum</TableHead>
+                            <TableHead className="text-slate-400">Harga/Satuan</TableHead>
                             <TableHead className="text-slate-400">Status</TableHead>
-                            <TableHead className="text-right text-slate-400">Actions</TableHead>
+                            <TableHead className="text-right text-slate-400">Aksi</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {isLoading ? (
                             <TableRow>
                                 <TableCell colSpan={7} className="text-center text-slate-400">
-                                    Loading...
+                                    Memuat...
                                 </TableCell>
                             </TableRow>
                         ) : ingredients.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={7} className="text-center text-slate-400">
-                                    No ingredients found
+                                    Tidak ada bahan ditemukan
                                 </TableCell>
                             </TableRow>
                         ) : (
@@ -237,22 +238,22 @@ export default function InventoryPage() {
                                         </TableCell>
                                         <TableCell className="text-slate-300">{ingredient.unit}</TableCell>
                                         <TableCell className="text-slate-300">
-                                            {ingredient.current_stock.toLocaleString()}
+                                            {formatNumber(ingredient.current_stock)}
                                         </TableCell>
                                         <TableCell className="text-slate-300">
-                                            {ingredient.min_stock.toLocaleString()}
+                                            {formatNumber(ingredient.min_stock)}
                                         </TableCell>
                                         <TableCell className="text-slate-300">
-                                            ${ingredient.cost_per_unit.toFixed(3)}
+                                            {formatCurrency(ingredient.cost_per_unit)}
                                         </TableCell>
                                         <TableCell>
                                             {isLowStock ? (
                                                 <Badge className="bg-red-500/20 text-red-400 border-red-500/30">
-                                                    Low Stock
+                                                    Stok Rendah
                                                 </Badge>
                                             ) : (
                                                 <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
-                                                    In Stock
+                                                    Tersedia
                                                 </Badge>
                                             )}
                                         </TableCell>
@@ -289,13 +290,13 @@ export default function InventoryPage() {
                 <DialogContent className="border-slate-800 bg-slate-900">
                     <DialogHeader>
                         <DialogTitle className="text-white">
-                            {editingIngredient ? 'Edit Ingredient' : 'Add Ingredient'}
+                            {editingIngredient ? 'Edit Bahan' : 'Tambah Bahan'}
                         </DialogTitle>
                     </DialogHeader>
 
                     <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
-                            <Label htmlFor="name" className="text-slate-300">Name</Label>
+                            <Label htmlFor="name" className="text-slate-300">Nama</Label>
                             <Input
                                 id="name"
                                 value={formData.name}
@@ -305,7 +306,7 @@ export default function InventoryPage() {
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="unit" className="text-slate-300">Unit</Label>
+                            <Label htmlFor="unit" className="text-slate-300">Satuan</Label>
                             <Select
                                 value={formData.unit}
                                 onValueChange={(value: 'ml' | 'gr' | 'pcs') =>
@@ -316,16 +317,16 @@ export default function InventoryPage() {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent className="border-slate-700 bg-slate-800">
-                                    <SelectItem value="gr">Grams (gr)</SelectItem>
-                                    <SelectItem value="ml">Milliliters (ml)</SelectItem>
-                                    <SelectItem value="pcs">Pieces (pcs)</SelectItem>
+                                    <SelectItem value="gr">Gram (gr)</SelectItem>
+                                    <SelectItem value="ml">Mililiter (ml)</SelectItem>
+                                    <SelectItem value="pcs">Buah (pcs)</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="current_stock" className="text-slate-300">Current Stock</Label>
+                                <Label htmlFor="current_stock" className="text-slate-300">Stok Saat Ini</Label>
                                 <Input
                                     id="current_stock"
                                     type="number"
@@ -338,7 +339,7 @@ export default function InventoryPage() {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="min_stock" className="text-slate-300">Min Stock</Label>
+                                <Label htmlFor="min_stock" className="text-slate-300">Stok Minimum</Label>
                                 <Input
                                     id="min_stock"
                                     type="number"
@@ -352,11 +353,11 @@ export default function InventoryPage() {
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="cost_per_unit" className="text-slate-300">Cost per Unit ($)</Label>
+                            <Label htmlFor="cost_per_unit" className="text-slate-300">Harga per Satuan (Rp)</Label>
                             <Input
                                 id="cost_per_unit"
                                 type="number"
-                                step="0.001"
+                                step="100"
                                 value={formData.cost_per_unit}
                                 onChange={(e) =>
                                     setFormData({ ...formData, cost_per_unit: parseFloat(e.target.value) || 0 })
@@ -372,13 +373,13 @@ export default function InventoryPage() {
                             onClick={() => setIsDialogOpen(false)}
                             className="border-slate-700 text-slate-300"
                         >
-                            Cancel
+                            Batal
                         </Button>
                         <Button
                             onClick={handleSubmit}
                             className="bg-gradient-to-r from-amber-500 to-orange-500 text-white"
                         >
-                            {editingIngredient ? 'Save Changes' : 'Add Ingredient'}
+                            {editingIngredient ? 'Simpan' : 'Tambah Bahan'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

@@ -6,11 +6,11 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-    { href: '/', label: 'POS', icon: Coffee },
-    { href: '/inventory', label: 'Inventory', icon: Package },
+    { href: '/', label: 'Kasir', icon: Coffee },
+    { href: '/inventory', label: 'Inventaris', icon: Package },
     { href: '/menu', label: 'Menu', icon: ClipboardList },
-    { href: '/reports', label: 'Reports', icon: BarChart3 },
-    { href: '/settings', label: 'Settings', icon: Settings },
+    { href: '/reports', label: 'Laporan', icon: BarChart3 },
+    { href: '/settings', label: 'Pengaturan', icon: Settings },
 ];
 
 export function SidebarNav() {
@@ -25,7 +25,7 @@ export function SidebarNav() {
                 </div>
                 <div>
                     <h1 className="text-lg font-bold text-white">Barn Coffee</h1>
-                    <p className="text-xs text-slate-400">Point of Sale</p>
+                    <p className="text-xs text-slate-400">Sistem Kasir</p>
                 </div>
             </div>
 
@@ -54,9 +54,9 @@ export function SidebarNav() {
             {/* Footer */}
             <div className="border-t border-slate-800 p-4">
                 <div className="rounded-lg bg-slate-800/50 p-4">
-                    <p className="text-xs font-medium text-slate-400">Today&apos;s Sales</p>
-                    <p className="mt-1 text-2xl font-bold text-white">$0.00</p>
-                    <p className="text-xs text-slate-500">0 orders</p>
+                    <p className="text-xs font-medium text-slate-400">Penjualan Hari Ini</p>
+                    <p className="mt-1 text-2xl font-bold text-white">Rp0</p>
+                    <p className="text-xs text-slate-500">0 pesanan</p>
                 </div>
             </div>
         </aside>

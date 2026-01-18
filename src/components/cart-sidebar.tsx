@@ -6,6 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { ShoppingCart, Plus, Minus, Trash2, Receipt } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { formatCurrency } from '@/lib/format';
 
 interface CartSidebarProps {
     onCheckout: () => void;
@@ -27,9 +28,9 @@ export function CartSidebar({ onCheckout }: CartSidebarProps) {
                         <ShoppingCart className="h-5 w-5 text-white" />
                     </div>
                     <div>
-                        <h2 className="font-bold text-white">Current Order</h2>
+                        <h2 className="font-bold text-white">Pesanan</h2>
                         <p className="text-xs text-slate-400">
-                            {itemCount} {itemCount === 1 ? 'item' : 'items'}
+                            {itemCount} {itemCount === 1 ? 'item' : 'item'}
                         </p>
                     </div>
                 </div>
@@ -52,9 +53,9 @@ export function CartSidebar({ onCheckout }: CartSidebarProps) {
                         <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-800">
                             <Receipt className="h-8 w-8 text-slate-600" />
                         </div>
-                        <p className="text-slate-400">Your cart is empty</p>
+                        <p className="text-slate-400">Keranjang kosong</p>
                         <p className="mt-1 text-xs text-slate-500">
-                            Tap on products to add them
+                            Ketuk produk untuk menambahkan
                         </p>
                     </div>
                 ) : (
@@ -70,7 +71,7 @@ export function CartSidebar({ onCheckout }: CartSidebarProps) {
                                             {item.product.name}
                                         </h4>
                                         <p className="text-sm text-amber-400">
-                                            ${item.product.price.toFixed(2)}
+                                            {formatCurrency(item.product.price)}
                                         </p>
                                     </div>
 
@@ -102,10 +103,10 @@ export function CartSidebar({ onCheckout }: CartSidebarProps) {
                                         onClick={() => removeItem(item.product.id)}
                                         className="text-xs text-slate-500 transition-colors hover:text-red-400"
                                     >
-                                        Remove
+                                        Hapus
                                     </button>
                                     <span className="text-sm font-semibold text-white">
-                                        ${(item.product.price * item.quantity).toFixed(2)}
+                                        {formatCurrency(item.product.price * item.quantity)}
                                     </span>
                                 </div>
                             </div>
@@ -119,16 +120,16 @@ export function CartSidebar({ onCheckout }: CartSidebarProps) {
                 <div className="mb-4 space-y-2">
                     <div className="flex justify-between text-sm">
                         <span className="text-slate-400">Subtotal</span>
-                        <span className="text-white">${total.toFixed(2)}</span>
+                        <span className="text-white">{formatCurrency(total)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                        <span className="text-slate-400">Tax (0%)</span>
-                        <span className="text-white">$0.00</span>
+                        <span className="text-slate-400">Pajak (0%)</span>
+                        <span className="text-white">Rp0</span>
                     </div>
                     <Separator className="bg-slate-700" />
                     <div className="flex justify-between text-lg font-bold">
                         <span className="text-white">Total</span>
-                        <span className="text-amber-400">${total.toFixed(2)}</span>
+                        <span className="text-amber-400">{formatCurrency(total)}</span>
                     </div>
                 </div>
 
@@ -142,7 +143,7 @@ export function CartSidebar({ onCheckout }: CartSidebarProps) {
                             : 'bg-slate-800 text-slate-500'
                     )}
                 >
-                    Pay ${total.toFixed(2)}
+                    Bayar {formatCurrency(total)}
                 </Button>
             </div>
         </aside>

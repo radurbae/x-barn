@@ -12,8 +12,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { CheckCircle2, DollarSign, Calculator } from 'lucide-react';
+import { CheckCircle2, Calculator } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { formatCurrency } from '@/lib/format';
 
 interface CheckoutDialogProps {
     open: boolean;
@@ -21,8 +22,8 @@ interface CheckoutDialogProps {
     onComplete: (paymentReceived: number) => void;
 }
 
-// Quick amount buttons
-const quickAmounts = [5, 10, 20, 50, 100];
+// Quick amount buttons in IDR
+const quickAmounts = [10000, 20000, 50000, 100000];
 
 export function CheckoutDialog({
     open,
@@ -47,7 +48,7 @@ export function CheckoutDialog({
     };
 
     const handleExactAmount = () => {
-        setPaymentInput(total.toFixed(2));
+        setPaymentInput(total.toString());
     };
 
     const handlePayment = async () => {
@@ -89,9 +90,9 @@ export function CheckoutDialog({
                         <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-green-600 shadow-lg shadow-emerald-500/25">
                             <CheckCircle2 className="h-10 w-10 text-white" />
                         </div>
-                        <h2 className="text-2xl font-bold text-white">Payment Complete!</h2>
+                        <h2 className="text-2xl font-bold text-white">Pembayaran Berhasil!</h2>
                         <p className="mt-2 text-slate-400">
-                            Change: <span className="font-bold text-emerald-400">${change.toFixed(2)}</span>
+                            Kembalian: <span className="font-bold text-emerald-400">{formatCurrency(change)}</span>
                         </p>
                     </div>
                 ) : (
@@ -101,7 +102,7 @@ export function CheckoutDialog({
                                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
                                     <Calculator className="h-5 w-5 text-white" />
                                 </div>
-                                Checkout
+                                Pembayaran
                             </DialogTitle>
                         </DialogHeader>
 
@@ -109,7 +110,7 @@ export function CheckoutDialog({
                             {/* Order Summary */}
                             <div>
                                 <h3 className="mb-3 text-sm font-medium text-slate-400">
-                                    Order Summary
+                                    Ringkasan Pesanan
                                 </h3>
                                 <ScrollArea className="max-h-40 rounded-lg bg-slate-800/50 p-3">
                                     <div className="space-y-2">
@@ -122,7 +123,7 @@ export function CheckoutDialog({
                                                     {item.quantity}x {item.product.name}
                                                 </span>
                                                 <span className="font-medium text-white">
-                                                    ${(item.product.price * item.quantity).toFixed(2)}
+                                                    {formatCurrency(item.product.price * item.quantity)}
                                                 </span>
                                             </div>
                                         ))}
@@ -131,23 +132,23 @@ export function CheckoutDialog({
                                 <Separator className="my-3 bg-slate-700" />
                                 <div className="flex justify-between text-lg font-bold">
                                     <span className="text-white">Total</span>
-                                    <span className="text-amber-400">${total.toFixed(2)}</span>
+                                    <span className="text-amber-400">{formatCurrency(total)}</span>
                                 </div>
                             </div>
 
                             {/* Payment Input */}
                             <div>
                                 <h3 className="mb-3 text-sm font-medium text-slate-400">
-                                    Payment Amount
+                                    Jumlah Pembayaran
                                 </h3>
                                 <div className="relative">
-                                    <DollarSign className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-medium">Rp</span>
                                     <Input
                                         type="number"
-                                        step="0.01"
+                                        step="1000"
                                         value={paymentInput}
                                         onChange={(e) => setPaymentInput(e.target.value)}
-                                        placeholder="Enter amount..."
+                                        placeholder="Masukkan jumlah..."
                                         className="h-14 border-slate-700 bg-slate-800 pl-10 text-xl font-bold text-white placeholder:text-slate-500 focus:border-amber-500 focus:ring-amber-500"
                                     />
                                 </div>
@@ -160,7 +161,7 @@ export function CheckoutDialog({
                                         onClick={handleExactAmount}
                                         className="border-amber-500/50 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20"
                                     >
-                                        Exact
+                                        Pas
                                     </Button>
                                     {quickAmounts.map((amount) => (
                                         <Button
@@ -170,7 +171,7 @@ export function CheckoutDialog({
                                             onClick={() => handleQuickAmount(amount)}
                                             className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white"
                                         >
-                                            +${amount}
+                                            +{formatCurrency(amount)}
                                         </Button>
                                     ))}
                                 </div>
@@ -183,18 +184,18 @@ export function CheckoutDialog({
                                     canPay ? 'bg-emerald-500/10' : 'bg-slate-800'
                                 )}
                             >
-                                <p className="text-sm text-slate-400">Change Due</p>
+                                <p className="text-sm text-slate-400">Kembalian</p>
                                 <p
                                     className={cn(
                                         'text-3xl font-bold',
                                         canPay ? 'text-emerald-400' : 'text-red-400'
                                     )}
                                 >
-                                    ${change >= 0 ? change.toFixed(2) : '0.00'}
+                                    {formatCurrency(change >= 0 ? change : 0)}
                                 </p>
                                 {!canPay && paymentAmount > 0 && (
                                     <p className="mt-1 text-xs text-red-400">
-                                        Insufficient amount (need ${(total - paymentAmount).toFixed(2)} more)
+                                        Kurang {formatCurrency(total - paymentAmount)}
                                     </p>
                                 )}
                             </div>
@@ -210,7 +211,7 @@ export function CheckoutDialog({
                                         : 'bg-slate-800 text-slate-500'
                                 )}
                             >
-                                {isProcessing ? 'Processing...' : 'Complete Payment'}
+                                {isProcessing ? 'Memproses...' : 'Selesaikan Pembayaran'}
                             </Button>
                         </div>
                     </>

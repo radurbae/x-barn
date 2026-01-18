@@ -5,6 +5,7 @@ import { useCartStore } from '@/stores/cart-store';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Coffee } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { formatCurrency } from '@/lib/format';
 
 interface ProductCardProps {
     product: Product;
@@ -22,6 +23,13 @@ export function ProductCard({ product }: ProductCardProps) {
         Iced: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
         'Non-Coffee': 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
         Food: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+    };
+
+    const categoryLabels: Record<string, string> = {
+        Coffee: 'Kopi',
+        Iced: 'Es',
+        'Non-Coffee': 'Non-Kopi',
+        Food: 'Makanan',
     };
 
     return (
@@ -56,7 +64,7 @@ export function ProductCard({ product }: ProductCardProps) {
                         categoryColors[product.category] || 'bg-slate-700 text-slate-300'
                     )}
                 >
-                    {product.category}
+                    {categoryLabels[product.category] || product.category}
                 </Badge>
 
                 <h3 className="font-semibold text-white transition-colors group-hover:text-amber-400">
@@ -71,7 +79,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
                 <div className="mt-auto pt-3">
                     <span className="text-lg font-bold text-amber-400">
-                        ${product.price.toFixed(2)}
+                        {formatCurrency(product.price)}
                     </span>
                 </div>
             </div>
@@ -80,7 +88,7 @@ export function ProductCard({ product }: ProductCardProps) {
             {!product.is_available && (
                 <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-slate-900/80">
                     <span className="rounded-full bg-red-500/20 px-3 py-1 text-sm font-medium text-red-400">
-                        Unavailable
+                        Tidak Tersedia
                     </span>
                 </div>
             )}

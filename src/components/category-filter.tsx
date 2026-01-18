@@ -10,11 +10,11 @@ interface CategoryFilterProps {
 }
 
 const categories: { value: ProductCategory; label: string; icon: React.ElementType }[] = [
-    { value: 'All', label: 'All Items', icon: LayoutGrid },
-    { value: 'Coffee', label: 'Coffee', icon: Coffee },
-    { value: 'Iced', label: 'Iced Drinks', icon: Snowflake },
-    { value: 'Non-Coffee', label: 'Non-Coffee', icon: Leaf },
-    { value: 'Food', label: 'Food', icon: Cookie },
+    { value: 'All', label: 'Semua', icon: LayoutGrid },
+    { value: 'Coffee', label: 'Kopi', icon: Coffee },
+    { value: 'Iced', label: 'Minuman Es', icon: Snowflake },
+    { value: 'Non-Coffee', label: 'Non-Kopi', icon: Leaf },
+    { value: 'Food', label: 'Makanan', icon: Cookie },
 ];
 
 export function CategoryFilter({

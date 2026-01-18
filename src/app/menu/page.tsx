@@ -25,6 +25,7 @@ import {
 import { Plus, Pencil, Trash2, Coffee, DollarSign } from 'lucide-react';
 import { Product } from '@/lib/types';
 import { supabase } from '@/lib/supabase';
+import { formatCurrency } from '@/lib/format';
 import {
     createProduct,
     updateProduct,
@@ -34,16 +35,22 @@ import {
 
 // Demo products
 const demoProducts: Product[] = [
-    { id: '1', name: 'Espresso', price: 3.50, category: 'Coffee', image_url: null, description: 'Rich, bold single shot', is_available: true, created_at: '', updated_at: '' },
-    { id: '2', name: 'Latte', price: 5.00, category: 'Coffee', image_url: null, description: 'Espresso with steamed milk', is_available: true, created_at: '', updated_at: '' },
-    { id: '3', name: 'Cappuccino', price: 5.00, category: 'Coffee', image_url: null, description: 'Equal parts espresso, milk, foam', is_available: true, created_at: '', updated_at: '' },
-    { id: '4', name: 'Iced Latte', price: 5.50, category: 'Iced', image_url: null, description: 'Chilled espresso with cold milk', is_available: true, created_at: '', updated_at: '' },
-    { id: '5', name: 'Cold Brew', price: 5.00, category: 'Iced', image_url: null, description: '12-hour steeped cold coffee', is_available: false, created_at: '', updated_at: '' },
-    { id: '6', name: 'Matcha Latte', price: 5.50, category: 'Non-Coffee', image_url: null, description: 'Japanese green tea with milk', is_available: true, created_at: '', updated_at: '' },
-    { id: '7', name: 'Butter Croissant', price: 4.00, category: 'Food', image_url: null, description: 'Flaky French croissant', is_available: true, created_at: '', updated_at: '' },
+    { id: '1', name: 'Espresso', price: 25000, category: 'Coffee', image_url: null, description: 'Espresso shot kuat', is_available: true, created_at: '', updated_at: '' },
+    { id: '2', name: 'Latte', price: 35000, category: 'Coffee', image_url: null, description: 'Espresso dengan susu steamed', is_available: true, created_at: '', updated_at: '' },
+    { id: '3', name: 'Cappuccino', price: 35000, category: 'Coffee', image_url: null, description: 'Espresso, susu, foam', is_available: true, created_at: '', updated_at: '' },
+    { id: '4', name: 'Iced Latte', price: 38000, category: 'Iced', image_url: null, description: 'Espresso dingin dengan susu', is_available: true, created_at: '', updated_at: '' },
+    { id: '5', name: 'Cold Brew', price: 35000, category: 'Iced', image_url: null, description: 'Kopi seduh dingin 12 jam', is_available: false, created_at: '', updated_at: '' },
+    { id: '6', name: 'Matcha Latte', price: 38000, category: 'Non-Coffee', image_url: null, description: 'Teh hijau Jepang dengan susu', is_available: true, created_at: '', updated_at: '' },
+    { id: '7', name: 'Butter Croissant', price: 28000, category: 'Food', image_url: null, description: 'Croissant renyah', is_available: true, created_at: '', updated_at: '' },
 ];
 
 const categories = ['Coffee', 'Iced', 'Non-Coffee', 'Food'];
+const categoryLabels: Record<string, string> = {
+    Coffee: 'Kopi',
+    Iced: 'Minuman Es',
+    'Non-Coffee': 'Non-Kopi',
+    Food: 'Makanan',
+};
 
 export default function MenuPage() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -131,7 +138,7 @@ export default function MenuPage() {
     }
 
     async function handleDelete(id: string) {
-        if (confirm('Are you sure you want to delete this product?')) {
+        if (confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
             const result = await deleteProduct(id);
             if (result.success) {
                 fetchProducts();
@@ -160,14 +167,14 @@ export default function MenuPage() {
     return (
         <PageLayout
             title="Menu"
-            description="Manage your products and pricing"
+            description="Kelola produk dan harga"
             actions={
                 <Button
                     onClick={openAddDialog}
                     className="bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
                 >
                     <Plus className="mr-2 h-4 w-4" />
-                    Add Product
+                    Tambah Produk
                 </Button>
             }
         >
@@ -179,7 +186,7 @@ export default function MenuPage() {
                             <Coffee className="h-5 w-5 text-amber-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Total Products</p>
+                            <p className="text-sm text-slate-400">Total Produk</p>
                             <p className="text-2xl font-bold text-white">{products.length}</p>
                         </div>
                     </div>
@@ -191,7 +198,7 @@ export default function MenuPage() {
                             <Coffee className="h-5 w-5 text-emerald-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Available</p>
+                            <p className="text-sm text-slate-400">Tersedia</p>
                             <p className="text-2xl font-bold text-white">
                                 {products.filter((p) => p.is_available).length}
                             </p>
@@ -205,9 +212,9 @@ export default function MenuPage() {
                             <DollarSign className="h-5 w-5 text-blue-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Avg. Price</p>
+                            <p className="text-sm text-slate-400">Rata-rata Harga</p>
                             <p className="text-2xl font-bold text-white">
-                                ${products.length > 0 ? (products.reduce((sum, p) => sum + p.price, 0) / products.length).toFixed(2) : '0.00'}
+                                {formatCurrency(products.length > 0 ? products.reduce((sum, p) => sum + p.price, 0) / products.length : 0)}
                             </p>
                         </div>
                     </div>
@@ -232,10 +239,10 @@ export default function MenuPage() {
                                         variant="outline"
                                         className={categoryColors[category]}
                                     >
-                                        {category}
+                                        {categoryLabels[category]}
                                     </Badge>
                                     <span className="text-slate-400">
-                                        ({categoryProducts.length} items)
+                                        ({categoryProducts.length} item)
                                     </span>
                                 </h2>
 
@@ -254,10 +261,10 @@ export default function MenuPage() {
                                             <div className="mb-3">
                                                 <h3 className="font-semibold text-white">{product.name}</h3>
                                                 <p className="mt-1 line-clamp-2 text-sm text-slate-400">
-                                                    {product.description || 'No description'}
+                                                    {product.description || 'Tidak ada deskripsi'}
                                                 </p>
                                                 <p className="mt-2 text-lg font-bold text-amber-400">
-                                                    ${product.price.toFixed(2)}
+                                                    {formatCurrency(product.price)}
                                                 </p>
                                             </div>
 
@@ -271,7 +278,7 @@ export default function MenuPage() {
                                                     className="data-[state=checked]:bg-emerald-500"
                                                 />
                                                 <span className="text-sm text-slate-400">
-                                                    {product.is_available ? 'Available' : 'Unavailable'}
+                                                    {product.is_available ? 'Tersedia' : 'Tidak Tersedia'}
                                                 </span>
                                             </div>
 
@@ -309,13 +316,13 @@ export default function MenuPage() {
                 <DialogContent className="border-slate-800 bg-slate-900">
                     <DialogHeader>
                         <DialogTitle className="text-white">
-                            {editingProduct ? 'Edit Product' : 'Add Product'}
+                            {editingProduct ? 'Edit Produk' : 'Tambah Produk'}
                         </DialogTitle>
                     </DialogHeader>
 
                     <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
-                            <Label htmlFor="name" className="text-slate-300">Name</Label>
+                            <Label htmlFor="name" className="text-slate-300">Nama</Label>
                             <Input
                                 id="name"
                                 value={formData.name}
@@ -326,11 +333,11 @@ export default function MenuPage() {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="price" className="text-slate-300">Price ($)</Label>
+                                <Label htmlFor="price" className="text-slate-300">Harga (Rp)</Label>
                                 <Input
                                     id="price"
                                     type="number"
-                                    step="0.01"
+                                    step="1000"
                                     value={formData.price}
                                     onChange={(e) =>
                                         setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })
@@ -340,7 +347,7 @@ export default function MenuPage() {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="category" className="text-slate-300">Category</Label>
+                                <Label htmlFor="category" className="text-slate-300">Kategori</Label>
                                 <Select
                                     value={formData.category}
                                     onValueChange={(value) => setFormData({ ...formData, category: value })}
@@ -351,7 +358,7 @@ export default function MenuPage() {
                                     <SelectContent className="border-slate-700 bg-slate-800">
                                         {categories.map((cat) => (
                                             <SelectItem key={cat} value={cat}>
-                                                {cat}
+                                                {categoryLabels[cat]}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -360,7 +367,7 @@ export default function MenuPage() {
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="description" className="text-slate-300">Description</Label>
+                            <Label htmlFor="description" className="text-slate-300">Deskripsi</Label>
                             <Textarea
                                 id="description"
                                 value={formData.description}
@@ -379,7 +386,7 @@ export default function MenuPage() {
                                     setFormData({ ...formData, is_available: checked })
                                 }
                             />
-                            <Label className="text-slate-300">Available for sale</Label>
+                            <Label className="text-slate-300">Tersedia untuk dijual</Label>
                         </div>
                     </div>
 
@@ -389,13 +396,13 @@ export default function MenuPage() {
                             onClick={() => setIsDialogOpen(false)}
                             className="border-slate-700 text-slate-300"
                         >
-                            Cancel
+                            Batal
                         </Button>
                         <Button
                             onClick={handleSubmit}
                             className="bg-gradient-to-r from-amber-500 to-orange-500 text-white"
                         >
-                            {editingProduct ? 'Save Changes' : 'Add Product'}
+                            {editingProduct ? 'Simpan' : 'Tambah Produk'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

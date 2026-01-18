@@ -20,6 +20,7 @@ import {
     Coffee,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { formatCurrency, formatTime } from '@/lib/format';
 
 interface SalesStats {
     today: { total: number; orders: number };
@@ -43,25 +44,25 @@ interface TopProduct {
 
 // Demo data
 const demoStats: SalesStats = {
-    today: { total: 245.50, orders: 18 },
-    week: { total: 1520.75, orders: 98 },
-    month: { total: 5840.00, orders: 412 },
+    today: { total: 1850000, orders: 18 },
+    week: { total: 12500000, orders: 98 },
+    month: { total: 48750000, orders: 412 },
 };
 
 const demoOrders: OrderSummary[] = [
-    { id: '1', order_number: 1042, total: 15.50, created_at: new Date().toISOString(), items_count: 3 },
-    { id: '2', order_number: 1041, total: 8.00, created_at: new Date(Date.now() - 3600000).toISOString(), items_count: 2 },
-    { id: '3', order_number: 1040, total: 22.50, created_at: new Date(Date.now() - 7200000).toISOString(), items_count: 4 },
-    { id: '4', order_number: 1039, total: 5.50, created_at: new Date(Date.now() - 10800000).toISOString(), items_count: 1 },
-    { id: '5', order_number: 1038, total: 18.00, created_at: new Date(Date.now() - 14400000).toISOString(), items_count: 3 },
+    { id: '1', order_number: 1042, total: 155000, created_at: new Date().toISOString(), items_count: 3 },
+    { id: '2', order_number: 1041, total: 80000, created_at: new Date(Date.now() - 3600000).toISOString(), items_count: 2 },
+    { id: '3', order_number: 1040, total: 225000, created_at: new Date(Date.now() - 7200000).toISOString(), items_count: 4 },
+    { id: '4', order_number: 1039, total: 55000, created_at: new Date(Date.now() - 10800000).toISOString(), items_count: 1 },
+    { id: '5', order_number: 1038, total: 180000, created_at: new Date(Date.now() - 14400000).toISOString(), items_count: 3 },
 ];
 
 const demoTopProducts: TopProduct[] = [
-    { name: 'Latte', quantity: 156, revenue: 780.00 },
-    { name: 'Cappuccino', quantity: 132, revenue: 660.00 },
-    { name: 'Iced Latte', quantity: 98, revenue: 539.00 },
-    { name: 'Americano', quantity: 87, revenue: 348.00 },
-    { name: 'Mocha', quantity: 65, revenue: 357.50 },
+    { name: 'Latte', quantity: 156, revenue: 5460000 },
+    { name: 'Cappuccino', quantity: 132, revenue: 4620000 },
+    { name: 'Iced Latte', quantity: 98, revenue: 3724000 },
+    { name: 'Americano', quantity: 87, revenue: 2436000 },
+    { name: 'Mocha', quantity: 65, revenue: 2470000 },
 ];
 
 export default function ReportsPage() {
@@ -81,7 +82,6 @@ export default function ReportsPage() {
         }
 
         try {
-            // Fetch today's stats
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
@@ -91,21 +91,18 @@ export default function ReportsPage() {
             const monthAgo = new Date(today);
             monthAgo.setDate(monthAgo.getDate() - 30);
 
-            // Today's orders
             const { data: todayData } = await supabase
                 .from('orders')
                 .select('total')
                 .gte('created_at', today.toISOString())
                 .eq('status', 'completed');
 
-            // Week's orders
             const { data: weekData } = await supabase
                 .from('orders')
                 .select('total')
                 .gte('created_at', weekAgo.toISOString())
                 .eq('status', 'completed');
 
-            // Month's orders
             const { data: monthData } = await supabase
                 .from('orders')
                 .select('total')
@@ -129,7 +126,6 @@ export default function ReportsPage() {
                 });
             }
 
-            // Recent orders
             const { data: orders } = await supabase
                 .from('orders')
                 .select('id, order_number, total, created_at')
@@ -138,7 +134,6 @@ export default function ReportsPage() {
                 .limit(10);
 
             if (orders) {
-                // Get items count for each order
                 const ordersWithItems = await Promise.all(
                     orders.map(async (order) => {
                         const { count } = await supabase!
@@ -151,7 +146,6 @@ export default function ReportsPage() {
                 setRecentOrders(ordersWithItems);
             }
 
-            // Top products (from order_items)
             const { data: topItems } = await supabase
                 .from('order_items')
                 .select('product_name, quantity, subtotal')
@@ -183,17 +177,10 @@ export default function ReportsPage() {
         }
     }
 
-    function formatTime(dateString: string) {
-        return new Date(dateString).toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-        });
-    }
-
     return (
         <PageLayout
-            title="Reports"
-            description="Sales analytics and performance metrics"
+            title="Laporan"
+            description="Analitik penjualan dan metrik kinerja"
         >
             {/* Stats Cards */}
             <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -203,9 +190,9 @@ export default function ReportsPage() {
                             <DollarSign className="h-6 w-6 text-white" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Today&apos;s Sales</p>
-                            <p className="text-2xl font-bold text-white">${stats.today.total.toFixed(2)}</p>
-                            <p className="text-xs text-slate-500">{stats.today.orders} orders</p>
+                            <p className="text-sm text-slate-400">Penjualan Hari Ini</p>
+                            <p className="text-2xl font-bold text-white">{formatCurrency(stats.today.total)}</p>
+                            <p className="text-xs text-slate-500">{stats.today.orders} pesanan</p>
                         </div>
                     </div>
                 </div>
@@ -216,9 +203,9 @@ export default function ReportsPage() {
                             <TrendingUp className="h-6 w-6 text-emerald-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">This Week</p>
-                            <p className="text-2xl font-bold text-white">${stats.week.total.toFixed(2)}</p>
-                            <p className="text-xs text-slate-500">{stats.week.orders} orders</p>
+                            <p className="text-sm text-slate-400">Minggu Ini</p>
+                            <p className="text-2xl font-bold text-white">{formatCurrency(stats.week.total)}</p>
+                            <p className="text-xs text-slate-500">{stats.week.orders} pesanan</p>
                         </div>
                     </div>
                 </div>
@@ -229,9 +216,9 @@ export default function ReportsPage() {
                             <Calendar className="h-6 w-6 text-blue-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">This Month</p>
-                            <p className="text-2xl font-bold text-white">${stats.month.total.toFixed(2)}</p>
-                            <p className="text-xs text-slate-500">{stats.month.orders} orders</p>
+                            <p className="text-sm text-slate-400">Bulan Ini</p>
+                            <p className="text-2xl font-bold text-white">{formatCurrency(stats.month.total)}</p>
+                            <p className="text-xs text-slate-500">{stats.month.orders} pesanan</p>
                         </div>
                     </div>
                 </div>
@@ -242,11 +229,11 @@ export default function ReportsPage() {
                             <ShoppingBag className="h-6 w-6 text-purple-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Avg. Order Value</p>
+                            <p className="text-sm text-slate-400">Rata-rata Pesanan</p>
                             <p className="text-2xl font-bold text-white">
-                                ${stats.month.orders > 0 ? (stats.month.total / stats.month.orders).toFixed(2) : '0.00'}
+                                {formatCurrency(stats.month.orders > 0 ? stats.month.total / stats.month.orders : 0)}
                             </p>
-                            <p className="text-xs text-slate-500">per order</p>
+                            <p className="text-xs text-slate-500">per pesanan</p>
                         </div>
                     </div>
                 </div>
@@ -256,10 +243,10 @@ export default function ReportsPage() {
             <Tabs defaultValue="recent" className="space-y-4">
                 <TabsList className="border-slate-800 bg-slate-800/50">
                     <TabsTrigger value="recent" className="data-[state=active]:bg-amber-500 data-[state=active]:text-white">
-                        Recent Orders
+                        Pesanan Terbaru
                     </TabsTrigger>
                     <TabsTrigger value="top" className="data-[state=active]:bg-amber-500 data-[state=active]:text-white">
-                        Top Products
+                        Produk Terlaris
                     </TabsTrigger>
                 </TabsList>
 
@@ -268,9 +255,9 @@ export default function ReportsPage() {
                         <Table>
                             <TableHeader>
                                 <TableRow className="border-slate-700 hover:bg-slate-800/50">
-                                    <TableHead className="text-slate-400">Order #</TableHead>
-                                    <TableHead className="text-slate-400">Time</TableHead>
-                                    <TableHead className="text-slate-400">Items</TableHead>
+                                    <TableHead className="text-slate-400">No. Pesanan</TableHead>
+                                    <TableHead className="text-slate-400">Waktu</TableHead>
+                                    <TableHead className="text-slate-400">Item</TableHead>
                                     <TableHead className="text-right text-slate-400">Total</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -278,13 +265,13 @@ export default function ReportsPage() {
                                 {isLoading ? (
                                     <TableRow>
                                         <TableCell colSpan={4} className="text-center text-slate-400">
-                                            Loading...
+                                            Memuat...
                                         </TableCell>
                                     </TableRow>
                                 ) : recentOrders.length === 0 ? (
                                     <TableRow>
                                         <TableCell colSpan={4} className="text-center text-slate-400">
-                                            No orders yet
+                                            Belum ada pesanan
                                         </TableCell>
                                     </TableRow>
                                 ) : (
@@ -297,10 +284,10 @@ export default function ReportsPage() {
                                                 {formatTime(order.created_at)}
                                             </TableCell>
                                             <TableCell className="text-slate-300">
-                                                {order.items_count} items
+                                                {order.items_count} item
                                             </TableCell>
                                             <TableCell className="text-right font-semibold text-amber-400">
-                                                ${order.total.toFixed(2)}
+                                                {formatCurrency(order.total)}
                                             </TableCell>
                                         </TableRow>
                                     ))
@@ -315,23 +302,23 @@ export default function ReportsPage() {
                         <Table>
                             <TableHeader>
                                 <TableRow className="border-slate-700 hover:bg-slate-800/50">
-                                    <TableHead className="text-slate-400">Rank</TableHead>
-                                    <TableHead className="text-slate-400">Product</TableHead>
-                                    <TableHead className="text-slate-400">Quantity Sold</TableHead>
-                                    <TableHead className="text-right text-slate-400">Revenue</TableHead>
+                                    <TableHead className="text-slate-400">Peringkat</TableHead>
+                                    <TableHead className="text-slate-400">Produk</TableHead>
+                                    <TableHead className="text-slate-400">Terjual</TableHead>
+                                    <TableHead className="text-right text-slate-400">Pendapatan</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {isLoading ? (
                                     <TableRow>
                                         <TableCell colSpan={4} className="text-center text-slate-400">
-                                            Loading...
+                                            Memuat...
                                         </TableCell>
                                     </TableRow>
                                 ) : topProducts.length === 0 ? (
                                     <TableRow>
                                         <TableCell colSpan={4} className="text-center text-slate-400">
-                                            No sales data yet
+                                            Belum ada data penjualan
                                         </TableCell>
                                     </TableRow>
                                 ) : (
@@ -362,7 +349,7 @@ export default function ReportsPage() {
                                                 {product.quantity}
                                             </TableCell>
                                             <TableCell className="text-right font-semibold text-emerald-400">
-                                                ${product.revenue.toFixed(2)}
+                                                {formatCurrency(product.revenue)}
                                             </TableCell>
                                         </TableRow>
                                     ))
