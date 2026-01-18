@@ -6,7 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { ShoppingCart, Plus, Minus, Trash2, Receipt } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { formatCurrency } from '@/lib/format';
+import { useCurrency } from '@/hooks/use-currency';
 
 interface CartSidebarProps {
     onCheckout: () => void;
@@ -15,6 +15,7 @@ interface CartSidebarProps {
 export function CartSidebar({ onCheckout }: CartSidebarProps) {
     const { items, updateQuantity, removeItem, getTotal, getItemCount, clearCart } =
         useCartStore();
+    const { formatCurrency } = useCurrency();
 
     const total = getTotal();
     const itemCount = getItemCount();
@@ -124,7 +125,7 @@ export function CartSidebar({ onCheckout }: CartSidebarProps) {
                     </div>
                     <div className="flex justify-between text-sm">
                         <span className="text-slate-400">Pajak (0%)</span>
-                        <span className="text-white">Rp0</span>
+                        <span className="text-white">{formatCurrency(0)}</span>
                     </div>
                     <Separator className="bg-slate-700" />
                     <div className="flex justify-between text-lg font-bold">

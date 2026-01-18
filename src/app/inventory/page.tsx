@@ -31,7 +31,8 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, Pencil, Trash2, Package, AlertTriangle } from 'lucide-react';
 import { Ingredient } from '@/lib/types';
 import { supabase } from '@/lib/supabase';
-import { formatCurrency, formatNumber } from '@/lib/format';
+import { formatNumber } from '@/lib/format';
+import { useCurrency } from '@/hooks/use-currency';
 import {
     createIngredient,
     updateIngredient,
@@ -61,6 +62,7 @@ export default function InventoryPage() {
         cost_per_unit: 0,
         min_stock: 0,
     });
+    const { formatCurrency } = useCurrency();
 
     useEffect(() => {
         fetchIngredients();

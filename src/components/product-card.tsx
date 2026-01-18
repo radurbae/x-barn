@@ -5,7 +5,7 @@ import { useCartStore } from '@/stores/cart-store';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Coffee } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { formatCurrency } from '@/lib/format';
+import { useCurrency } from '@/hooks/use-currency';
 
 interface ProductCardProps {
     product: Product;
@@ -13,6 +13,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
     const addItem = useCartStore((state) => state.addItem);
+    const { formatCurrency } = useCurrency();
 
     const handleAdd = () => {
         addItem(product);

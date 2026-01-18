@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useCartStore } from '@/stores/cart-store';
+import { useSettingsStore } from '@/stores/settings-store';
 import {
     Dialog,
     DialogContent,
@@ -14,7 +15,7 @@ import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { CheckCircle2, Calculator } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { formatCurrency } from '@/lib/format';
+import { useCurrency } from '@/hooks/use-currency';
 
 interface CheckoutDialogProps {
     open: boolean;
@@ -22,15 +23,14 @@ interface CheckoutDialogProps {
     onComplete: (paymentReceived: number) => void;
 }
 
-// Quick amount buttons in IDR
-const quickAmounts = [10000, 20000, 50000, 100000];
-
 export function CheckoutDialog({
     open,
     onOpenChange,
     onComplete,
 }: CheckoutDialogProps) {
     const { items, getTotal, clearCart } = useCartStore();
+    const { settings } = useSettingsStore();
+    const { formatCurrency, currency } = useCurrency();
     const [paymentInput, setPaymentInput] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
@@ -39,6 +39,13 @@ export function CheckoutDialog({
     const paymentAmount = parseFloat(paymentInput) || 0;
     const change = paymentAmount - total;
     const canPay = paymentAmount >= total;
+
+    // Quick amount buttons based on currency
+    const quickAmounts = currency === 'IDR'
+        ? [10000, 20000, 50000, 100000]
+        : [5, 10, 20, 50];
+
+    const currencySymbol = currency === 'IDR' ? 'Rp' : currency === 'USD' ? '$' : currency;
 
     const handleQuickAmount = (amount: number) => {
         setPaymentInput((prev) => {
@@ -142,10 +149,10 @@ export function CheckoutDialog({
                                     Jumlah Pembayaran
                                 </h3>
                                 <div className="relative">
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-medium">Rp</span>
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-medium">{currencySymbol}</span>
                                     <Input
                                         type="number"
-                                        step="1000"
+                                        step={currency === 'IDR' ? '1000' : '0.01'}
                                         value={paymentInput}
                                         onChange={(e) => setPaymentInput(e.target.value)}
                                         placeholder="Masukkan jumlah..."

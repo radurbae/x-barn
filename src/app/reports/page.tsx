@@ -20,7 +20,8 @@ import {
     Coffee,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { formatCurrency, formatTime } from '@/lib/format';
+import { formatTime } from '@/lib/format';
+import { useCurrency } from '@/hooks/use-currency';
 
 interface SalesStats {
     today: { total: number; orders: number };
@@ -70,6 +71,7 @@ export default function ReportsPage() {
     const [recentOrders, setRecentOrders] = useState<OrderSummary[]>(demoOrders);
     const [topProducts, setTopProducts] = useState<TopProduct[]>(demoTopProducts);
     const [isLoading, setIsLoading] = useState(true);
+    const { formatCurrency } = useCurrency();
 
     useEffect(() => {
         fetchReportData();

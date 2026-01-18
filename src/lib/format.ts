@@ -1,11 +1,31 @@
 // Formatting utilities for Indonesian localization
 
-export function formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('id-ID', {
+// Currency formatting with dynamic currency support
+export function formatCurrency(amount: number, currency: string = 'IDR'): string {
+    const localeMap: Record<string, string> = {
+        IDR: 'id-ID',
+        USD: 'en-US',
+        EUR: 'de-DE',
+        GBP: 'en-GB',
+        JPY: 'ja-JP',
+    };
+
+    const fractionDigits: Record<string, { min: number; max: number }> = {
+        IDR: { min: 0, max: 0 },
+        USD: { min: 2, max: 2 },
+        EUR: { min: 2, max: 2 },
+        GBP: { min: 2, max: 2 },
+        JPY: { min: 0, max: 0 },
+    };
+
+    const locale = localeMap[currency] || 'id-ID';
+    const digits = fractionDigits[currency] || { min: 0, max: 0 };
+
+    return new Intl.NumberFormat(locale, {
         style: 'currency',
-        currency: 'IDR',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
+        currency: currency,
+        minimumFractionDigits: digits.min,
+        maximumFractionDigits: digits.max,
     }).format(amount);
 }
 

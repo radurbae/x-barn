@@ -25,7 +25,7 @@ import {
 import { Plus, Pencil, Trash2, Coffee, DollarSign } from 'lucide-react';
 import { Product } from '@/lib/types';
 import { supabase } from '@/lib/supabase';
-import { formatCurrency } from '@/lib/format';
+import { useCurrency } from '@/hooks/use-currency';
 import {
     createProduct,
     updateProduct,
@@ -64,6 +64,7 @@ export default function MenuPage() {
         description: '',
         is_available: true,
     });
+    const { formatCurrency } = useCurrency();
 
     useEffect(() => {
         fetchProducts();
