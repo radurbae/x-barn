@@ -25,16 +25,18 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useState } from 'react';
+import { useTranslation } from '@/hooks/use-translation';
 
 export default function SettingsPage() {
     const { settings, updateSettings } = useSettingsStore();
     const [isSaving, setIsSaving] = useState(false);
     const [saveMessage, setSaveMessage] = useState('');
+    const { t, language } = useTranslation();
 
     async function handleSave() {
         setIsSaving(true);
         await new Promise((resolve) => setTimeout(resolve, 300));
-        setSaveMessage('Pengaturan berhasil disimpan!');
+        setSaveMessage(t('settingsSaved'));
         setIsSaving(false);
         setTimeout(() => setSaveMessage(''), 3000);
     }
@@ -43,8 +45,8 @@ export default function SettingsPage() {
 
     return (
         <PageLayout
-            title="Pengaturan"
-            description="Konfigurasi sistem kasir Anda"
+            title={t('settings')}
+            description={t('configurePos')}
             actions={
                 <Button
                     onClick={handleSave}
@@ -52,7 +54,7 @@ export default function SettingsPage() {
                     className="bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
                 >
                     <Save className="mr-2 h-4 w-4" />
-                    {isSaving ? 'Menyimpan...' : 'Simpan'}
+                    {isSaving ? t('saving') : t('save')}
                 </Button>
             }
         >
@@ -70,8 +72,8 @@ export default function SettingsPage() {
                             <Store className="h-5 w-5 text-amber-400" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-semibold text-white">Detail Toko</h2>
-                            <p className="text-sm text-slate-400">Informasi dasar toko</p>
+                            <h2 className="text-lg font-semibold text-white">{t('shopDetails')}</h2>
+                            <p className="text-sm text-slate-400">{t('basicInfo')}</p>
                         </div>
                     </div>
 
@@ -79,7 +81,7 @@ export default function SettingsPage() {
                         <div className="grid gap-4">
                             <div className="grid gap-2">
                                 <Label htmlFor="shopName" className="text-slate-300">
-                                    Nama Toko
+                                    {t('shopName')}
                                 </Label>
                                 <Input
                                     id="shopName"
@@ -91,7 +93,7 @@ export default function SettingsPage() {
 
                             <div className="grid gap-2">
                                 <Label htmlFor="currency" className="text-slate-300">
-                                    Mata Uang
+                                    {t('currency')} ({language === 'id' ? 'Bahasa Indonesia' : 'English'})
                                 </Label>
                                 <Select
                                     value={settings.currency}
@@ -101,11 +103,11 @@ export default function SettingsPage() {
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent className="border-slate-700 bg-slate-800">
-                                        <SelectItem value="IDR">IDR (Rp)</SelectItem>
-                                        <SelectItem value="USD">USD ($)</SelectItem>
-                                        <SelectItem value="EUR">EUR (€)</SelectItem>
-                                        <SelectItem value="GBP">GBP (£)</SelectItem>
-                                        <SelectItem value="JPY">JPY (¥)</SelectItem>
+                                        <SelectItem value="IDR">🇮🇩 IDR (Rp) - Bahasa Indonesia</SelectItem>
+                                        <SelectItem value="USD">🇺🇸 USD ($) - English</SelectItem>
+                                        <SelectItem value="EUR">🇪🇺 EUR (€) - English</SelectItem>
+                                        <SelectItem value="GBP">🇬🇧 GBP (£) - English</SelectItem>
+                                        <SelectItem value="JPY">🇯🇵 JPY (¥) - English</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -122,8 +124,8 @@ export default function SettingsPage() {
                             <DollarSign className="h-5 w-5 text-blue-400" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-semibold text-white">Pengaturan Pajak</h2>
-                            <p className="text-sm text-slate-400">Konfigurasi pajak penjualan</p>
+                            <h2 className="text-lg font-semibold text-white">{t('taxSettings')}</h2>
+                            <p className="text-sm text-slate-400">{t('configureTax')}</p>
                         </div>
                     </div>
 
@@ -131,9 +133,9 @@ export default function SettingsPage() {
                         <div className="grid gap-4">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <Label className="text-slate-300">Aktifkan Pajak</Label>
+                                    <Label className="text-slate-300">{t('enableTax')}</Label>
                                     <p className="text-sm text-slate-500">
-                                        Terapkan pajak ke semua pesanan
+                                        {t('applyTax')}
                                     </p>
                                 </div>
                                 <Switch
@@ -145,7 +147,7 @@ export default function SettingsPage() {
                             {settings.taxEnabled && (
                                 <div className="grid gap-2">
                                     <Label htmlFor="taxRate" className="text-slate-300">
-                                        Tarif Pajak (%)
+                                        {t('taxRate')} (%)
                                     </Label>
                                     <Input
                                         id="taxRate"
@@ -172,22 +174,22 @@ export default function SettingsPage() {
                             <Receipt className="h-5 w-5 text-emerald-400" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-semibold text-white">Pengaturan Struk</h2>
-                            <p className="text-sm text-slate-400">Kustomisasi pesan struk</p>
+                            <h2 className="text-lg font-semibold text-white">{t('receiptSettings')}</h2>
+                            <p className="text-sm text-slate-400">{t('customizeReceipt')}</p>
                         </div>
                     </div>
 
                     <div className="rounded-xl border border-slate-800 bg-slate-800/50 p-6">
                         <div className="grid gap-2">
                             <Label htmlFor="receiptFooter" className="text-slate-300">
-                                Pesan Footer Struk
+                                {t('receiptFooter')}
                             </Label>
                             <Input
                                 id="receiptFooter"
                                 value={settings.receiptFooter}
                                 onChange={(e) => updateSettings({ receiptFooter: e.target.value })}
                                 className="border-slate-700 bg-slate-800 text-white"
-                                placeholder="Pesan terima kasih..."
+                                placeholder={t('thankYouMessage')}
                             />
                         </div>
                     </div>
@@ -202,17 +204,17 @@ export default function SettingsPage() {
                             <Palette className="h-5 w-5 text-purple-400" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-semibold text-white">Tampilan</h2>
-                            <p className="text-sm text-slate-400">Pengaturan tampilan</p>
+                            <h2 className="text-lg font-semibold text-white">{t('display')}</h2>
+                            <p className="text-sm text-slate-400">{t('displaySettings')}</p>
                         </div>
                     </div>
 
                     <div className="rounded-xl border border-slate-800 bg-slate-800/50 p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <Label className="text-slate-300">Mode Gelap</Label>
+                                <Label className="text-slate-300">{t('darkMode')}</Label>
                                 <p className="text-sm text-slate-500">
-                                    Gunakan tema gelap (disarankan)
+                                    {t('useDarkTheme')}
                                 </p>
                             </div>
                             <Switch
@@ -232,8 +234,8 @@ export default function SettingsPage() {
                             <Database className="h-5 w-5 text-slate-400" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-semibold text-white">Database</h2>
-                            <p className="text-sm text-slate-400">Status koneksi Supabase</p>
+                            <h2 className="text-lg font-semibold text-white">{t('database')}</h2>
+                            <p className="text-sm text-slate-400">{t('connectionStatus')}</p>
                         </div>
                     </div>
 
@@ -245,12 +247,12 @@ export default function SettingsPage() {
                             />
                             <div>
                                 <p className="font-medium text-white">
-                                    {isConnected ? 'Terhubung' : 'Mode Demo'}
+                                    {isConnected ? t('connected') : t('demoMode')}
                                 </p>
                                 <p className="text-sm text-slate-400">
                                     {isConnected
-                                        ? 'Database Supabase terhubung'
-                                        : 'Berjalan dengan data demo. Konfigurasi .env.local untuk fungsionalitas penuh.'}
+                                        ? t('dbConnected')
+                                        : t('runningDemo')}
                                 </p>
                             </div>
                         </div>
@@ -259,10 +261,10 @@ export default function SettingsPage() {
                             <div className="mt-4 flex items-start gap-2 rounded-lg bg-amber-500/10 p-3">
                                 <AlertCircle className="mt-0.5 h-4 w-4 text-amber-400" />
                                 <div className="text-sm text-amber-400">
-                                    <p className="font-medium">Pengaturan Diperlukan</p>
+                                    <p className="font-medium">{t('setupRequired')}</p>
                                     <p className="mt-1 text-amber-400/80">
-                                        Atur <code className="rounded bg-amber-500/20 px-1">NEXT_PUBLIC_SUPABASE_URL</code> dan{' '}
-                                        <code className="rounded bg-amber-500/20 px-1">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> di file .env.local Anda.
+                                        {t('setEnvVars')} <code className="rounded bg-amber-500/20 px-1">NEXT_PUBLIC_SUPABASE_URL</code> {language === 'id' ? 'dan' : 'and'}{' '}
+                                        <code className="rounded bg-amber-500/20 px-1">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> {t('inEnvFile')}
                                     </p>
                                 </div>
                             </div>

@@ -8,20 +8,23 @@ import { cn } from '@/lib/utils';
 import { useSettingsStore } from '@/stores/settings-store';
 import { useDailySalesStore } from '@/stores/daily-sales-store';
 import { useCurrency } from '@/hooks/use-currency';
-
-const navItems = [
-    { href: '/', label: 'Kasir', icon: Coffee },
-    { href: '/inventory', label: 'Inventaris', icon: Package },
-    { href: '/menu', label: 'Menu', icon: ClipboardList },
-    { href: '/reports', label: 'Laporan', icon: BarChart3 },
-    { href: '/settings', label: 'Pengaturan', icon: Settings },
-];
+import { useTranslation } from '@/hooks/use-translation';
 
 export function SidebarNav() {
     const pathname = usePathname();
     const { settings } = useSettingsStore();
     const { todayTotal, todayOrders, resetIfNewDay } = useDailySalesStore();
     const { formatCurrency } = useCurrency();
+    const { t } = useTranslation();
+
+    // Navigation items with translation keys
+    const navItems = [
+        { href: '/', label: t('cashier'), icon: Coffee },
+        { href: '/inventory', label: t('inventory'), icon: Package },
+        { href: '/menu', label: t('menu'), icon: ClipboardList },
+        { href: '/reports', label: t('reports'), icon: BarChart3 },
+        { href: '/settings', label: t('settings'), icon: Settings },
+    ];
 
     // Reset daily sales if it's a new day
     useEffect(() => {
@@ -37,7 +40,7 @@ export function SidebarNav() {
                 </div>
                 <div>
                     <h1 className="text-lg font-bold text-white">{settings.shopName}</h1>
-                    <p className="text-xs text-slate-400">Sistem Kasir</p>
+                    <p className="text-xs text-slate-400">{t('posSystem')}</p>
                 </div>
             </div>
 
@@ -66,9 +69,9 @@ export function SidebarNav() {
             {/* Footer - Daily Sales */}
             <div className="border-t border-slate-800 p-4">
                 <div className="rounded-lg bg-slate-800/50 p-4">
-                    <p className="text-xs font-medium text-slate-400">Penjualan Hari Ini</p>
+                    <p className="text-xs font-medium text-slate-400">{t('todaySalesLabel')}</p>
                     <p className="mt-1 text-2xl font-bold text-white">{formatCurrency(todayTotal)}</p>
-                    <p className="text-xs text-slate-500">{todayOrders} pesanan</p>
+                    <p className="text-xs text-slate-500">{todayOrders} {t('orders')}</p>
                 </div>
             </div>
         </aside>
