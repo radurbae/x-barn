@@ -109,7 +109,7 @@ export default function POSPage() {
       <SidebarNav />
 
       {/* Main Content Area */}
-      <main className="ml-64 flex flex-1 flex-col">
+      <main className="ml-64 mr-80 flex flex-1 flex-col">
         {/* Header */}
         <header className="sticky top-0 z-30 border-b border-slate-800 bg-slate-900/95 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-slate-900/80">
           <div className="flex items-center justify-between gap-6">
@@ -148,7 +148,7 @@ export default function POSPage() {
         </header>
 
         {/* Product Grid */}
-        <div className="flex-1 overflow-auto p-6 pr-[336px]">
+        <div className="flex-1 overflow-auto p-6">
           {isLoading ? (
             <div className="flex h-64 items-center justify-center">
               <div className="flex flex-col items-center gap-4">
