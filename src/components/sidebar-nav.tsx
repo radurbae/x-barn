@@ -1,10 +1,13 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Coffee, Package, ClipboardList, BarChart3, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useSettingsStore } from '@/stores/settings-store';
+import { useDailySalesStore } from '@/stores/daily-sales-store';
+import { useCurrency } from '@/hooks/use-currency';
 
 const navItems = [
     { href: '/', label: 'Kasir', icon: Coffee },
@@ -17,6 +20,13 @@ const navItems = [
 export function SidebarNav() {
     const pathname = usePathname();
     const { settings } = useSettingsStore();
+    const { todayTotal, todayOrders, resetIfNewDay } = useDailySalesStore();
+    const { formatCurrency } = useCurrency();
+
+    // Reset daily sales if it's a new day
+    useEffect(() => {
+        resetIfNewDay();
+    }, [resetIfNewDay]);
 
     return (
         <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col bg-slate-900 border-r border-slate-800">
@@ -53,12 +63,12 @@ export function SidebarNav() {
                 })}
             </nav>
 
-            {/* Footer */}
+            {/* Footer - Daily Sales */}
             <div className="border-t border-slate-800 p-4">
                 <div className="rounded-lg bg-slate-800/50 p-4">
                     <p className="text-xs font-medium text-slate-400">Penjualan Hari Ini</p>
-                    <p className="mt-1 text-2xl font-bold text-white">Rp0</p>
-                    <p className="text-xs text-slate-500">0 pesanan</p>
+                    <p className="mt-1 text-2xl font-bold text-white">{formatCurrency(todayTotal)}</p>
+                    <p className="text-xs text-slate-500">{todayOrders} pesanan</p>
                 </div>
             </div>
         </aside>

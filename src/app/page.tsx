@@ -8,6 +8,7 @@ import { CategoryFilter } from '@/components/category-filter';
 import { CheckoutDialog } from '@/components/checkout-dialog';
 import { Product, ProductCategory } from '@/lib/types';
 import { useCartStore } from '@/stores/cart-store';
+import { useDailySalesStore } from '@/stores/daily-sales-store';
 import { createOrder } from '@/app/actions/orders';
 import { supabase } from '@/lib/supabase';
 import { Coffee, Search } from 'lucide-react';
@@ -39,7 +40,8 @@ export default function POSPage() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { items } = useCartStore();
+  const { items, getTotal } = useCartStore();
+  const { addSale } = useDailySalesStore();
 
   // Fetch products
   useEffect(() => {
@@ -90,6 +92,11 @@ export default function POSPage() {
 
   // Handle checkout completion
   const handleCheckoutComplete = async (paymentReceived: number) => {
+    const total = getTotal();
+
+    // Track the sale in daily sales store
+    addSale(total);
+
     // Only call createOrder if Supabase is configured
     if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
       try {
