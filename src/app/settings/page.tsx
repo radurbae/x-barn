@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useSettingsStore } from '@/stores/settings-store';
 import { PageLayout } from '@/components/page-layout';
 import { Button } from '@/components/ui/button';
@@ -22,23 +23,92 @@ import {
     Palette,
     Save,
     AlertCircle,
+    RotateCcw,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { useState } from 'react';
-import { useTranslation } from '@/hooks/use-translation';
+import { translations, getLanguageFromCurrency } from '@/lib/translations';
+
+// Draft settings type
+interface DraftSettings {
+    shopName: string;
+    currency: string;
+    taxRate: number;
+    taxEnabled: boolean;
+    receiptFooter: string;
+    darkMode: boolean;
+}
 
 export default function SettingsPage() {
     const { settings, updateSettings } = useSettingsStore();
     const [isSaving, setIsSaving] = useState(false);
     const [saveMessage, setSaveMessage] = useState('');
-    const { t, language } = useTranslation();
+    const [hasChanges, setHasChanges] = useState(false);
+
+    // Draft state - local copy that doesn't affect the app until saved
+    const [draft, setDraft] = useState<DraftSettings>({
+        shopName: settings.shopName,
+        currency: settings.currency,
+        taxRate: settings.taxRate,
+        taxEnabled: settings.taxEnabled,
+        receiptFooter: settings.receiptFooter,
+        darkMode: settings.darkMode,
+    });
+
+    // Get language based on draft currency for preview
+    const draftLanguage = getLanguageFromCurrency(draft.currency);
+    const t = (key: keyof typeof translations.id) => translations[draftLanguage][key];
+
+    // Check if draft differs from saved settings
+    useEffect(() => {
+        const changed =
+            draft.shopName !== settings.shopName ||
+            draft.currency !== settings.currency ||
+            draft.taxRate !== settings.taxRate ||
+            draft.taxEnabled !== settings.taxEnabled ||
+            draft.receiptFooter !== settings.receiptFooter ||
+            draft.darkMode !== settings.darkMode;
+        setHasChanges(changed);
+    }, [draft, settings]);
+
+    // Reset draft when settings change externally
+    useEffect(() => {
+        setDraft({
+            shopName: settings.shopName,
+            currency: settings.currency,
+            taxRate: settings.taxRate,
+            taxEnabled: settings.taxEnabled,
+            receiptFooter: settings.receiptFooter,
+            darkMode: settings.darkMode,
+        });
+    }, [settings]);
+
+    function updateDraft(updates: Partial<DraftSettings>) {
+        setDraft(prev => ({ ...prev, ...updates }));
+    }
 
     async function handleSave() {
         setIsSaving(true);
         await new Promise((resolve) => setTimeout(resolve, 300));
+
+        // Apply all draft changes to the real settings
+        updateSettings(draft);
+
         setSaveMessage(t('settingsSaved'));
         setIsSaving(false);
+        setHasChanges(false);
         setTimeout(() => setSaveMessage(''), 3000);
+    }
+
+    function handleReset() {
+        setDraft({
+            shopName: settings.shopName,
+            currency: settings.currency,
+            taxRate: settings.taxRate,
+            taxEnabled: settings.taxEnabled,
+            receiptFooter: settings.receiptFooter,
+            darkMode: settings.darkMode,
+        });
+        setHasChanges(false);
     }
 
     const isConnected = !!supabase;
@@ -48,19 +118,41 @@ export default function SettingsPage() {
             title={t('settings')}
             description={t('configurePos')}
             actions={
-                <Button
-                    onClick={handleSave}
-                    disabled={isSaving}
-                    className="bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
-                >
-                    <Save className="mr-2 h-4 w-4" />
-                    {isSaving ? t('saving') : t('save')}
-                </Button>
+                <div className="flex items-center gap-2">
+                    {hasChanges && (
+                        <Button
+                            variant="outline"
+                            onClick={handleReset}
+                            className="border-slate-700 text-slate-300"
+                        >
+                            <RotateCcw className="mr-2 h-4 w-4" />
+                            {t('cancel')}
+                        </Button>
+                    )}
+                    <Button
+                        onClick={handleSave}
+                        disabled={isSaving || !hasChanges}
+                        className={hasChanges
+                            ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
+                            : "bg-slate-700 text-slate-400 cursor-not-allowed"
+                        }
+                    >
+                        <Save className="mr-2 h-4 w-4" />
+                        {isSaving ? t('saving') : t('save')}
+                    </Button>
+                </div>
             }
         >
             {saveMessage && (
                 <div className="mb-6 rounded-lg bg-emerald-500/20 p-4 text-emerald-400">
                     {saveMessage}
+                </div>
+            )}
+
+            {hasChanges && (
+                <div className="mb-6 rounded-lg bg-amber-500/20 p-4 text-amber-400 flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4" />
+                    {draftLanguage === 'id' ? 'Ada perubahan yang belum disimpan' : 'You have unsaved changes'}
                 </div>
             )}
 
@@ -85,19 +177,19 @@ export default function SettingsPage() {
                                 </Label>
                                 <Input
                                     id="shopName"
-                                    value={settings.shopName}
-                                    onChange={(e) => updateSettings({ shopName: e.target.value })}
+                                    value={draft.shopName}
+                                    onChange={(e) => updateDraft({ shopName: e.target.value })}
                                     className="border-slate-700 bg-slate-800 text-white"
                                 />
                             </div>
 
                             <div className="grid gap-2">
                                 <Label htmlFor="currency" className="text-slate-300">
-                                    {t('currency')} ({language === 'id' ? 'Bahasa Indonesia' : 'English'})
+                                    {t('currency')} ({draftLanguage === 'id' ? 'Bahasa Indonesia' : 'English'})
                                 </Label>
                                 <Select
-                                    value={settings.currency}
-                                    onValueChange={(value) => updateSettings({ currency: value })}
+                                    value={draft.currency}
+                                    onValueChange={(value) => updateDraft({ currency: value })}
                                 >
                                     <SelectTrigger className="border-slate-700 bg-slate-800 text-white">
                                         <SelectValue />
@@ -139,12 +231,12 @@ export default function SettingsPage() {
                                     </p>
                                 </div>
                                 <Switch
-                                    checked={settings.taxEnabled}
-                                    onCheckedChange={(checked) => updateSettings({ taxEnabled: checked })}
+                                    checked={draft.taxEnabled}
+                                    onCheckedChange={(checked) => updateDraft({ taxEnabled: checked })}
                                 />
                             </div>
 
-                            {settings.taxEnabled && (
+                            {draft.taxEnabled && (
                                 <div className="grid gap-2">
                                     <Label htmlFor="taxRate" className="text-slate-300">
                                         {t('taxRate')} (%)
@@ -153,9 +245,9 @@ export default function SettingsPage() {
                                         id="taxRate"
                                         type="number"
                                         step="0.1"
-                                        value={settings.taxRate}
+                                        value={draft.taxRate}
                                         onChange={(e) =>
-                                            updateSettings({ taxRate: parseFloat(e.target.value) || 0 })
+                                            updateDraft({ taxRate: parseFloat(e.target.value) || 0 })
                                         }
                                         className="border-slate-700 bg-slate-800 text-white"
                                     />
@@ -186,8 +278,8 @@ export default function SettingsPage() {
                             </Label>
                             <Input
                                 id="receiptFooter"
-                                value={settings.receiptFooter}
-                                onChange={(e) => updateSettings({ receiptFooter: e.target.value })}
+                                value={draft.receiptFooter}
+                                onChange={(e) => updateDraft({ receiptFooter: e.target.value })}
                                 className="border-slate-700 bg-slate-800 text-white"
                                 placeholder={t('thankYouMessage')}
                             />
@@ -218,8 +310,8 @@ export default function SettingsPage() {
                                 </p>
                             </div>
                             <Switch
-                                checked={settings.darkMode}
-                                onCheckedChange={(checked) => updateSettings({ darkMode: checked })}
+                                checked={draft.darkMode}
+                                onCheckedChange={(checked) => updateDraft({ darkMode: checked })}
                             />
                         </div>
                     </div>
@@ -263,7 +355,7 @@ export default function SettingsPage() {
                                 <div className="text-sm text-amber-400">
                                     <p className="font-medium">{t('setupRequired')}</p>
                                     <p className="mt-1 text-amber-400/80">
-                                        {t('setEnvVars')} <code className="rounded bg-amber-500/20 px-1">NEXT_PUBLIC_SUPABASE_URL</code> {language === 'id' ? 'dan' : 'and'}{' '}
+                                        {t('setEnvVars')} <code className="rounded bg-amber-500/20 px-1">NEXT_PUBLIC_SUPABASE_URL</code> {draftLanguage === 'id' ? 'dan' : 'and'}{' '}
                                         <code className="rounded bg-amber-500/20 px-1">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> {t('inEnvFile')}
                                     </p>
                                 </div>
