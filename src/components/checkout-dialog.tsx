@@ -90,22 +90,22 @@ export function CheckoutDialog({
 
     return (
         <Dialog open={open} onOpenChange={handleClose}>
-            <DialogContent className="max-w-lg border-slate-800 bg-slate-900 p-0">
+            <DialogContent className="max-w-lg border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-0 text-slate-900 dark:text-white">
                 {isComplete ? (
                     // Success state
                     <div className="flex flex-col items-center justify-center p-12 text-center">
                         <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-green-600 shadow-lg shadow-emerald-500/25">
                             <CheckCircle2 className="h-10 w-10 text-white" />
                         </div>
-                        <h2 className="text-2xl font-bold text-white">Pembayaran Berhasil!</h2>
-                        <p className="mt-2 text-slate-400">
-                            Kembalian: <span className="font-bold text-emerald-400">{formatCurrency(change)}</span>
+                        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Pembayaran Berhasil!</h2>
+                        <p className="mt-2 text-slate-500 dark:text-slate-400">
+                            Kembalian: <span className="font-bold text-emerald-600 dark:text-emerald-400">{formatCurrency(change)}</span>
                         </p>
                     </div>
                 ) : (
                     <>
-                        <DialogHeader className="border-b border-slate-800 p-6">
-                            <DialogTitle className="flex items-center gap-3 text-xl text-white">
+                        <DialogHeader className="border-b border-slate-200 dark:border-slate-800 p-6">
+                            <DialogTitle className="flex items-center gap-3 text-xl text-slate-900 dark:text-white">
                                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
                                     <Calculator className="h-5 w-5 text-white" />
                                 </div>
@@ -116,36 +116,36 @@ export function CheckoutDialog({
                         <div className="grid gap-6 p-6">
                             {/* Order Summary */}
                             <div>
-                                <h3 className="mb-3 text-sm font-medium text-slate-400">
+                                <h3 className="mb-3 text-sm font-medium text-slate-500 dark:text-slate-400">
                                     Ringkasan Pesanan
                                 </h3>
-                                <ScrollArea className="max-h-40 rounded-lg bg-slate-800/50 p-3">
+                                <ScrollArea className="max-h-40 rounded-lg bg-slate-50 dark:bg-slate-800/50 p-3">
                                     <div className="space-y-2">
                                         {items.map((item) => (
                                             <div
                                                 key={item.product.id}
                                                 className="flex justify-between text-sm"
                                             >
-                                                <span className="text-slate-300">
+                                                <span className="text-slate-600 dark:text-slate-300">
                                                     {item.quantity}x {item.product.name}
                                                 </span>
-                                                <span className="font-medium text-white">
+                                                <span className="font-medium text-slate-900 dark:text-white">
                                                     {formatCurrency(item.product.price * item.quantity)}
                                                 </span>
                                             </div>
                                         ))}
                                     </div>
                                 </ScrollArea>
-                                <Separator className="my-3 bg-slate-700" />
+                                <Separator className="my-3 bg-slate-200 dark:bg-slate-700" />
                                 <div className="flex justify-between text-lg font-bold">
-                                    <span className="text-white">Total</span>
-                                    <span className="text-amber-400">{formatCurrency(total)}</span>
+                                    <span className="text-slate-900 dark:text-white">Total</span>
+                                    <span className="text-amber-600 dark:text-amber-400">{formatCurrency(total)}</span>
                                 </div>
                             </div>
 
                             {/* Payment Input */}
                             <div>
-                                <h3 className="mb-3 text-sm font-medium text-slate-400">
+                                <h3 className="mb-3 text-sm font-medium text-slate-500 dark:text-slate-400">
                                     Jumlah Pembayaran
                                 </h3>
                                 <div className="relative">
@@ -156,7 +156,7 @@ export function CheckoutDialog({
                                         value={paymentInput}
                                         onChange={(e) => setPaymentInput(e.target.value)}
                                         placeholder="Masukkan jumlah..."
-                                        className="h-14 border-slate-700 bg-slate-800 pl-10 text-xl font-bold text-white placeholder:text-slate-500 focus:border-amber-500 focus:ring-amber-500"
+                                        className="h-14 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 pl-10 text-xl font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-amber-500 focus:ring-amber-500"
                                     />
                                 </div>
 
@@ -176,7 +176,7 @@ export function CheckoutDialog({
                                             variant="outline"
                                             size="sm"
                                             onClick={() => handleQuickAmount(amount)}
-                                            className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white"
+                                            className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white"
                                         >
                                             +{formatCurrency(amount)}
                                         </Button>
@@ -188,7 +188,7 @@ export function CheckoutDialog({
                             <div
                                 className={cn(
                                     'rounded-lg p-4 text-center transition-colors',
-                                    canPay ? 'bg-emerald-500/10' : 'bg-slate-800'
+                                    canPay ? 'bg-emerald-500/10' : 'bg-slate-100 dark:bg-slate-800'
                                 )}
                             >
                                 <p className="text-sm text-slate-400">Kembalian</p>
@@ -207,7 +207,6 @@ export function CheckoutDialog({
                                 )}
                             </div>
 
-                            {/* Pay Button */}
                             <Button
                                 onClick={handlePayment}
                                 disabled={!canPay || isProcessing}
@@ -215,7 +214,7 @@ export function CheckoutDialog({
                                     'w-full py-6 text-lg font-bold transition-all duration-300',
                                     canPay
                                         ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25 hover:from-amber-600 hover:to-orange-600'
-                                        : 'bg-slate-800 text-slate-500'
+                                        : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500'
                                 )}
                             >
                                 {isProcessing ? 'Memproses...' : 'Selesaikan Pembayaran'}

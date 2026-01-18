@@ -118,11 +118,12 @@ export default function POSPage() {
       {/* Main Content Area */}
       <main className="ml-64 mr-80 flex flex-1 flex-col">
         {/* Header */}
-        <header className="sticky top-0 z-30 border-b border-slate-800 bg-slate-900/95 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-slate-900/80">
+        {/* Header */}
+        <header className="sticky top-0 z-30 border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:supports-[backdrop-filter]:bg-slate-900/80">
           <div className="flex items-center justify-between gap-6">
             <div>
-              <h1 className="text-2xl font-bold text-white">Kasir</h1>
-              <p className="text-sm text-slate-400">
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Kasir</h1>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 {new Date().toLocaleDateString('id-ID', {
                   weekday: 'long',
                   year: 'numeric',
@@ -134,13 +135,13 @@ export default function POSPage() {
 
             {/* Search */}
             <div className="relative w-full max-w-md">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
               <Input
                 type="text"
                 placeholder="Cari produk..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-10 border-slate-700 bg-slate-800 pl-10 text-white placeholder:text-slate-500 focus:border-amber-500 focus:ring-amber-500"
+                className="h-10 border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 pl-10 text-slate-900 dark:text-white placeholder:text-slate-500 focus:border-amber-500 focus:ring-amber-500"
               />
             </div>
           </div>
@@ -165,9 +166,9 @@ export default function POSPage() {
             </div>
           ) : filteredProducts.length === 0 ? (
             <div className="flex h-64 flex-col items-center justify-center text-center">
-              <Coffee className="mb-4 h-16 w-16 text-slate-600" />
-              <h3 className="text-lg font-medium text-white">Produk tidak ditemukan</h3>
-              <p className="mt-1 text-sm text-slate-400">
+              <Coffee className="mb-4 h-16 w-16 text-slate-300 dark:text-slate-600" />
+              <h3 className="text-lg font-medium text-slate-900 dark:text-white">Produk tidak ditemukan</h3>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 Coba sesuaikan pencarian atau filter Anda
               </p>
             </div>

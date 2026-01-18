@@ -33,7 +33,7 @@ export function CategoryFilter({
                             'flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200',
                             isSelected
                                 ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25'
-                                : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200'
+                                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-transparent hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-slate-200'
                         )}
                     >
                         <category.icon className="h-4 w-4" />

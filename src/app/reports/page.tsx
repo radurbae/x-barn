@@ -186,53 +186,53 @@ export default function ReportsPage() {
         >
             {/* Stats Cards */}
             <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <div className="rounded-xl border border-slate-800 bg-slate-800/50 p-4">
+                <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-4">
                     <div className="flex items-center gap-3">
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
                             <DollarSign className="h-6 w-6 text-white" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Penjualan Hari Ini</p>
-                            <p className="text-2xl font-bold text-white">{formatCurrency(stats.today.total)}</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">Penjualan Hari Ini</p>
+                            <p className="text-2xl font-bold text-slate-900 dark:text-white">{formatCurrency(stats.today.total)}</p>
                             <p className="text-xs text-slate-500">{stats.today.orders} pesanan</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="rounded-xl border border-slate-800 bg-slate-800/50 p-4">
+                <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-4">
                     <div className="flex items-center gap-3">
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-500/20">
-                            <TrendingUp className="h-6 w-6 text-emerald-400" />
+                            <TrendingUp className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Minggu Ini</p>
-                            <p className="text-2xl font-bold text-white">{formatCurrency(stats.week.total)}</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">Minggu Ini</p>
+                            <p className="text-2xl font-bold text-slate-900 dark:text-white">{formatCurrency(stats.week.total)}</p>
                             <p className="text-xs text-slate-500">{stats.week.orders} pesanan</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="rounded-xl border border-slate-800 bg-slate-800/50 p-4">
+                <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-4">
                     <div className="flex items-center gap-3">
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500/20">
-                            <Calendar className="h-6 w-6 text-blue-400" />
+                            <Calendar className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Bulan Ini</p>
-                            <p className="text-2xl font-bold text-white">{formatCurrency(stats.month.total)}</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">Bulan Ini</p>
+                            <p className="text-2xl font-bold text-slate-900 dark:text-white">{formatCurrency(stats.month.total)}</p>
                             <p className="text-xs text-slate-500">{stats.month.orders} pesanan</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="rounded-xl border border-slate-800 bg-slate-800/50 p-4">
+                <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-4">
                     <div className="flex items-center gap-3">
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500/20">
-                            <ShoppingBag className="h-6 w-6 text-purple-400" />
+                            <ShoppingBag className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Rata-rata Pesanan</p>
-                            <p className="text-2xl font-bold text-white">
+                            <p className="text-sm text-slate-500 dark:text-slate-400">Rata-rata Pesanan</p>
+                            <p className="text-2xl font-bold text-slate-900 dark:text-white">
                                 {formatCurrency(stats.month.orders > 0 ? stats.month.total / stats.month.orders : 0)}
                             </p>
                             <p className="text-xs text-slate-500">per pesanan</p>
@@ -243,52 +243,52 @@ export default function ReportsPage() {
 
             {/* Tabs */}
             <Tabs defaultValue="recent" className="space-y-4">
-                <TabsList className="border-slate-800 bg-slate-800/50">
-                    <TabsTrigger value="recent" className="data-[state=active]:bg-amber-500 data-[state=active]:text-white">
+                <TabsList className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50">
+                    <TabsTrigger value="recent" className="data-[state=active]:bg-amber-500 data-[state=active]:text-white data-[state=inactive]:text-slate-600 dark:data-[state=inactive]:text-slate-400">
                         Pesanan Terbaru
                     </TabsTrigger>
-                    <TabsTrigger value="top" className="data-[state=active]:bg-amber-500 data-[state=active]:text-white">
+                    <TabsTrigger value="top" className="data-[state=active]:bg-amber-500 data-[state=active]:text-white data-[state=inactive]:text-slate-600 dark:data-[state=inactive]:text-slate-400">
                         Produk Terlaris
                     </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="recent">
-                    <div className="rounded-xl border border-slate-800 bg-slate-800/50">
+                    <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50">
                         <Table>
                             <TableHeader>
-                                <TableRow className="border-slate-700 hover:bg-slate-800/50">
-                                    <TableHead className="text-slate-400">No. Pesanan</TableHead>
-                                    <TableHead className="text-slate-400">Waktu</TableHead>
-                                    <TableHead className="text-slate-400">Item</TableHead>
-                                    <TableHead className="text-right text-slate-400">Total</TableHead>
+                                <TableRow className="border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                                    <TableHead className="text-slate-500 dark:text-slate-400">No. Pesanan</TableHead>
+                                    <TableHead className="text-slate-500 dark:text-slate-400">Waktu</TableHead>
+                                    <TableHead className="text-slate-500 dark:text-slate-400">Item</TableHead>
+                                    <TableHead className="text-right text-slate-500 dark:text-slate-400">Total</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {isLoading ? (
                                     <TableRow>
-                                        <TableCell colSpan={4} className="text-center text-slate-400">
+                                        <TableCell colSpan={4} className="text-center text-slate-500 dark:text-slate-400">
                                             Memuat...
                                         </TableCell>
                                     </TableRow>
                                 ) : recentOrders.length === 0 ? (
                                     <TableRow>
-                                        <TableCell colSpan={4} className="text-center text-slate-400">
+                                        <TableCell colSpan={4} className="text-center text-slate-500 dark:text-slate-400">
                                             Belum ada pesanan
                                         </TableCell>
                                     </TableRow>
                                 ) : (
                                     recentOrders.map((order) => (
-                                        <TableRow key={order.id} className="border-slate-700 hover:bg-slate-800/50">
-                                            <TableCell className="font-medium text-white">
+                                        <TableRow key={order.id} className="border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                                            <TableCell className="font-medium text-slate-900 dark:text-white">
                                                 #{order.order_number}
                                             </TableCell>
-                                            <TableCell className="text-slate-300">
+                                            <TableCell className="text-slate-600 dark:text-slate-300">
                                                 {formatTime(order.created_at)}
                                             </TableCell>
-                                            <TableCell className="text-slate-300">
+                                            <TableCell className="text-slate-600 dark:text-slate-300">
                                                 {order.items_count} item
                                             </TableCell>
-                                            <TableCell className="text-right font-semibold text-amber-400">
+                                            <TableCell className="text-right font-semibold text-amber-600 dark:text-amber-400">
                                                 {formatCurrency(order.total)}
                                             </TableCell>
                                         </TableRow>
@@ -300,57 +300,57 @@ export default function ReportsPage() {
                 </TabsContent>
 
                 <TabsContent value="top">
-                    <div className="rounded-xl border border-slate-800 bg-slate-800/50">
+                    <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50">
                         <Table>
                             <TableHeader>
-                                <TableRow className="border-slate-700 hover:bg-slate-800/50">
-                                    <TableHead className="text-slate-400">Peringkat</TableHead>
-                                    <TableHead className="text-slate-400">Produk</TableHead>
-                                    <TableHead className="text-slate-400">Terjual</TableHead>
-                                    <TableHead className="text-right text-slate-400">Pendapatan</TableHead>
+                                <TableRow className="border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                                    <TableHead className="text-slate-500 dark:text-slate-400">Peringkat</TableHead>
+                                    <TableHead className="text-slate-500 dark:text-slate-400">Produk</TableHead>
+                                    <TableHead className="text-slate-500 dark:text-slate-400">Terjual</TableHead>
+                                    <TableHead className="text-right text-slate-500 dark:text-slate-400">Pendapatan</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {isLoading ? (
                                     <TableRow>
-                                        <TableCell colSpan={4} className="text-center text-slate-400">
+                                        <TableCell colSpan={4} className="text-center text-slate-500 dark:text-slate-400">
                                             Memuat...
                                         </TableCell>
                                     </TableRow>
                                 ) : topProducts.length === 0 ? (
                                     <TableRow>
-                                        <TableCell colSpan={4} className="text-center text-slate-400">
+                                        <TableCell colSpan={4} className="text-center text-slate-500 dark:text-slate-400">
                                             Belum ada data penjualan
                                         </TableCell>
                                     </TableRow>
                                 ) : (
                                     topProducts.map((product, index) => (
-                                        <TableRow key={product.name} className="border-slate-700 hover:bg-slate-800/50">
+                                        <TableRow key={product.name} className="border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50">
                                             <TableCell>
                                                 <Badge
                                                     className={
                                                         index === 0
-                                                            ? 'bg-amber-500/20 text-amber-400'
+                                                            ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400'
                                                             : index === 1
-                                                                ? 'bg-slate-500/20 text-slate-300'
+                                                                ? 'bg-slate-500/20 text-slate-600 dark:text-slate-300'
                                                                 : index === 2
-                                                                    ? 'bg-orange-500/20 text-orange-400'
-                                                                    : 'bg-slate-700 text-slate-400'
+                                                                    ? 'bg-orange-500/20 text-orange-600 dark:text-orange-400'
+                                                                    : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
                                                     }
                                                 >
                                                     #{index + 1}
                                                 </Badge>
                                             </TableCell>
-                                            <TableCell className="font-medium text-white">
+                                            <TableCell className="font-medium text-slate-900 dark:text-white">
                                                 <div className="flex items-center gap-2">
                                                     <Coffee className="h-4 w-4 text-slate-500" />
                                                     {product.name}
                                                 </div>
                                             </TableCell>
-                                            <TableCell className="text-slate-300">
+                                            <TableCell className="text-slate-600 dark:text-slate-300">
                                                 {product.quantity}
                                             </TableCell>
-                                            <TableCell className="text-right font-semibold text-emerald-400">
+                                            <TableCell className="text-right font-semibold text-emerald-600 dark:text-emerald-400">
                                                 {formatCurrency(product.revenue)}
                                             </TableCell>
                                         </TableRow>

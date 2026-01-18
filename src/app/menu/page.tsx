@@ -181,40 +181,40 @@ export default function MenuPage() {
         >
             {/* Stats */}
             <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div className="rounded-xl border border-slate-800 bg-slate-800/50 p-4">
+                <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-4">
                     <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/20">
-                            <Coffee className="h-5 w-5 text-amber-400" />
+                            <Coffee className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Total Produk</p>
-                            <p className="text-2xl font-bold text-white">{products.length}</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">Total Produk</p>
+                            <p className="text-2xl font-bold text-slate-900 dark:text-white">{products.length}</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="rounded-xl border border-slate-800 bg-slate-800/50 p-4">
+                <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-4">
                     <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/20">
-                            <Coffee className="h-5 w-5 text-emerald-400" />
+                            <Coffee className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Tersedia</p>
-                            <p className="text-2xl font-bold text-white">
+                            <p className="text-sm text-slate-500 dark:text-slate-400">Tersedia</p>
+                            <p className="text-2xl font-bold text-slate-900 dark:text-white">
                                 {products.filter((p) => p.is_available).length}
                             </p>
                         </div>
                     </div>
                 </div>
 
-                <div className="rounded-xl border border-slate-800 bg-slate-800/50 p-4">
+                <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-4">
                     <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/20">
-                            <DollarSign className="h-5 w-5 text-blue-400" />
+                            <DollarSign className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Rata-rata Harga</p>
-                            <p className="text-2xl font-bold text-white">
+                            <p className="text-sm text-slate-500 dark:text-slate-400">Rata-rata Harga</p>
+                            <p className="text-2xl font-bold text-slate-900 dark:text-white">
                                 {formatCurrency(products.length > 0 ? products.reduce((sum, p) => sum + p.price, 0) / products.length : 0)}
                             </p>
                         </div>
@@ -235,14 +235,14 @@ export default function MenuPage() {
 
                         return (
                             <div key={category}>
-                                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
+                                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-slate-900 dark:text-white">
                                     <Badge
                                         variant="outline"
                                         className={categoryColors[category]}
                                     >
                                         {categoryLabels[category]}
                                     </Badge>
-                                    <span className="text-slate-400">
+                                    <span className="text-slate-500 dark:text-slate-400">
                                         ({categoryProducts.length} item)
                                     </span>
                                 </h2>
@@ -251,20 +251,20 @@ export default function MenuPage() {
                                     {categoryProducts.map((product) => (
                                         <div
                                             key={product.id}
-                                            className="group relative rounded-xl border border-slate-700/50 bg-slate-800/50 p-4 transition-all hover:border-slate-600"
+                                            className="group relative rounded-xl border border-slate-200 dark:border-slate-700/50 bg-white dark:bg-slate-800/50 p-4 transition-all hover:border-amber-500/50 hover:bg-slate-50 dark:hover:bg-slate-800"
                                         >
                                             {/* Product Image Placeholder */}
-                                            <div className="mb-3 flex h-24 items-center justify-center rounded-lg bg-slate-700/50">
-                                                <Coffee className="h-10 w-10 text-slate-500" />
+                                            <div className="mb-3 flex h-24 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-700/50">
+                                                <Coffee className="h-10 w-10 text-slate-400 dark:text-slate-500" />
                                             </div>
 
                                             {/* Product Info */}
                                             <div className="mb-3">
-                                                <h3 className="font-semibold text-white">{product.name}</h3>
-                                                <p className="mt-1 line-clamp-2 text-sm text-slate-400">
+                                                <h3 className="font-semibold text-slate-900 dark:text-white">{product.name}</h3>
+                                                <p className="mt-1 line-clamp-2 text-sm text-slate-500 dark:text-slate-400">
                                                     {product.description || 'Tidak ada deskripsi'}
                                                 </p>
-                                                <p className="mt-2 text-lg font-bold text-amber-400">
+                                                <p className="mt-2 text-lg font-bold text-amber-600 dark:text-amber-400">
                                                     {formatCurrency(product.price)}
                                                 </p>
                                             </div>
@@ -278,7 +278,7 @@ export default function MenuPage() {
                                                     }
                                                     className="data-[state=checked]:bg-emerald-500"
                                                 />
-                                                <span className="text-sm text-slate-400">
+                                                <span className="text-sm text-slate-500 dark:text-slate-400">
                                                     {product.is_available ? 'Tersedia' : 'Tidak Tersedia'}
                                                 </span>
                                             </div>
@@ -289,7 +289,7 @@ export default function MenuPage() {
                                                     variant="outline"
                                                     size="sm"
                                                     onClick={() => openEditDialog(product)}
-                                                    className="flex-1 border-slate-700 text-slate-300"
+                                                    className="flex-1 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
                                                 >
                                                     <Pencil className="mr-2 h-3 w-3" />
                                                     Edit
@@ -298,7 +298,7 @@ export default function MenuPage() {
                                                     variant="outline"
                                                     size="sm"
                                                     onClick={() => handleDelete(product.id)}
-                                                    className="border-slate-700 text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                                                    className="border-slate-200 dark:border-slate-700 text-red-500 dark:text-red-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/10 dark:hover:text-red-300"
                                                 >
                                                     <Trash2 className="h-3 w-3" />
                                                 </Button>
@@ -314,27 +314,27 @@ export default function MenuPage() {
 
             {/* Add/Edit Dialog */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="border-slate-800 bg-slate-900">
+                <DialogContent className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
                     <DialogHeader>
-                        <DialogTitle className="text-white">
+                        <DialogTitle className="text-slate-900 dark:text-white">
                             {editingProduct ? 'Edit Produk' : 'Tambah Produk'}
                         </DialogTitle>
                     </DialogHeader>
 
                     <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
-                            <Label htmlFor="name" className="text-slate-300">Nama</Label>
+                            <Label htmlFor="name" className="text-slate-600 dark:text-slate-300">Nama</Label>
                             <Input
                                 id="name"
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                className="border-slate-700 bg-slate-800 text-white"
+                                className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                             />
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="price" className="text-slate-300">Harga (Rp)</Label>
+                                <Label htmlFor="price" className="text-slate-600 dark:text-slate-300">Harga (Rp)</Label>
                                 <Input
                                     id="price"
                                     type="number"
@@ -343,20 +343,20 @@ export default function MenuPage() {
                                     onChange={(e) =>
                                         setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })
                                     }
-                                    className="border-slate-700 bg-slate-800 text-white"
+                                    className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                                 />
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="category" className="text-slate-300">Kategori</Label>
+                                <Label htmlFor="category" className="text-slate-600 dark:text-slate-300">Kategori</Label>
                                 <Select
                                     value={formData.category}
                                     onValueChange={(value) => setFormData({ ...formData, category: value })}
                                 >
-                                    <SelectTrigger className="border-slate-700 bg-slate-800 text-white">
+                                    <SelectTrigger className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white">
                                         <SelectValue />
                                     </SelectTrigger>
-                                    <SelectContent className="border-slate-700 bg-slate-800">
+                                    <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white">
                                         {categories.map((cat) => (
                                             <SelectItem key={cat} value={cat}>
                                                 {categoryLabels[cat]}
@@ -368,14 +368,14 @@ export default function MenuPage() {
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="description" className="text-slate-300">Deskripsi</Label>
+                            <Label htmlFor="description" className="text-slate-600 dark:text-slate-300">Deskripsi</Label>
                             <Textarea
                                 id="description"
                                 value={formData.description}
                                 onChange={(e) =>
                                     setFormData({ ...formData, description: e.target.value })
                                 }
-                                className="border-slate-700 bg-slate-800 text-white"
+                                className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                                 rows={3}
                             />
                         </div>
@@ -387,7 +387,7 @@ export default function MenuPage() {
                                     setFormData({ ...formData, is_available: checked })
                                 }
                             />
-                            <Label className="text-slate-300">Tersedia untuk dijual</Label>
+                            <Label className="text-slate-600 dark:text-slate-300">Tersedia untuk dijual</Label>
                         </div>
                     </div>
 
@@ -395,7 +395,7 @@ export default function MenuPage() {
                         <Button
                             variant="outline"
                             onClick={() => setIsDialogOpen(false)}
-                            className="border-slate-700 text-slate-300"
+                            className="border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-300"
                         >
                             Batal
                         </Button>

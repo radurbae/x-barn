@@ -134,7 +134,7 @@ export default function SettingsPage() {
                         disabled={isSaving || !hasChanges}
                         className={hasChanges
                             ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
-                            : "bg-slate-700 text-slate-400 cursor-not-allowed"
+                            : "bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-400 cursor-not-allowed"
                         }
                     >
                         <Save className="mr-2 h-4 w-4" />
@@ -161,40 +161,40 @@ export default function SettingsPage() {
                 <section>
                     <div className="mb-4 flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/20">
-                            <Store className="h-5 w-5 text-amber-400" />
+                            <Store className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-semibold text-white">{t('shopDetails')}</h2>
-                            <p className="text-sm text-slate-400">{t('basicInfo')}</p>
+                            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">{t('shopDetails')}</h2>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{t('basicInfo')}</p>
                         </div>
                     </div>
 
-                    <div className="rounded-xl border border-slate-800 bg-slate-800/50 p-6">
+                    <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-6">
                         <div className="grid gap-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="shopName" className="text-slate-300">
+                                <Label htmlFor="shopName" className="text-slate-600 dark:text-slate-300">
                                     {t('shopName')}
                                 </Label>
                                 <Input
                                     id="shopName"
                                     value={draft.shopName}
                                     onChange={(e) => updateDraft({ shopName: e.target.value })}
-                                    className="border-slate-700 bg-slate-800 text-white"
+                                    className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                                 />
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="currency" className="text-slate-300">
+                                <Label htmlFor="currency" className="text-slate-600 dark:text-slate-300">
                                     {t('currency')} ({draftLanguage === 'id' ? 'Bahasa Indonesia' : 'English'})
                                 </Label>
                                 <Select
                                     value={draft.currency}
                                     onValueChange={(value) => updateDraft({ currency: value })}
                                 >
-                                    <SelectTrigger className="border-slate-700 bg-slate-800 text-white">
+                                    <SelectTrigger className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white">
                                         <SelectValue />
                                     </SelectTrigger>
-                                    <SelectContent className="border-slate-700 bg-slate-800">
+                                    <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white">
                                         <SelectItem value="IDR">🇮🇩 IDR (Rp) - Bahasa Indonesia</SelectItem>
                                         <SelectItem value="USD">🇺🇸 USD ($) - English</SelectItem>
                                         <SelectItem value="EUR">🇪🇺 EUR (€) - English</SelectItem>
@@ -207,28 +207,26 @@ export default function SettingsPage() {
                     </div>
                 </section>
 
-                <Separator className="bg-slate-800" />
+                <Separator className="bg-slate-200 dark:bg-slate-800" />
 
                 {/* Tax Settings */}
                 <section>
                     <div className="mb-4 flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/20">
-                            <DollarSign className="h-5 w-5 text-blue-400" />
+                            <DollarSign className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-semibold text-white">{t('taxSettings')}</h2>
-                            <p className="text-sm text-slate-400">{t('configureTax')}</p>
+                            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">{t('taxSettings')}</h2>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{t('configureTax')}</p>
                         </div>
                     </div>
 
-                    <div className="rounded-xl border border-slate-800 bg-slate-800/50 p-6">
+                    <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-6">
                         <div className="grid gap-4">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <Label className="text-slate-300">{t('enableTax')}</Label>
-                                    <p className="text-sm text-slate-500">
-                                        {t('applyTax')}
-                                    </p>
+                                    <Label className="text-slate-600 dark:text-slate-300">{t('enableTax')}</Label>
+                                    <p className="text-sm text-slate-500">{t('applyTax')}</p>
                                 </div>
                                 <Switch
                                     checked={draft.taxEnabled}
@@ -238,7 +236,7 @@ export default function SettingsPage() {
 
                             {draft.taxEnabled && (
                                 <div className="grid gap-2">
-                                    <Label htmlFor="taxRate" className="text-slate-300">
+                                    <Label htmlFor="taxRate" className="text-slate-600 dark:text-slate-300">
                                         {t('taxRate')} (%)
                                     </Label>
                                     <Input
@@ -249,7 +247,7 @@ export default function SettingsPage() {
                                         onChange={(e) =>
                                             updateDraft({ taxRate: parseFloat(e.target.value) || 0 })
                                         }
-                                        className="border-slate-700 bg-slate-800 text-white"
+                                        className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                                     />
                                 </div>
                             )}
@@ -257,54 +255,54 @@ export default function SettingsPage() {
                     </div>
                 </section>
 
-                <Separator className="bg-slate-800" />
+                <Separator className="bg-slate-200 dark:bg-slate-800" />
 
                 {/* Receipt Settings */}
                 <section>
                     <div className="mb-4 flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/20">
-                            <Receipt className="h-5 w-5 text-emerald-400" />
+                            <Receipt className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-semibold text-white">{t('receiptSettings')}</h2>
-                            <p className="text-sm text-slate-400">{t('customizeReceipt')}</p>
+                            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">{t('receiptSettings')}</h2>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{t('customizeReceipt')}</p>
                         </div>
                     </div>
 
-                    <div className="rounded-xl border border-slate-800 bg-slate-800/50 p-6">
+                    <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="receiptFooter" className="text-slate-300">
+                            <Label htmlFor="receiptFooter" className="text-slate-600 dark:text-slate-300">
                                 {t('receiptFooter')}
                             </Label>
                             <Input
                                 id="receiptFooter"
                                 value={draft.receiptFooter}
                                 onChange={(e) => updateDraft({ receiptFooter: e.target.value })}
-                                className="border-slate-700 bg-slate-800 text-white"
+                                className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                                 placeholder={t('thankYouMessage')}
                             />
                         </div>
                     </div>
                 </section>
 
-                <Separator className="bg-slate-800" />
+                <Separator className="bg-slate-200 dark:bg-slate-800" />
 
                 {/* Display Settings */}
                 <section>
                     <div className="mb-4 flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/20">
-                            <Palette className="h-5 w-5 text-purple-400" />
+                            <Palette className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-semibold text-white">{t('display')}</h2>
-                            <p className="text-sm text-slate-400">{t('displaySettings')}</p>
+                            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">{t('display')}</h2>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{t('displaySettings')}</p>
                         </div>
                     </div>
 
-                    <div className="rounded-xl border border-slate-800 bg-slate-800/50 p-6">
+                    <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <Label className="text-slate-300">{t('darkMode')}</Label>
+                                <Label className="text-slate-600 dark:text-slate-300">{t('darkMode')}</Label>
                                 <p className="text-sm text-slate-500">
                                     {t('useDarkTheme')}
                                 </p>
@@ -317,31 +315,31 @@ export default function SettingsPage() {
                     </div>
                 </section>
 
-                <Separator className="bg-slate-800" />
+                <Separator className="bg-slate-200 dark:bg-slate-800" />
 
                 {/* Database Status */}
                 <section>
                     <div className="mb-4 flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-500/20">
-                            <Database className="h-5 w-5 text-slate-400" />
+                            <Database className="h-5 w-5 text-slate-600 dark:text-slate-400" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-semibold text-white">{t('database')}</h2>
-                            <p className="text-sm text-slate-400">{t('connectionStatus')}</p>
+                            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">{t('database')}</h2>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{t('connectionStatus')}</p>
                         </div>
                     </div>
 
-                    <div className="rounded-xl border border-slate-800 bg-slate-800/50 p-6">
+                    <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-6">
                         <div className="flex items-center gap-3">
                             <div
                                 className={`h-3 w-3 rounded-full ${isConnected ? 'bg-emerald-500' : 'bg-amber-500'
                                     }`}
                             />
                             <div>
-                                <p className="font-medium text-white">
+                                <p className="font-medium text-slate-900 dark:text-white">
                                     {isConnected ? t('connected') : t('demoMode')}
                                 </p>
-                                <p className="text-sm text-slate-400">
+                                <p className="text-sm text-slate-500 dark:text-slate-400">
                                     {isConnected
                                         ? t('dbConnected')
                                         : t('runningDemo')}
@@ -351,10 +349,10 @@ export default function SettingsPage() {
 
                         {!isConnected && (
                             <div className="mt-4 flex items-start gap-2 rounded-lg bg-amber-500/10 p-3">
-                                <AlertCircle className="mt-0.5 h-4 w-4 text-amber-400" />
-                                <div className="text-sm text-amber-400">
+                                <AlertCircle className="mt-0.5 h-4 w-4 text-amber-600 dark:text-amber-400" />
+                                <div className="text-sm text-amber-600 dark:text-amber-400">
                                     <p className="font-medium">{t('setupRequired')}</p>
-                                    <p className="mt-1 text-amber-400/80">
+                                    <p className="mt-1 text-amber-600/80 dark:text-amber-400/80">
                                         {t('setEnvVars')} <code className="rounded bg-amber-500/20 px-1">NEXT_PUBLIC_SUPABASE_URL</code> {draftLanguage === 'id' ? 'dan' : 'and'}{' '}
                                         <code className="rounded bg-amber-500/20 px-1">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> {t('inEnvFile')}
                                     </p>

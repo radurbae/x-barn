@@ -18,12 +18,12 @@ export function PageLayout({ children, title, description, actions }: PageLayout
             {/* Main Content Area */}
             <main className="ml-64 flex flex-1 flex-col">
                 {/* Header */}
-                <header className="sticky top-0 z-30 border-b border-slate-800 bg-slate-900/95 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-slate-900/80">
+                <header className="sticky top-0 z-30 border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:supports-[backdrop-filter]:bg-slate-900/80">
                     <div className="flex items-center justify-between gap-6">
                         <div>
-                            <h1 className="text-2xl font-bold text-white">{title}</h1>
+                            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{title}</h1>
                             {description && (
-                                <p className="text-sm text-slate-400">{description}</p>
+                                <p className="text-sm text-slate-500 dark:text-slate-400">{description}</p>
                             )}
                         </div>
                         {actions && <div className="flex items-center gap-3">{actions}</div>}
@@ -31,7 +31,7 @@ export function PageLayout({ children, title, description, actions }: PageLayout
                 </header>
 
                 {/* Content */}
-                <div className="flex-1 overflow-auto p-6">{children}</div>
+                <div className="flex-1 overflow-auto p-6 bg-slate-50 dark:bg-transparent">{children}</div>
             </main>
         </div>
     );

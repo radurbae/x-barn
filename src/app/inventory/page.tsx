@@ -161,38 +161,38 @@ export default function InventoryPage() {
         >
             {/* Stats Cards */}
             <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div className="rounded-xl border border-slate-800 bg-slate-800/50 p-4">
+                <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-4">
                     <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/20">
-                            <Package className="h-5 w-5 text-amber-400" />
+                            <Package className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Total Bahan</p>
-                            <p className="text-2xl font-bold text-white">{ingredients.length}</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">Total Bahan</p>
+                            <p className="text-2xl font-bold text-slate-900 dark:text-white">{ingredients.length}</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="rounded-xl border border-slate-800 bg-slate-800/50 p-4">
+                <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-4">
                     <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-500/20">
-                            <AlertTriangle className="h-5 w-5 text-red-400" />
+                            <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Stok Rendah</p>
-                            <p className="text-2xl font-bold text-white">{lowStockCount}</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">Stok Rendah</p>
+                            <p className="text-2xl font-bold text-slate-900 dark:text-white">{lowStockCount}</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="rounded-xl border border-slate-800 bg-slate-800/50 p-4">
+                <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-4">
                     <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/20">
-                            <Package className="h-5 w-5 text-emerald-400" />
+                            <Package className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-400">Total Nilai</p>
-                            <p className="text-2xl font-bold text-white">
+                            <p className="text-sm text-slate-500 dark:text-slate-400">Total Nilai</p>
+                            <p className="text-2xl font-bold text-slate-900 dark:text-white">
                                 {formatCurrency(ingredients.reduce((sum, i) => sum + i.current_stock * i.cost_per_unit, 0))}
                             </p>
                         </div>
@@ -201,29 +201,29 @@ export default function InventoryPage() {
             </div>
 
             {/* Table */}
-            <div className="rounded-xl border border-slate-800 bg-slate-800/50">
+            <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50">
                 <Table>
                     <TableHeader>
-                        <TableRow className="border-slate-700 hover:bg-slate-800/50">
-                            <TableHead className="text-slate-400">Nama</TableHead>
-                            <TableHead className="text-slate-400">Satuan</TableHead>
-                            <TableHead className="text-slate-400">Stok Saat Ini</TableHead>
-                            <TableHead className="text-slate-400">Stok Minimum</TableHead>
-                            <TableHead className="text-slate-400">Harga/Satuan</TableHead>
-                            <TableHead className="text-slate-400">Status</TableHead>
-                            <TableHead className="text-right text-slate-400">Aksi</TableHead>
+                        <TableRow className="border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                            <TableHead className="text-slate-500 dark:text-slate-400">Nama</TableHead>
+                            <TableHead className="text-slate-500 dark:text-slate-400">Satuan</TableHead>
+                            <TableHead className="text-slate-500 dark:text-slate-400">Stok Saat Ini</TableHead>
+                            <TableHead className="text-slate-500 dark:text-slate-400">Stok Minimum</TableHead>
+                            <TableHead className="text-slate-500 dark:text-slate-400">Harga/Satuan</TableHead>
+                            <TableHead className="text-slate-500 dark:text-slate-400">Status</TableHead>
+                            <TableHead className="text-right text-slate-500 dark:text-slate-400">Aksi</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {isLoading ? (
                             <TableRow>
-                                <TableCell colSpan={7} className="text-center text-slate-400">
+                                <TableCell colSpan={7} className="text-center text-slate-500 dark:text-slate-400">
                                     Memuat...
                                 </TableCell>
                             </TableRow>
                         ) : ingredients.length === 0 ? (
                             <TableRow>
-                                <TableCell colSpan={7} className="text-center text-slate-400">
+                                <TableCell colSpan={7} className="text-center text-slate-500 dark:text-slate-400">
                                     Tidak ada bahan ditemukan
                                 </TableCell>
                             </TableRow>
@@ -233,28 +233,28 @@ export default function InventoryPage() {
                                 return (
                                     <TableRow
                                         key={ingredient.id}
-                                        className="border-slate-700 hover:bg-slate-800/50"
+                                        className="border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50"
                                     >
-                                        <TableCell className="font-medium text-white">
+                                        <TableCell className="font-medium text-slate-900 dark:text-white">
                                             {ingredient.name}
                                         </TableCell>
-                                        <TableCell className="text-slate-300">{ingredient.unit}</TableCell>
-                                        <TableCell className="text-slate-300">
+                                        <TableCell className="text-slate-600 dark:text-slate-300">{ingredient.unit}</TableCell>
+                                        <TableCell className="text-slate-600 dark:text-slate-300">
                                             {formatNumber(ingredient.current_stock)}
                                         </TableCell>
-                                        <TableCell className="text-slate-300">
+                                        <TableCell className="text-slate-600 dark:text-slate-300">
                                             {formatNumber(ingredient.min_stock)}
                                         </TableCell>
-                                        <TableCell className="text-slate-300">
+                                        <TableCell className="text-slate-600 dark:text-slate-300">
                                             {formatCurrency(ingredient.cost_per_unit)}
                                         </TableCell>
                                         <TableCell>
                                             {isLowStock ? (
-                                                <Badge className="bg-red-500/20 text-red-400 border-red-500/30">
+                                                <Badge className="bg-red-500/20 text-red-600 dark:text-red-400 border-red-500/30">
                                                     Stok Rendah
                                                 </Badge>
                                             ) : (
-                                                <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
+                                                <Badge className="bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30">
                                                     Tersedia
                                                 </Badge>
                                             )}
@@ -265,7 +265,7 @@ export default function InventoryPage() {
                                                     variant="ghost"
                                                     size="sm"
                                                     onClick={() => openEditDialog(ingredient)}
-                                                    className="text-slate-400 hover:text-white"
+                                                    className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                                                 >
                                                     <Pencil className="h-4 w-4" />
                                                 </Button>
@@ -273,7 +273,7 @@ export default function InventoryPage() {
                                                     variant="ghost"
                                                     size="sm"
                                                     onClick={() => handleDelete(ingredient.id)}
-                                                    className="text-slate-400 hover:text-red-400"
+                                                    className="text-slate-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400"
                                                 >
                                                     <Trash2 className="h-4 w-4" />
                                                 </Button>
@@ -289,36 +289,36 @@ export default function InventoryPage() {
 
             {/* Add/Edit Dialog */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="border-slate-800 bg-slate-900">
+                <DialogContent className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
                     <DialogHeader>
-                        <DialogTitle className="text-white">
+                        <DialogTitle className="text-slate-900 dark:text-white">
                             {editingIngredient ? 'Edit Bahan' : 'Tambah Bahan'}
                         </DialogTitle>
                     </DialogHeader>
 
                     <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
-                            <Label htmlFor="name" className="text-slate-300">Nama</Label>
+                            <Label htmlFor="name" className="text-slate-600 dark:text-slate-300">Nama</Label>
                             <Input
                                 id="name"
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                className="border-slate-700 bg-slate-800 text-white"
+                                className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                             />
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="unit" className="text-slate-300">Satuan</Label>
+                            <Label htmlFor="unit" className="text-slate-600 dark:text-slate-300">Satuan</Label>
                             <Select
                                 value={formData.unit}
                                 onValueChange={(value: 'ml' | 'gr' | 'pcs') =>
                                     setFormData({ ...formData, unit: value })
                                 }
                             >
-                                <SelectTrigger className="border-slate-700 bg-slate-800 text-white">
+                                <SelectTrigger className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white">
                                     <SelectValue />
                                 </SelectTrigger>
-                                <SelectContent className="border-slate-700 bg-slate-800">
+                                <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white">
                                     <SelectItem value="gr">Gram (gr)</SelectItem>
                                     <SelectItem value="ml">Mililiter (ml)</SelectItem>
                                     <SelectItem value="pcs">Buah (pcs)</SelectItem>
@@ -328,7 +328,7 @@ export default function InventoryPage() {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="current_stock" className="text-slate-300">Stok Saat Ini</Label>
+                                <Label htmlFor="current_stock" className="text-slate-600 dark:text-slate-300">Stok Saat Ini</Label>
                                 <Input
                                     id="current_stock"
                                     type="number"
@@ -336,12 +336,12 @@ export default function InventoryPage() {
                                     onChange={(e) =>
                                         setFormData({ ...formData, current_stock: parseFloat(e.target.value) || 0 })
                                     }
-                                    className="border-slate-700 bg-slate-800 text-white"
+                                    className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                                 />
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="min_stock" className="text-slate-300">Stok Minimum</Label>
+                                <Label htmlFor="min_stock" className="text-slate-600 dark:text-slate-300">Stok Minimum</Label>
                                 <Input
                                     id="min_stock"
                                     type="number"
@@ -349,13 +349,13 @@ export default function InventoryPage() {
                                     onChange={(e) =>
                                         setFormData({ ...formData, min_stock: parseFloat(e.target.value) || 0 })
                                     }
-                                    className="border-slate-700 bg-slate-800 text-white"
+                                    className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                                 />
                             </div>
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="cost_per_unit" className="text-slate-300">Harga per Satuan (Rp)</Label>
+                            <Label htmlFor="cost_per_unit" className="text-slate-600 dark:text-slate-300">Harga per Satuan (Rp)</Label>
                             <Input
                                 id="cost_per_unit"
                                 type="number"
@@ -364,7 +364,7 @@ export default function InventoryPage() {
                                 onChange={(e) =>
                                     setFormData({ ...formData, cost_per_unit: parseFloat(e.target.value) || 0 })
                                 }
-                                className="border-slate-700 bg-slate-800 text-white"
+                                className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                             />
                         </div>
                     </div>
@@ -373,7 +373,7 @@ export default function InventoryPage() {
                         <Button
                             variant="outline"
                             onClick={() => setIsDialogOpen(false)}
-                            className="border-slate-700 text-slate-300"
+                            className="border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-300"
                         >
                             Batal
                         </Button>
