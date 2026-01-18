@@ -175,7 +175,7 @@ export default function POSPage() {
       </main>
 
       {/* Cart Sidebar */}
-      <div className="fixed right-0 top-0 h-screen">
+      <div className="fixed right-0 top-0 z-40 h-screen">
         <CartSidebar onCheckout={() => setIsCheckoutOpen(true)} />
       </div>
 
