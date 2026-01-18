@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useSettingsStore } from '@/stores/settings-store';
 import { PageLayout } from '@/components/page-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,23 +24,16 @@ import {
     AlertCircle,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { useState } from 'react';
 
 export default function SettingsPage() {
-    const [settings, setSettings] = useState({
-        shopName: 'Barn Coffee',
-        currency: 'IDR',
-        taxRate: 0,
-        taxEnabled: false,
-        receiptFooter: 'Terima kasih atas kunjungan Anda!',
-        darkMode: true,
-    });
-
+    const { settings, updateSettings } = useSettingsStore();
     const [isSaving, setIsSaving] = useState(false);
     const [saveMessage, setSaveMessage] = useState('');
 
     async function handleSave() {
         setIsSaving(true);
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 300));
         setSaveMessage('Pengaturan berhasil disimpan!');
         setIsSaving(false);
         setTimeout(() => setSaveMessage(''), 3000);
@@ -91,9 +84,7 @@ export default function SettingsPage() {
                                 <Input
                                     id="shopName"
                                     value={settings.shopName}
-                                    onChange={(e) =>
-                                        setSettings({ ...settings, shopName: e.target.value })
-                                    }
+                                    onChange={(e) => updateSettings({ shopName: e.target.value })}
                                     className="border-slate-700 bg-slate-800 text-white"
                                 />
                             </div>
@@ -104,9 +95,7 @@ export default function SettingsPage() {
                                 </Label>
                                 <Select
                                     value={settings.currency}
-                                    onValueChange={(value) =>
-                                        setSettings({ ...settings, currency: value })
-                                    }
+                                    onValueChange={(value) => updateSettings({ currency: value })}
                                 >
                                     <SelectTrigger className="border-slate-700 bg-slate-800 text-white">
                                         <SelectValue />
@@ -149,9 +138,7 @@ export default function SettingsPage() {
                                 </div>
                                 <Switch
                                     checked={settings.taxEnabled}
-                                    onCheckedChange={(checked) =>
-                                        setSettings({ ...settings, taxEnabled: checked })
-                                    }
+                                    onCheckedChange={(checked) => updateSettings({ taxEnabled: checked })}
                                 />
                             </div>
 
@@ -166,10 +153,7 @@ export default function SettingsPage() {
                                         step="0.1"
                                         value={settings.taxRate}
                                         onChange={(e) =>
-                                            setSettings({
-                                                ...settings,
-                                                taxRate: parseFloat(e.target.value) || 0,
-                                            })
+                                            updateSettings({ taxRate: parseFloat(e.target.value) || 0 })
                                         }
                                         className="border-slate-700 bg-slate-800 text-white"
                                     />
@@ -201,9 +185,7 @@ export default function SettingsPage() {
                             <Input
                                 id="receiptFooter"
                                 value={settings.receiptFooter}
-                                onChange={(e) =>
-                                    setSettings({ ...settings, receiptFooter: e.target.value })
-                                }
+                                onChange={(e) => updateSettings({ receiptFooter: e.target.value })}
                                 className="border-slate-700 bg-slate-800 text-white"
                                 placeholder="Pesan terima kasih..."
                             />
@@ -235,9 +217,7 @@ export default function SettingsPage() {
                             </div>
                             <Switch
                                 checked={settings.darkMode}
-                                onCheckedChange={(checked) =>
-                                    setSettings({ ...settings, darkMode: checked })
-                                }
+                                onCheckedChange={(checked) => updateSettings({ darkMode: checked })}
                             />
                         </div>
                     </div>

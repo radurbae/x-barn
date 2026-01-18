@@ -4,6 +4,7 @@ import { Coffee, Package, ClipboardList, BarChart3, Settings } from 'lucide-reac
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useSettingsStore } from '@/stores/settings-store';
 
 const navItems = [
     { href: '/', label: 'Kasir', icon: Coffee },
@@ -15,6 +16,7 @@ const navItems = [
 
 export function SidebarNav() {
     const pathname = usePathname();
+    const { settings } = useSettingsStore();
 
     return (
         <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col bg-slate-900 border-r border-slate-800">
@@ -24,7 +26,7 @@ export function SidebarNav() {
                     <Coffee className="h-5 w-5 text-white" />
                 </div>
                 <div>
-                    <h1 className="text-lg font-bold text-white">Barn Coffee</h1>
+                    <h1 className="text-lg font-bold text-white">{settings.shopName}</h1>
                     <p className="text-xs text-slate-400">Sistem Kasir</p>
                 </div>
             </div>
