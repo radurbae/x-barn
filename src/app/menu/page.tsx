@@ -27,6 +27,8 @@ import { Product } from '@/lib/types';
 import { supabase } from '@/lib/supabase';
 import { useCurrency } from '@/hooks/use-currency';
 import { useTranslation } from '@/hooks/use-translation';
+import { ImageUpload } from '@/components/image-upload';
+import Image from 'next/image';
 import {
     createProduct,
     updateProduct,
@@ -58,6 +60,7 @@ export default function MenuPage() {
         category: 'Coffee',
         description: '',
         is_available: true,
+        image_url: null as string | null,
     });
     const { formatCurrency } = useCurrency();
     const { t } = useTranslation();
@@ -111,6 +114,7 @@ export default function MenuPage() {
             category: 'Coffee',
             description: '',
             is_available: true,
+            image_url: null,
         });
         setIsDialogOpen(true);
     }
@@ -123,6 +127,7 @@ export default function MenuPage() {
             category: product.category,
             description: product.description || '',
             is_available: product.is_available,
+            image_url: product.image_url,
         });
         setIsDialogOpen(true);
     }
@@ -134,10 +139,7 @@ export default function MenuPage() {
                 fetchProducts();
             }
         } else {
-            const result = await createProduct({
-                ...formData,
-                image_url: null,
-            } as Omit<Product, 'id' | 'created_at' | 'updated_at'>);
+            const result = await createProduct(formData as Omit<Product, 'id' | 'created_at' | 'updated_at'>);
             if (result.success) {
                 fetchProducts();
             }
@@ -260,9 +262,19 @@ export default function MenuPage() {
                                             key={product.id}
                                             className="group relative rounded-xl border border-slate-200 dark:border-slate-700/50 bg-white dark:bg-slate-800/50 p-4 transition-all hover:border-amber-500/50 hover:bg-slate-50 dark:hover:bg-slate-800"
                                         >
-                                            {/* Product Image Placeholder */}
-                                            <div className="mb-3 flex h-24 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-700/50">
-                                                <Coffee className="h-10 w-10 text-slate-400 dark:text-slate-500" />
+                                            {/* Product Image */}
+                                            <div className="mb-3 flex h-24 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-700/50 overflow-hidden">
+                                                {product.image_url ? (
+                                                    <Image
+                                                        src={product.image_url}
+                                                        alt={product.name}
+                                                        width={96}
+                                                        height={96}
+                                                        className="h-full w-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <Coffee className="h-10 w-10 text-slate-400 dark:text-slate-500" />
+                                                )}
                                             </div>
 
                                             {/* Product Info */}
@@ -321,7 +333,7 @@ export default function MenuPage() {
 
             {/* Add/Edit Dialog */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
+                <DialogContent className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle className="text-slate-900 dark:text-white">
                             {editingProduct ? t('editProduct') : t('addProduct')}
@@ -329,6 +341,15 @@ export default function MenuPage() {
                     </DialogHeader>
 
                     <div className="grid gap-4 py-4">
+                        {/* Image Upload */}
+                        <div className="grid gap-2">
+                            <Label className="text-slate-600 dark:text-slate-300">{t('productImage')}</Label>
+                            <ImageUpload
+                                value={formData.image_url}
+                                onChange={(url) => setFormData({ ...formData, image_url: url })}
+                            />
+                        </div>
+
                         <div className="grid gap-2">
                             <Label htmlFor="name" className="text-slate-600 dark:text-slate-300">{t('name')}</Label>
                             <Input

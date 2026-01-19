@@ -59,6 +59,8 @@ export const translations = {
         processing: 'Memproses...',
         completePayment: 'Selesaikan Pembayaran',
         paymentSuccess: 'Pembayaran Berhasil!',
+        print: 'Cetak',
+        cash: 'Tunai',
 
         // Inventory
         ingredientManagement: 'Kelola bahan baku dan stok',
@@ -91,6 +93,10 @@ export const translations = {
         noDescription: 'Tidak ada deskripsi',
         availableForSale: 'Tersedia untuk dijual',
         deleteProductConfirm: 'Apakah Anda yakin ingin menghapus produk ini?',
+        productImage: 'Gambar Produk',
+        uploading: 'Mengunggah...',
+        uploadImage: 'Unggah Gambar',
+        dragOrClick: 'Seret atau klik untuk memilih',
 
         // Reports
         salesAnalytics: 'Analitik penjualan dan metrik kinerja',
@@ -201,6 +207,8 @@ export const translations = {
         processing: 'Processing...',
         completePayment: 'Complete Payment',
         paymentSuccess: 'Payment Successful!',
+        print: 'Print',
+        cash: 'Cash',
 
         // Inventory
         ingredientManagement: 'Manage ingredients and stock',
@@ -233,6 +241,10 @@ export const translations = {
         noDescription: 'No description',
         availableForSale: 'Available for sale',
         deleteProductConfirm: 'Are you sure you want to delete this product?',
+        productImage: 'Product Image',
+        uploading: 'Uploading...',
+        uploadImage: 'Upload Image',
+        dragOrClick: 'Drag or click to select',
 
         // Reports
         salesAnalytics: 'Sales analytics and performance metrics',

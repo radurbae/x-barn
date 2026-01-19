@@ -6,6 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, Coffee } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCurrency } from '@/hooks/use-currency';
+import { useTranslation } from '@/hooks/use-translation';
+import Image from 'next/image';
 
 interface ProductCardProps {
     product: Product;
@@ -14,6 +16,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
     const addItem = useCartStore((state) => state.addItem);
     const { formatCurrency } = useCurrency();
+    const { t } = useTranslation();
 
     const handleAdd = () => {
         addItem(product);
@@ -26,11 +29,15 @@ export function ProductCard({ product }: ProductCardProps) {
         Food: 'bg-purple-500/20 text-purple-600 dark:text-purple-400 border-purple-500/30',
     };
 
-    const categoryLabels: Record<string, string> = {
-        Coffee: 'Kopi',
-        Iced: 'Es',
-        'Non-Coffee': 'Non-Kopi',
-        Food: 'Makanan',
+    // Dynamic category labels based on translation
+    const getCategoryLabel = (cat: string) => {
+        const labels: Record<string, () => string> = {
+            Coffee: () => t('coffee'),
+            Iced: () => t('iced'),
+            'Non-Coffee': () => t('nonCoffee'),
+            Food: () => t('food'),
+        };
+        return labels[cat]?.() || cat;
     };
 
     return (
@@ -44,9 +51,18 @@ export function ProductCard({ product }: ProductCardProps) {
                 !product.is_available && 'cursor-not-allowed opacity-50'
             )}
         >
-            {/* Image placeholder */}
-            <div className="relative mb-3 flex h-24 w-full items-center justify-center rounded-lg bg-slate-100 dark:bg-gradient-to-br dark:from-slate-700 dark:to-slate-800">
-                <Coffee className="h-10 w-10 text-slate-400 dark:text-slate-500 transition-colors group-hover:text-amber-500/50" />
+            {/* Image */}
+            <div className="relative mb-3 flex h-24 w-full items-center justify-center rounded-lg bg-slate-100 dark:bg-gradient-to-br dark:from-slate-700 dark:to-slate-800 overflow-hidden">
+                {product.image_url ? (
+                    <Image
+                        src={product.image_url}
+                        alt={product.name}
+                        fill
+                        className="object-cover transition-transform group-hover:scale-105"
+                    />
+                ) : (
+                    <Coffee className="h-10 w-10 text-slate-400 dark:text-slate-500 transition-colors group-hover:text-amber-500/50" />
+                )}
 
                 {/* Add button overlay */}
                 <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-amber-500/0 transition-all duration-300 group-hover:bg-amber-500/10">
@@ -65,7 +81,7 @@ export function ProductCard({ product }: ProductCardProps) {
                         categoryColors[product.category] || 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                     )}
                 >
-                    {categoryLabels[product.category] || product.category}
+                    {getCategoryLabel(product.category)}
                 </Badge>
 
                 <h3 className="font-semibold text-slate-900 dark:text-white transition-colors group-hover:text-amber-600 dark:group-hover:text-amber-400">
@@ -89,7 +105,7 @@ export function ProductCard({ product }: ProductCardProps) {
             {!product.is_available && (
                 <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-white/80 dark:bg-slate-900/80">
                     <span className="rounded-full bg-red-500/20 px-3 py-1 text-sm font-medium text-red-600 dark:text-red-400">
-                        Tidak Tersedia
+                        {t('notAvailable')}
                     </span>
                 </div>
             )}
