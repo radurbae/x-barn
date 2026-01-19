@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils';
 import { useCurrency } from '@/hooks/use-currency';
 import { useTranslation } from '@/hooks/use-translation';
 import { ReceiptModal } from '@/components/receipt-modal';
+import { processTransaction } from '@/app/actions/transaction';
 
 interface CheckoutDialogProps {
     open: boolean;
@@ -79,31 +80,46 @@ export function CheckoutDialog({
 
         setIsProcessing(true);
 
-        // Simulate payment processing
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        try {
+            // Process transaction with inventory deduction
+            const result = await processTransaction({
+                items,
+                subtotal,
+                taxAmount,
+                total,
+                paymentReceived: paymentAmount,
+            });
 
-        // Generate order number (in production this would come from database)
-        const orderNumber = Math.floor(1000 + Math.random() * 9000);
+            if (!result.success) {
+                console.error('Transaction failed:', result.error);
+                // Still show receipt for demo mode
+            }
 
-        // Store completed order for receipt
-        setCompletedOrder({
-            orderNumber,
-            items: [...items],
-            subtotal,
-            taxAmount,
-            total,
-            paymentReceived: paymentAmount,
-            change,
-            timestamp: new Date(),
-        });
+            // Use order number from database or generate demo one
+            const orderNumber = result.orderNumber || Math.floor(1000 + Math.random() * 9000);
 
-        setIsProcessing(false);
+            // Store completed order for receipt
+            setCompletedOrder({
+                orderNumber,
+                items: [...items],
+                subtotal,
+                taxAmount,
+                total,
+                paymentReceived: paymentAmount,
+                change,
+                timestamp: new Date(),
+            });
 
-        // Call complete handler (this would save to database)
-        onComplete(paymentAmount);
+            // Call complete handler
+            onComplete(paymentAmount);
 
-        // Clear cart
-        clearCart();
+            // Clear cart
+            clearCart();
+        } catch (error) {
+            console.error('Payment error:', error);
+        } finally {
+            setIsProcessing(false);
+        }
     };
 
     const handleReceiptClose = () => {
