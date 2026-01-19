@@ -13,6 +13,7 @@ import { createOrder } from '@/app/actions/orders';
 import { supabase } from '@/lib/supabase';
 import { Coffee, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { useTranslation } from '@/hooks/use-translation';
 
 // Demo products for when Supabase is not configured
 const demoProducts: Product[] = [
@@ -42,6 +43,10 @@ export default function POSPage() {
 
   const { items, getTotal } = useCartStore();
   const { addSale } = useDailySalesStore();
+  const { t, language } = useTranslation();
+
+  // Get locale based on language
+  const dateLocale = language === 'id' ? 'id-ID' : 'en-US';
 
   // Fetch products
   useEffect(() => {
@@ -122,9 +127,9 @@ export default function POSPage() {
         <header className="sticky top-0 z-30 border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:supports-[backdrop-filter]:bg-slate-900/80">
           <div className="flex items-center justify-between gap-6">
             <div>
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Kasir</h1>
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{t('cashier')}</h1>
               <p className="text-sm text-slate-500 dark:text-slate-400">
-                {new Date().toLocaleDateString('id-ID', {
+                {new Date().toLocaleDateString(dateLocale, {
                   weekday: 'long',
                   year: 'numeric',
                   month: 'long',
@@ -138,7 +143,7 @@ export default function POSPage() {
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
               <Input
                 type="text"
-                placeholder="Cari produk..."
+                placeholder={t('searchProducts')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="h-10 border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 pl-10 text-slate-900 dark:text-white placeholder:text-slate-500 focus:border-amber-500 focus:ring-amber-500"
@@ -161,15 +166,15 @@ export default function POSPage() {
             <div className="flex h-64 items-center justify-center">
               <div className="flex flex-col items-center gap-4">
                 <div className="h-10 w-10 animate-spin rounded-full border-4 border-amber-500/20 border-t-amber-500" />
-                <p className="text-slate-400">Memuat produk...</p>
+                <p className="text-slate-400">{t('loadingProducts')}</p>
               </div>
             </div>
           ) : filteredProducts.length === 0 ? (
             <div className="flex h-64 flex-col items-center justify-center text-center">
               <Coffee className="mb-4 h-16 w-16 text-slate-300 dark:text-slate-600" />
-              <h3 className="text-lg font-medium text-slate-900 dark:text-white">Produk tidak ditemukan</h3>
+              <h3 className="text-lg font-medium text-slate-900 dark:text-white">{t('noProductsFound')}</h3>
               <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                Coba sesuaikan pencarian atau filter Anda
+                {t('tryAdjusting')}
               </p>
             </div>
           ) : (

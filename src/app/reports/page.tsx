@@ -22,6 +22,7 @@ import {
 import { supabase } from '@/lib/supabase';
 import { formatTime } from '@/lib/format';
 import { useCurrency } from '@/hooks/use-currency';
+import { useTranslation } from '@/hooks/use-translation';
 
 interface SalesStats {
     today: { total: number; orders: number };
@@ -72,6 +73,7 @@ export default function ReportsPage() {
     const [topProducts, setTopProducts] = useState<TopProduct[]>(demoTopProducts);
     const [isLoading, setIsLoading] = useState(true);
     const { formatCurrency } = useCurrency();
+    const { t } = useTranslation();
 
     useEffect(() => {
         fetchReportData();
@@ -181,8 +183,8 @@ export default function ReportsPage() {
 
     return (
         <PageLayout
-            title="Laporan"
-            description="Analitik penjualan dan metrik kinerja"
+            title={t('reports')}
+            description={t('salesAnalytics')}
         >
             {/* Stats Cards */}
             <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -192,9 +194,9 @@ export default function ReportsPage() {
                             <DollarSign className="h-6 w-6 text-white" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Penjualan Hari Ini</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{t('todaySales')}</p>
                             <p className="text-2xl font-bold text-slate-900 dark:text-white">{formatCurrency(stats.today.total)}</p>
-                            <p className="text-xs text-slate-500">{stats.today.orders} pesanan</p>
+                            <p className="text-xs text-slate-500">{stats.today.orders} {t('orders')}</p>
                         </div>
                     </div>
                 </div>
@@ -205,9 +207,9 @@ export default function ReportsPage() {
                             <TrendingUp className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Minggu Ini</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{t('thisWeek')}</p>
                             <p className="text-2xl font-bold text-slate-900 dark:text-white">{formatCurrency(stats.week.total)}</p>
-                            <p className="text-xs text-slate-500">{stats.week.orders} pesanan</p>
+                            <p className="text-xs text-slate-500">{stats.week.orders} {t('orders')}</p>
                         </div>
                     </div>
                 </div>
@@ -218,9 +220,9 @@ export default function ReportsPage() {
                             <Calendar className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Bulan Ini</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{t('thisMonth')}</p>
                             <p className="text-2xl font-bold text-slate-900 dark:text-white">{formatCurrency(stats.month.total)}</p>
-                            <p className="text-xs text-slate-500">{stats.month.orders} pesanan</p>
+                            <p className="text-xs text-slate-500">{stats.month.orders} {t('orders')}</p>
                         </div>
                     </div>
                 </div>
@@ -231,11 +233,11 @@ export default function ReportsPage() {
                             <ShoppingBag className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Rata-rata Pesanan</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{t('avgOrderValue')}</p>
                             <p className="text-2xl font-bold text-slate-900 dark:text-white">
                                 {formatCurrency(stats.month.orders > 0 ? stats.month.total / stats.month.orders : 0)}
                             </p>
-                            <p className="text-xs text-slate-500">per pesanan</p>
+                            <p className="text-xs text-slate-500">{t('perOrder')}</p>
                         </div>
                     </div>
                 </div>
@@ -245,10 +247,10 @@ export default function ReportsPage() {
             <Tabs defaultValue="recent" className="space-y-4">
                 <TabsList className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50">
                     <TabsTrigger value="recent" className="data-[state=active]:bg-amber-500 data-[state=active]:text-white data-[state=inactive]:text-slate-600 dark:data-[state=inactive]:text-slate-400">
-                        Pesanan Terbaru
+                        {t('recentOrders')}
                     </TabsTrigger>
                     <TabsTrigger value="top" className="data-[state=active]:bg-amber-500 data-[state=active]:text-white data-[state=inactive]:text-slate-600 dark:data-[state=inactive]:text-slate-400">
-                        Produk Terlaris
+                        {t('topProducts')}
                     </TabsTrigger>
                 </TabsList>
 
@@ -257,23 +259,23 @@ export default function ReportsPage() {
                         <Table>
                             <TableHeader>
                                 <TableRow className="border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                                    <TableHead className="text-slate-500 dark:text-slate-400">No. Pesanan</TableHead>
-                                    <TableHead className="text-slate-500 dark:text-slate-400">Waktu</TableHead>
-                                    <TableHead className="text-slate-500 dark:text-slate-400">Item</TableHead>
-                                    <TableHead className="text-right text-slate-500 dark:text-slate-400">Total</TableHead>
+                                    <TableHead className="text-slate-500 dark:text-slate-400">{t('orderNumber')}</TableHead>
+                                    <TableHead className="text-slate-500 dark:text-slate-400">{t('time')}</TableHead>
+                                    <TableHead className="text-slate-500 dark:text-slate-400">{t('items')}</TableHead>
+                                    <TableHead className="text-right text-slate-500 dark:text-slate-400">{t('total')}</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {isLoading ? (
                                     <TableRow>
                                         <TableCell colSpan={4} className="text-center text-slate-500 dark:text-slate-400">
-                                            Memuat...
+                                            {t('loading')}
                                         </TableCell>
                                     </TableRow>
                                 ) : recentOrders.length === 0 ? (
                                     <TableRow>
                                         <TableCell colSpan={4} className="text-center text-slate-500 dark:text-slate-400">
-                                            Belum ada pesanan
+                                            {t('noOrders')}
                                         </TableCell>
                                     </TableRow>
                                 ) : (
@@ -286,7 +288,7 @@ export default function ReportsPage() {
                                                 {formatTime(order.created_at)}
                                             </TableCell>
                                             <TableCell className="text-slate-600 dark:text-slate-300">
-                                                {order.items_count} item
+                                                {order.items_count} {t('item')}
                                             </TableCell>
                                             <TableCell className="text-right font-semibold text-amber-600 dark:text-amber-400">
                                                 {formatCurrency(order.total)}
@@ -304,23 +306,23 @@ export default function ReportsPage() {
                         <Table>
                             <TableHeader>
                                 <TableRow className="border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                                    <TableHead className="text-slate-500 dark:text-slate-400">Peringkat</TableHead>
-                                    <TableHead className="text-slate-500 dark:text-slate-400">Produk</TableHead>
-                                    <TableHead className="text-slate-500 dark:text-slate-400">Terjual</TableHead>
-                                    <TableHead className="text-right text-slate-500 dark:text-slate-400">Pendapatan</TableHead>
+                                    <TableHead className="text-slate-500 dark:text-slate-400">{t('rank')}</TableHead>
+                                    <TableHead className="text-slate-500 dark:text-slate-400">{t('product')}</TableHead>
+                                    <TableHead className="text-slate-500 dark:text-slate-400">{t('quantitySold')}</TableHead>
+                                    <TableHead className="text-right text-slate-500 dark:text-slate-400">{t('revenue')}</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {isLoading ? (
                                     <TableRow>
                                         <TableCell colSpan={4} className="text-center text-slate-500 dark:text-slate-400">
-                                            Memuat...
+                                            {t('loading')}
                                         </TableCell>
                                     </TableRow>
                                 ) : topProducts.length === 0 ? (
                                     <TableRow>
                                         <TableCell colSpan={4} className="text-center text-slate-500 dark:text-slate-400">
-                                            Belum ada data penjualan
+                                            {t('noSalesData')}
                                         </TableCell>
                                     </TableRow>
                                 ) : (

@@ -33,6 +33,7 @@ import { Ingredient } from '@/lib/types';
 import { supabase } from '@/lib/supabase';
 import { formatNumber } from '@/lib/format';
 import { useCurrency } from '@/hooks/use-currency';
+import { useTranslation } from '@/hooks/use-translation';
 import {
     createIngredient,
     updateIngredient,
@@ -63,6 +64,7 @@ export default function InventoryPage() {
         min_stock: 0,
     });
     const { formatCurrency } = useCurrency();
+    const { t } = useTranslation();
 
     useEffect(() => {
         fetchIngredients();
@@ -133,7 +135,7 @@ export default function InventoryPage() {
     }
 
     async function handleDelete(id: string) {
-        if (confirm('Apakah Anda yakin ingin menghapus bahan ini?')) {
+        if (confirm(t('deleteIngredientConfirm'))) {
             const result = await deleteIngredient(id);
             if (result.success) {
                 fetchIngredients();
@@ -147,15 +149,15 @@ export default function InventoryPage() {
 
     return (
         <PageLayout
-            title="Inventaris"
-            description="Kelola bahan baku dan stok"
+            title={t('inventory')}
+            description={t('ingredientManagement')}
             actions={
                 <Button
                     onClick={openAddDialog}
                     className="bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
                 >
                     <Plus className="mr-2 h-4 w-4" />
-                    Tambah Bahan
+                    {t('addIngredient')}
                 </Button>
             }
         >
@@ -167,7 +169,7 @@ export default function InventoryPage() {
                             <Package className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Total Bahan</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{t('totalIngredients')}</p>
                             <p className="text-2xl font-bold text-slate-900 dark:text-white">{ingredients.length}</p>
                         </div>
                     </div>
@@ -179,7 +181,7 @@ export default function InventoryPage() {
                             <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Stok Rendah</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{t('lowStock')}</p>
                             <p className="text-2xl font-bold text-slate-900 dark:text-white">{lowStockCount}</p>
                         </div>
                     </div>
@@ -191,7 +193,7 @@ export default function InventoryPage() {
                             <Package className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Total Nilai</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{t('totalValue')}</p>
                             <p className="text-2xl font-bold text-slate-900 dark:text-white">
                                 {formatCurrency(ingredients.reduce((sum, i) => sum + i.current_stock * i.cost_per_unit, 0))}
                             </p>
@@ -205,26 +207,26 @@ export default function InventoryPage() {
                 <Table>
                     <TableHeader>
                         <TableRow className="border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                            <TableHead className="text-slate-500 dark:text-slate-400">Nama</TableHead>
-                            <TableHead className="text-slate-500 dark:text-slate-400">Satuan</TableHead>
-                            <TableHead className="text-slate-500 dark:text-slate-400">Stok Saat Ini</TableHead>
-                            <TableHead className="text-slate-500 dark:text-slate-400">Stok Minimum</TableHead>
-                            <TableHead className="text-slate-500 dark:text-slate-400">Harga/Satuan</TableHead>
-                            <TableHead className="text-slate-500 dark:text-slate-400">Status</TableHead>
-                            <TableHead className="text-right text-slate-500 dark:text-slate-400">Aksi</TableHead>
+                            <TableHead className="text-slate-500 dark:text-slate-400">{t('name')}</TableHead>
+                            <TableHead className="text-slate-500 dark:text-slate-400">{t('unit')}</TableHead>
+                            <TableHead className="text-slate-500 dark:text-slate-400">{t('currentStock')}</TableHead>
+                            <TableHead className="text-slate-500 dark:text-slate-400">{t('minStock')}</TableHead>
+                            <TableHead className="text-slate-500 dark:text-slate-400">{t('costPerUnit')}</TableHead>
+                            <TableHead className="text-slate-500 dark:text-slate-400">{t('status')}</TableHead>
+                            <TableHead className="text-right text-slate-500 dark:text-slate-400">{t('actions')}</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {isLoading ? (
                             <TableRow>
                                 <TableCell colSpan={7} className="text-center text-slate-500 dark:text-slate-400">
-                                    Memuat...
+                                    {t('loading')}
                                 </TableCell>
                             </TableRow>
                         ) : ingredients.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={7} className="text-center text-slate-500 dark:text-slate-400">
-                                    Tidak ada bahan ditemukan
+                                    {t('noIngredients')}
                                 </TableCell>
                             </TableRow>
                         ) : (
@@ -251,11 +253,11 @@ export default function InventoryPage() {
                                         <TableCell>
                                             {isLowStock ? (
                                                 <Badge className="bg-red-500/20 text-red-600 dark:text-red-400 border-red-500/30">
-                                                    Stok Rendah
+                                                    {t('lowStock')}
                                                 </Badge>
                                             ) : (
                                                 <Badge className="bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30">
-                                                    Tersedia
+                                                    {t('inStock')}
                                                 </Badge>
                                             )}
                                         </TableCell>
@@ -292,13 +294,13 @@ export default function InventoryPage() {
                 <DialogContent className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
                     <DialogHeader>
                         <DialogTitle className="text-slate-900 dark:text-white">
-                            {editingIngredient ? 'Edit Bahan' : 'Tambah Bahan'}
+                            {editingIngredient ? t('editIngredient') : t('addIngredient')}
                         </DialogTitle>
                     </DialogHeader>
 
                     <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
-                            <Label htmlFor="name" className="text-slate-600 dark:text-slate-300">Nama</Label>
+                            <Label htmlFor="name" className="text-slate-600 dark:text-slate-300">{t('name')}</Label>
                             <Input
                                 id="name"
                                 value={formData.name}
@@ -308,7 +310,7 @@ export default function InventoryPage() {
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="unit" className="text-slate-600 dark:text-slate-300">Satuan</Label>
+                            <Label htmlFor="unit" className="text-slate-600 dark:text-slate-300">{t('unit')}</Label>
                             <Select
                                 value={formData.unit}
                                 onValueChange={(value: 'ml' | 'gr' | 'pcs') =>
@@ -321,14 +323,14 @@ export default function InventoryPage() {
                                 <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white">
                                     <SelectItem value="gr">Gram (gr)</SelectItem>
                                     <SelectItem value="ml">Mililiter (ml)</SelectItem>
-                                    <SelectItem value="pcs">Buah (pcs)</SelectItem>
+                                    <SelectItem value="pcs">Pieces (pcs)</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="current_stock" className="text-slate-600 dark:text-slate-300">Stok Saat Ini</Label>
+                                <Label htmlFor="current_stock" className="text-slate-600 dark:text-slate-300">{t('currentStock')}</Label>
                                 <Input
                                     id="current_stock"
                                     type="number"
@@ -341,7 +343,7 @@ export default function InventoryPage() {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="min_stock" className="text-slate-600 dark:text-slate-300">Stok Minimum</Label>
+                                <Label htmlFor="min_stock" className="text-slate-600 dark:text-slate-300">{t('minStock')}</Label>
                                 <Input
                                     id="min_stock"
                                     type="number"
@@ -355,7 +357,7 @@ export default function InventoryPage() {
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="cost_per_unit" className="text-slate-600 dark:text-slate-300">Harga per Satuan (Rp)</Label>
+                            <Label htmlFor="cost_per_unit" className="text-slate-600 dark:text-slate-300">{t('costPerUnit')}</Label>
                             <Input
                                 id="cost_per_unit"
                                 type="number"
@@ -375,13 +377,13 @@ export default function InventoryPage() {
                             onClick={() => setIsDialogOpen(false)}
                             className="border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-300"
                         >
-                            Batal
+                            {t('cancel')}
                         </Button>
                         <Button
                             onClick={handleSubmit}
                             className="bg-gradient-to-r from-amber-500 to-orange-500 text-white"
                         >
-                            {editingIngredient ? 'Simpan' : 'Tambah Bahan'}
+                            {editingIngredient ? t('save') : t('addIngredient')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

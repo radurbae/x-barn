@@ -26,6 +26,7 @@ import { Plus, Pencil, Trash2, Coffee, DollarSign } from 'lucide-react';
 import { Product } from '@/lib/types';
 import { supabase } from '@/lib/supabase';
 import { useCurrency } from '@/hooks/use-currency';
+import { useTranslation } from '@/hooks/use-translation';
 import {
     createProduct,
     updateProduct,
@@ -45,12 +46,6 @@ const demoProducts: Product[] = [
 ];
 
 const categories = ['Coffee', 'Iced', 'Non-Coffee', 'Food'];
-const categoryLabels: Record<string, string> = {
-    Coffee: 'Kopi',
-    Iced: 'Minuman Es',
-    'Non-Coffee': 'Non-Kopi',
-    Food: 'Makanan',
-};
 
 export default function MenuPage() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -65,6 +60,18 @@ export default function MenuPage() {
         is_available: true,
     });
     const { formatCurrency } = useCurrency();
+    const { t } = useTranslation();
+
+    // Dynamic category labels based on translation
+    const getCategoryLabel = (cat: string) => {
+        const labels: Record<string, () => string> = {
+            Coffee: () => t('coffee'),
+            Iced: () => t('iced'),
+            'Non-Coffee': () => t('nonCoffee'),
+            Food: () => t('food'),
+        };
+        return labels[cat]?.() || cat;
+    };
 
     useEffect(() => {
         fetchProducts();
@@ -139,7 +146,7 @@ export default function MenuPage() {
     }
 
     async function handleDelete(id: string) {
-        if (confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
+        if (confirm(t('deleteProductConfirm'))) {
             const result = await deleteProduct(id);
             if (result.success) {
                 fetchProducts();
@@ -167,15 +174,15 @@ export default function MenuPage() {
 
     return (
         <PageLayout
-            title="Menu"
-            description="Kelola produk dan harga"
+            title={t('menu')}
+            description={t('productManagement')}
             actions={
                 <Button
                     onClick={openAddDialog}
                     className="bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
                 >
                     <Plus className="mr-2 h-4 w-4" />
-                    Tambah Produk
+                    {t('addProduct')}
                 </Button>
             }
         >
@@ -187,7 +194,7 @@ export default function MenuPage() {
                             <Coffee className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Total Produk</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{t('totalProducts')}</p>
                             <p className="text-2xl font-bold text-slate-900 dark:text-white">{products.length}</p>
                         </div>
                     </div>
@@ -199,7 +206,7 @@ export default function MenuPage() {
                             <Coffee className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Tersedia</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{t('available')}</p>
                             <p className="text-2xl font-bold text-slate-900 dark:text-white">
                                 {products.filter((p) => p.is_available).length}
                             </p>
@@ -213,7 +220,7 @@ export default function MenuPage() {
                             <DollarSign className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Rata-rata Harga</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{t('avgPrice')}</p>
                             <p className="text-2xl font-bold text-slate-900 dark:text-white">
                                 {formatCurrency(products.length > 0 ? products.reduce((sum, p) => sum + p.price, 0) / products.length : 0)}
                             </p>
@@ -240,10 +247,10 @@ export default function MenuPage() {
                                         variant="outline"
                                         className={categoryColors[category]}
                                     >
-                                        {categoryLabels[category]}
+                                        {getCategoryLabel(category)}
                                     </Badge>
                                     <span className="text-slate-500 dark:text-slate-400">
-                                        ({categoryProducts.length} item)
+                                        ({categoryProducts.length} {t('item')})
                                     </span>
                                 </h2>
 
@@ -262,7 +269,7 @@ export default function MenuPage() {
                                             <div className="mb-3">
                                                 <h3 className="font-semibold text-slate-900 dark:text-white">{product.name}</h3>
                                                 <p className="mt-1 line-clamp-2 text-sm text-slate-500 dark:text-slate-400">
-                                                    {product.description || 'Tidak ada deskripsi'}
+                                                    {product.description || t('noDescription')}
                                                 </p>
                                                 <p className="mt-2 text-lg font-bold text-amber-600 dark:text-amber-400">
                                                     {formatCurrency(product.price)}
@@ -279,7 +286,7 @@ export default function MenuPage() {
                                                     className="data-[state=checked]:bg-emerald-500"
                                                 />
                                                 <span className="text-sm text-slate-500 dark:text-slate-400">
-                                                    {product.is_available ? 'Tersedia' : 'Tidak Tersedia'}
+                                                    {product.is_available ? t('available') : t('notAvailable')}
                                                 </span>
                                             </div>
 
@@ -292,7 +299,7 @@ export default function MenuPage() {
                                                     className="flex-1 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
                                                 >
                                                     <Pencil className="mr-2 h-3 w-3" />
-                                                    Edit
+                                                    {t('edit')}
                                                 </Button>
                                                 <Button
                                                     variant="outline"
@@ -317,13 +324,13 @@ export default function MenuPage() {
                 <DialogContent className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
                     <DialogHeader>
                         <DialogTitle className="text-slate-900 dark:text-white">
-                            {editingProduct ? 'Edit Produk' : 'Tambah Produk'}
+                            {editingProduct ? t('editProduct') : t('addProduct')}
                         </DialogTitle>
                     </DialogHeader>
 
                     <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
-                            <Label htmlFor="name" className="text-slate-600 dark:text-slate-300">Nama</Label>
+                            <Label htmlFor="name" className="text-slate-600 dark:text-slate-300">{t('name')}</Label>
                             <Input
                                 id="name"
                                 value={formData.name}
@@ -334,7 +341,7 @@ export default function MenuPage() {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="price" className="text-slate-600 dark:text-slate-300">Harga (Rp)</Label>
+                                <Label htmlFor="price" className="text-slate-600 dark:text-slate-300">{t('price')}</Label>
                                 <Input
                                     id="price"
                                     type="number"
@@ -348,7 +355,7 @@ export default function MenuPage() {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="category" className="text-slate-600 dark:text-slate-300">Kategori</Label>
+                                <Label htmlFor="category" className="text-slate-600 dark:text-slate-300">{t('category')}</Label>
                                 <Select
                                     value={formData.category}
                                     onValueChange={(value) => setFormData({ ...formData, category: value })}
@@ -359,7 +366,7 @@ export default function MenuPage() {
                                     <SelectContent className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white">
                                         {categories.map((cat) => (
                                             <SelectItem key={cat} value={cat}>
-                                                {categoryLabels[cat]}
+                                                {getCategoryLabel(cat)}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -368,7 +375,7 @@ export default function MenuPage() {
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="description" className="text-slate-600 dark:text-slate-300">Deskripsi</Label>
+                            <Label htmlFor="description" className="text-slate-600 dark:text-slate-300">{t('description')}</Label>
                             <Textarea
                                 id="description"
                                 value={formData.description}
@@ -387,7 +394,7 @@ export default function MenuPage() {
                                     setFormData({ ...formData, is_available: checked })
                                 }
                             />
-                            <Label className="text-slate-600 dark:text-slate-300">Tersedia untuk dijual</Label>
+                            <Label className="text-slate-600 dark:text-slate-300">{t('availableForSale')}</Label>
                         </div>
                     </div>
 
@@ -397,13 +404,13 @@ export default function MenuPage() {
                             onClick={() => setIsDialogOpen(false)}
                             className="border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-300"
                         >
-                            Batal
+                            {t('cancel')}
                         </Button>
                         <Button
                             onClick={handleSubmit}
                             className="bg-gradient-to-r from-amber-500 to-orange-500 text-white"
                         >
-                            {editingProduct ? 'Simpan' : 'Tambah Produk'}
+                            {editingProduct ? t('save') : t('addProduct')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

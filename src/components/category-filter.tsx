@@ -2,6 +2,7 @@
 
 import { ProductCategory } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/hooks/use-translation';
 import { Coffee, Snowflake, Leaf, Cookie, LayoutGrid } from 'lucide-react';
 
 interface CategoryFilterProps {
@@ -9,18 +10,22 @@ interface CategoryFilterProps {
     onCategoryChange: (category: ProductCategory) => void;
 }
 
-const categories: { value: ProductCategory; label: string; icon: React.ElementType }[] = [
-    { value: 'All', label: 'Semua', icon: LayoutGrid },
-    { value: 'Coffee', label: 'Kopi', icon: Coffee },
-    { value: 'Iced', label: 'Minuman Es', icon: Snowflake },
-    { value: 'Non-Coffee', label: 'Non-Kopi', icon: Leaf },
-    { value: 'Food', label: 'Makanan', icon: Cookie },
+type TranslationKey = 'all' | 'coffee' | 'iced' | 'nonCoffee' | 'food';
+
+const categories: { value: ProductCategory; labelKey: TranslationKey; icon: React.ElementType }[] = [
+    { value: 'All', labelKey: 'all', icon: LayoutGrid },
+    { value: 'Coffee', labelKey: 'coffee', icon: Coffee },
+    { value: 'Iced', labelKey: 'iced', icon: Snowflake },
+    { value: 'Non-Coffee', labelKey: 'nonCoffee', icon: Leaf },
+    { value: 'Food', labelKey: 'food', icon: Cookie },
 ];
 
 export function CategoryFilter({
     selectedCategory,
     onCategoryChange,
 }: CategoryFilterProps) {
+    const { t } = useTranslation();
+
     return (
         <div className="flex flex-wrap gap-2">
             {categories.map((category) => {
@@ -37,7 +42,7 @@ export function CategoryFilter({
                         )}
                     >
                         <category.icon className="h-4 w-4" />
-                        {category.label}
+                        {t(category.labelKey)}
                     </button>
                 );
             })}
