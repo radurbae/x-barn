@@ -1,12 +1,14 @@
 'use client';
 
 import { useCartStore } from '@/stores/cart-store';
+import { useSettingsStore } from '@/stores/settings-store';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { ShoppingCart, Plus, Minus, Trash2, Receipt } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCurrency } from '@/hooks/use-currency';
+import { useTranslation } from '@/hooks/use-translation';
 
 interface CartSidebarProps {
     onCheckout: () => void;
@@ -15,9 +17,13 @@ interface CartSidebarProps {
 export function CartSidebar({ onCheckout }: CartSidebarProps) {
     const { items, updateQuantity, removeItem, getTotal, getItemCount, clearCart } =
         useCartStore();
+    const { settings } = useSettingsStore();
     const { formatCurrency } = useCurrency();
+    const { t } = useTranslation();
 
-    const total = getTotal();
+    const subtotal = getTotal();
+    const taxAmount = settings.taxEnabled ? subtotal * (settings.taxRate / 100) : 0;
+    const total = subtotal + taxAmount;
     const itemCount = getItemCount();
 
     return (
@@ -29,9 +35,9 @@ export function CartSidebar({ onCheckout }: CartSidebarProps) {
                         <ShoppingCart className="h-5 w-5 text-white" />
                     </div>
                     <div>
-                        <h2 className="font-bold text-slate-900 dark:text-white">Pesanan</h2>
+                        <h2 className="font-bold text-slate-900 dark:text-white">{t('order')}</h2>
                         <p className="text-xs text-slate-500 dark:text-slate-400">
-                            {itemCount} {itemCount === 1 ? 'item' : 'item'}
+                            {itemCount} {t('item')}
                         </p>
                     </div>
                 </div>
@@ -54,9 +60,9 @@ export function CartSidebar({ onCheckout }: CartSidebarProps) {
                         <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
                             <Receipt className="h-8 w-8 text-slate-400 dark:text-slate-600" />
                         </div>
-                        <p className="text-slate-500 dark:text-slate-400">Keranjang kosong</p>
+                        <p className="text-slate-500 dark:text-slate-400">{t('emptyCart')}</p>
                         <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
-                            Ketuk produk untuk menambahkan
+                            {t('tapToAdd')}
                         </p>
                     </div>
                 ) : (
@@ -104,7 +110,7 @@ export function CartSidebar({ onCheckout }: CartSidebarProps) {
                                         onClick={() => removeItem(item.product.id)}
                                         className="text-xs text-slate-400 dark:text-slate-500 transition-colors hover:text-red-500 dark:hover:text-red-400"
                                     >
-                                        Hapus
+                                        {t('remove')}
                                     </button>
                                     <span className="text-sm font-semibold text-slate-900 dark:text-white">
                                         {formatCurrency(item.product.price * item.quantity)}
@@ -120,16 +126,18 @@ export function CartSidebar({ onCheckout }: CartSidebarProps) {
             <div className="border-t border-slate-200 dark:border-slate-800 p-4">
                 <div className="mb-4 space-y-2">
                     <div className="flex justify-between text-sm">
-                        <span className="text-slate-500 dark:text-slate-400">Subtotal</span>
-                        <span className="text-slate-900 dark:text-white">{formatCurrency(total)}</span>
+                        <span className="text-slate-500 dark:text-slate-400">{t('subtotal')}</span>
+                        <span className="text-slate-900 dark:text-white">{formatCurrency(subtotal)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                        <span className="text-slate-500 dark:text-slate-400">Pajak (0%)</span>
-                        <span className="text-slate-900 dark:text-white">{formatCurrency(0)}</span>
+                        <span className="text-slate-500 dark:text-slate-400">
+                            {t('tax')} ({settings.taxEnabled ? settings.taxRate : 0}%)
+                        </span>
+                        <span className="text-slate-900 dark:text-white">{formatCurrency(taxAmount)}</span>
                     </div>
                     <Separator className="bg-slate-200 dark:bg-slate-700" />
                     <div className="flex justify-between text-lg font-bold">
-                        <span className="text-slate-900 dark:text-white">Total</span>
+                        <span className="text-slate-900 dark:text-white">{t('total')}</span>
                         <span className="text-amber-600 dark:text-amber-400">{formatCurrency(total)}</span>
                     </div>
                 </div>
@@ -144,7 +152,7 @@ export function CartSidebar({ onCheckout }: CartSidebarProps) {
                             : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500'
                     )}
                 >
-                    Bayar {formatCurrency(total)}
+                    {t('pay')} {formatCurrency(total)}
                 </Button>
             </div>
         </aside>

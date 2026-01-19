@@ -16,6 +16,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { CheckCircle2, Calculator } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCurrency } from '@/hooks/use-currency';
+import { useTranslation } from '@/hooks/use-translation';
 
 interface CheckoutDialogProps {
     open: boolean;
@@ -31,11 +32,14 @@ export function CheckoutDialog({
     const { items, getTotal, clearCart } = useCartStore();
     const { settings } = useSettingsStore();
     const { formatCurrency, currency } = useCurrency();
+    const { t } = useTranslation();
     const [paymentInput, setPaymentInput] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
 
-    const total = getTotal();
+    const subtotal = getTotal();
+    const taxAmount = settings.taxEnabled ? subtotal * (settings.taxRate / 100) : 0;
+    const total = subtotal + taxAmount;
     const paymentAmount = parseFloat(paymentInput) || 0;
     const change = paymentAmount - total;
     const canPay = paymentAmount >= total;
@@ -97,9 +101,9 @@ export function CheckoutDialog({
                         <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-green-600 shadow-lg shadow-emerald-500/25">
                             <CheckCircle2 className="h-10 w-10 text-white" />
                         </div>
-                        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Pembayaran Berhasil!</h2>
+                        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('paymentSuccess')}</h2>
                         <p className="mt-2 text-slate-500 dark:text-slate-400">
-                            Kembalian: <span className="font-bold text-emerald-600 dark:text-emerald-400">{formatCurrency(change)}</span>
+                            {t('change')}: <span className="font-bold text-emerald-600 dark:text-emerald-400">{formatCurrency(change)}</span>
                         </p>
                     </div>
                 ) : (
@@ -109,7 +113,7 @@ export function CheckoutDialog({
                                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
                                     <Calculator className="h-5 w-5 text-white" />
                                 </div>
-                                Pembayaran
+                                {t('payment')}
                             </DialogTitle>
                         </DialogHeader>
 
@@ -117,7 +121,7 @@ export function CheckoutDialog({
                             {/* Order Summary */}
                             <div>
                                 <h3 className="mb-3 text-sm font-medium text-slate-500 dark:text-slate-400">
-                                    Ringkasan Pesanan
+                                    {t('orderSummary')}
                                 </h3>
                                 <ScrollArea className="max-h-40 rounded-lg bg-slate-50 dark:bg-slate-800/50 p-3">
                                     <div className="space-y-2">
@@ -137,16 +141,28 @@ export function CheckoutDialog({
                                     </div>
                                 </ScrollArea>
                                 <Separator className="my-3 bg-slate-200 dark:bg-slate-700" />
-                                <div className="flex justify-between text-lg font-bold">
-                                    <span className="text-slate-900 dark:text-white">Total</span>
-                                    <span className="text-amber-600 dark:text-amber-400">{formatCurrency(total)}</span>
+                                <div className="space-y-1">
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-slate-500 dark:text-slate-400">{t('subtotal')}</span>
+                                        <span className="text-slate-900 dark:text-white">{formatCurrency(subtotal)}</span>
+                                    </div>
+                                    {settings.taxEnabled && (
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-slate-500 dark:text-slate-400">{t('tax')} ({settings.taxRate}%)</span>
+                                            <span className="text-slate-900 dark:text-white">{formatCurrency(taxAmount)}</span>
+                                        </div>
+                                    )}
+                                    <div className="flex justify-between text-lg font-bold pt-2">
+                                        <span className="text-slate-900 dark:text-white">{t('total')}</span>
+                                        <span className="text-amber-600 dark:text-amber-400">{formatCurrency(total)}</span>
+                                    </div>
                                 </div>
                             </div>
 
                             {/* Payment Input */}
                             <div>
                                 <h3 className="mb-3 text-sm font-medium text-slate-500 dark:text-slate-400">
-                                    Jumlah Pembayaran
+                                    {t('paymentAmount')}
                                 </h3>
                                 <div className="relative">
                                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-medium">{currencySymbol}</span>
@@ -155,7 +171,7 @@ export function CheckoutDialog({
                                         step={currency === 'IDR' ? '1000' : '0.01'}
                                         value={paymentInput}
                                         onChange={(e) => setPaymentInput(e.target.value)}
-                                        placeholder="Masukkan jumlah..."
+                                        placeholder={t('enterAmount')}
                                         className="h-14 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 pl-10 text-xl font-bold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-amber-500 focus:ring-amber-500"
                                     />
                                 </div>
@@ -168,7 +184,7 @@ export function CheckoutDialog({
                                         onClick={handleExactAmount}
                                         className="border-amber-500/50 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20"
                                     >
-                                        Pas
+                                        {t('exact')}
                                     </Button>
                                     {quickAmounts.map((amount) => (
                                         <Button
@@ -191,7 +207,7 @@ export function CheckoutDialog({
                                     canPay ? 'bg-emerald-500/10' : 'bg-slate-100 dark:bg-slate-800'
                                 )}
                             >
-                                <p className="text-sm text-slate-400">Kembalian</p>
+                                <p className="text-sm text-slate-400">{t('change')}</p>
                                 <p
                                     className={cn(
                                         'text-3xl font-bold',
@@ -202,7 +218,7 @@ export function CheckoutDialog({
                                 </p>
                                 {!canPay && paymentAmount > 0 && (
                                     <p className="mt-1 text-xs text-red-400">
-                                        Kurang {formatCurrency(total - paymentAmount)}
+                                        {t('insufficient')} {formatCurrency(total - paymentAmount)}
                                     </p>
                                 )}
                             </div>
@@ -217,7 +233,7 @@ export function CheckoutDialog({
                                         : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500'
                                 )}
                             >
-                                {isProcessing ? 'Memproses...' : 'Selesaikan Pembayaran'}
+                                {isProcessing ? t('processing') : t('completePayment')}
                             </Button>
                         </div>
                     </>
