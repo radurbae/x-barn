@@ -44,13 +44,13 @@ import {
 
 // Demo products
 const demoProducts: Product[] = [
-    { id: '1', name: 'Espresso', price: 25000, category: 'Coffee', image_url: null, description: 'Espresso shot kuat', is_available: true, created_at: '', updated_at: '' },
-    { id: '2', name: 'Latte', price: 35000, category: 'Coffee', image_url: null, description: 'Espresso dengan susu steamed', is_available: true, created_at: '', updated_at: '' },
-    { id: '3', name: 'Cappuccino', price: 35000, category: 'Coffee', image_url: null, description: 'Espresso, susu, foam', is_available: true, created_at: '', updated_at: '' },
-    { id: '4', name: 'Iced Latte', price: 38000, category: 'Iced', image_url: null, description: 'Espresso dingin dengan susu', is_available: true, created_at: '', updated_at: '' },
-    { id: '5', name: 'Cold Brew', price: 35000, category: 'Iced', image_url: null, description: 'Kopi seduh dingin 12 jam', is_available: false, created_at: '', updated_at: '' },
-    { id: '6', name: 'Matcha Latte', price: 38000, category: 'Non-Coffee', image_url: null, description: 'Teh hijau Jepang dengan susu', is_available: true, created_at: '', updated_at: '' },
-    { id: '7', name: 'Butter Croissant', price: 28000, category: 'Food', image_url: null, description: 'Croissant renyah', is_available: true, created_at: '', updated_at: '' },
+    { id: '1', name: 'Espresso', price: 25000, category: 'Coffee', image_url: '/images/products/espresso.png', description: 'Espresso shot kuat', is_available: true, created_at: '', updated_at: '' },
+    { id: '2', name: 'Latte', price: 35000, category: 'Coffee', image_url: '/images/products/latte.png', description: 'Espresso dengan susu steamed', is_available: true, created_at: '', updated_at: '' },
+    { id: '3', name: 'Cappuccino', price: 35000, category: 'Coffee', image_url: '/images/products/cappuccino.png', description: 'Espresso, susu, foam', is_available: true, created_at: '', updated_at: '' },
+    { id: '4', name: 'Iced Latte', price: 38000, category: 'Iced', image_url: '/images/products/iced_latte.png', description: 'Espresso dingin dengan susu', is_available: true, created_at: '', updated_at: '' },
+    { id: '5', name: 'Cold Brew', price: 35000, category: 'Iced', image_url: '/images/products/cold_brew.png', description: 'Kopi seduh dingin 12 jam', is_available: false, created_at: '', updated_at: '' },
+    { id: '6', name: 'Matcha Latte', price: 38000, category: 'Non-Coffee', image_url: '/images/products/matcha_latte.png', description: 'Teh hijau Jepang dengan susu', is_available: true, created_at: '', updated_at: '' },
+    { id: '7', name: 'Butter Croissant', price: 28000, category: 'Food', image_url: '/images/products/croissant.png', description: 'Croissant renyah', is_available: true, created_at: '', updated_at: '' },
 ];
 
 const categories = ['Coffee', 'Iced', 'Non-Coffee', 'Food'];

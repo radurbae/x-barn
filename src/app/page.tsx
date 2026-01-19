@@ -17,21 +17,21 @@ import { useTranslation } from '@/hooks/use-translation';
 
 // Demo products for when Supabase is not configured
 const demoProducts: Product[] = [
-  { id: '1', name: 'Espresso', price: 25000, category: 'Coffee', image_url: null, description: 'Espresso shot kuat dan kaya rasa', is_available: true, created_at: '', updated_at: '' },
-  { id: '2', name: 'Americano', price: 28000, category: 'Coffee', image_url: null, description: 'Espresso dengan air panas', is_available: true, created_at: '', updated_at: '' },
-  { id: '3', name: 'Latte', price: 35000, category: 'Coffee', image_url: null, description: 'Espresso dengan susu steamed', is_available: true, created_at: '', updated_at: '' },
-  { id: '4', name: 'Cappuccino', price: 35000, category: 'Coffee', image_url: null, description: 'Espresso, susu steamed, dan foam', is_available: true, created_at: '', updated_at: '' },
-  { id: '5', name: 'Mocha', price: 38000, category: 'Coffee', image_url: null, description: 'Espresso dengan coklat dan susu steamed', is_available: true, created_at: '', updated_at: '' },
-  { id: '6', name: 'Vanilla Latte', price: 38000, category: 'Coffee', image_url: null, description: 'Latte dengan sirup vanilla', is_available: true, created_at: '', updated_at: '' },
-  { id: '7', name: 'Caramel Macchiato', price: 42000, category: 'Coffee', image_url: null, description: 'Vanilla latte dengan saus caramel', is_available: true, created_at: '', updated_at: '' },
-  { id: '8', name: 'Iced Latte', price: 38000, category: 'Iced', image_url: null, description: 'Espresso dingin dengan susu dan es', is_available: true, created_at: '', updated_at: '' },
-  { id: '9', name: 'Iced Americano', price: 30000, category: 'Iced', image_url: null, description: 'Espresso dengan air dingin dan es', is_available: true, created_at: '', updated_at: '' },
-  { id: '10', name: 'Cold Brew', price: 35000, category: 'Iced', image_url: null, description: 'Kopi seduh dingin 12 jam', is_available: true, created_at: '', updated_at: '' },
-  { id: '11', name: 'Matcha Latte', price: 38000, category: 'Non-Coffee', image_url: null, description: 'Teh hijau Jepang dengan susu steamed', is_available: true, created_at: '', updated_at: '' },
-  { id: '12', name: 'Hot Chocolate', price: 32000, category: 'Non-Coffee', image_url: null, description: 'Coklat kaya dengan susu steamed', is_available: true, created_at: '', updated_at: '' },
-  { id: '13', name: 'Butter Croissant', price: 28000, category: 'Food', image_url: null, description: 'Croissant renyah dengan mentega', is_available: true, created_at: '', updated_at: '' },
-  { id: '14', name: 'Banana Bread', price: 32000, category: 'Food', image_url: null, description: 'Roti pisang buatan sendiri', is_available: true, created_at: '', updated_at: '' },
-  { id: '15', name: 'Chocolate Muffin', price: 28000, category: 'Food', image_url: null, description: 'Muffin coklat chip lembut', is_available: true, created_at: '', updated_at: '' },
+  { id: '1', name: 'Espresso', price: 25000, category: 'Coffee', image_url: '/images/products/espresso.png', description: 'Espresso shot kuat dan kaya rasa', is_available: true, created_at: '', updated_at: '' },
+  { id: '2', name: 'Americano', price: 28000, category: 'Coffee', image_url: '/images/products/espresso.png', description: 'Espresso dengan air panas', is_available: true, created_at: '', updated_at: '' },
+  { id: '3', name: 'Latte', price: 35000, category: 'Coffee', image_url: '/images/products/latte.png', description: 'Espresso dengan susu steamed', is_available: true, created_at: '', updated_at: '' },
+  { id: '4', name: 'Cappuccino', price: 35000, category: 'Coffee', image_url: '/images/products/cappuccino.png', description: 'Espresso, susu steamed, dan foam', is_available: true, created_at: '', updated_at: '' },
+  { id: '5', name: 'Mocha', price: 38000, category: 'Coffee', image_url: '/images/products/latte.png', description: 'Espresso dengan coklat dan susu steamed', is_available: true, created_at: '', updated_at: '' },
+  { id: '6', name: 'Vanilla Latte', price: 38000, category: 'Coffee', image_url: '/images/products/latte.png', description: 'Latte dengan sirup vanilla', is_available: true, created_at: '', updated_at: '' },
+  { id: '7', name: 'Caramel Macchiato', price: 42000, category: 'Coffee', image_url: '/images/products/cappuccino.png', description: 'Vanilla latte dengan saus caramel', is_available: true, created_at: '', updated_at: '' },
+  { id: '8', name: 'Iced Latte', price: 38000, category: 'Iced', image_url: '/images/products/iced_latte.png', description: 'Espresso dingin dengan susu dan es', is_available: true, created_at: '', updated_at: '' },
+  { id: '9', name: 'Iced Americano', price: 30000, category: 'Iced', image_url: '/images/products/cold_brew.png', description: 'Espresso dengan air dingin dan es', is_available: true, created_at: '', updated_at: '' },
+  { id: '10', name: 'Cold Brew', price: 35000, category: 'Iced', image_url: '/images/products/cold_brew.png', description: 'Kopi seduh dingin 12 jam', is_available: true, created_at: '', updated_at: '' },
+  { id: '11', name: 'Matcha Latte', price: 38000, category: 'Non-Coffee', image_url: '/images/products/matcha_latte.png', description: 'Teh hijau Jepang dengan susu steamed', is_available: true, created_at: '', updated_at: '' },
+  { id: '12', name: 'Hot Chocolate', price: 32000, category: 'Non-Coffee', image_url: '/images/products/matcha_latte.png', description: 'Coklat kaya dengan susu steamed', is_available: true, created_at: '', updated_at: '' },
+  { id: '13', name: 'Butter Croissant', price: 28000, category: 'Food', image_url: '/images/products/croissant.png', description: 'Croissant renyah dengan mentega', is_available: true, created_at: '', updated_at: '' },
+  { id: '14', name: 'Banana Bread', price: 32000, category: 'Food', image_url: '/images/products/croissant.png', description: 'Roti pisang buatan sendiri', is_available: true, created_at: '', updated_at: '' },
+  { id: '15', name: 'Chocolate Muffin', price: 28000, category: 'Food', image_url: '/images/products/croissant.png', description: 'Muffin coklat chip lembut', is_available: true, created_at: '', updated_at: '' },
 ];
 
 export default function POSPage() {
