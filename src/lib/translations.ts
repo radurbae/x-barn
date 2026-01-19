@@ -97,6 +97,11 @@ export const translations = {
         uploading: 'Mengunggah...',
         uploadImage: 'Unggah Gambar',
         dragOrClick: 'Seret atau klik untuk memilih',
+        recipe: 'Resep',
+        recipeIngredients: 'Bahan Resep',
+        amountNeeded: 'Jumlah Diperlukan',
+        selectIngredient: 'Pilih bahan...',
+        noRecipe: 'Tidak ada bahan',
 
         // Reports
         salesAnalytics: 'Analitik penjualan dan metrik kinerja',
@@ -245,6 +250,11 @@ export const translations = {
         uploading: 'Uploading...',
         uploadImage: 'Upload Image',
         dragOrClick: 'Drag or click to select',
+        recipe: 'Recipe',
+        recipeIngredients: 'Recipe Ingredients',
+        amountNeeded: 'Amount Needed',
+        selectIngredient: 'Select ingredient...',
+        noRecipe: 'No ingredients',
 
         // Reports
         salesAnalytics: 'Sales analytics and performance metrics',

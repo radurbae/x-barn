@@ -22,7 +22,8 @@ export async function getProductsAdmin(): Promise<Product[]> {
 
 export async function createProduct(product: Omit<Product, 'id' | 'created_at' | 'updated_at'>) {
     if (!supabase) {
-        return { success: false, error: 'Database not configured' };
+        // Demo mode: return a fake product ID
+        return { success: true, productId: 'demo-' + Date.now() };
     }
 
     const { data, error } = await supabase
@@ -36,7 +37,7 @@ export async function createProduct(product: Omit<Product, 'id' | 'created_at' |
         return { success: false, error: error.message };
     }
 
-    return { success: true, data };
+    return { success: true, productId: data.id, data };
 }
 
 export async function updateProduct(id: string, updates: Partial<Product>) {
