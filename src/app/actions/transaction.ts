@@ -16,22 +16,20 @@ interface TransactionResult {
     orderId?: string;
     orderNumber?: number;
     error?: string;
-    insufficientStock?: { ingredientName: string; required: number; available: number }[];
+    insufficientIngredients?: { ingredient_name: string; required: number; available: number }[];
 }
 
 /**
- * Process a transaction atomically:
- * 1. Create order and order_items
- * 2. Look up product_recipes for all items
- * 3. Check if sufficient stock exists
- * 4. Deduct ingredient stock
+ * Process a transaction atomically using the database RPC function.
  * 
- * All operations are performed in a transaction block for data integrity.
+ * The process_order_transaction RPC function:
+ * 1. Validates all ingredient stock before making changes
+ * 2. Creates order and order_items records
+ * 3. Deducts ingredient stock based on product_recipes
+ * 4. Rolls back everything if any ingredient has insufficient stock
  */
 export async function processTransaction({
     items,
-    subtotal,
-    taxAmount,
     total,
     paymentReceived,
 }: TransactionInput): Promise<TransactionResult> {
@@ -45,141 +43,73 @@ export async function processTransaction({
     }
 
     try {
-        // Step 1: Fetch all product recipes for items in the cart
-        const productIds = items.map(item => item.product.id);
-
-        const { data: recipes, error: recipesError } = await supabase
-            .from('product_recipes')
-            .select(`
-                product_id,
-                ingredient_id,
-                amount_needed,
-                ingredients (
-                    id,
-                    name,
-                    current_stock
-                )
-            `)
-            .in('product_id', productIds);
-
-        if (recipesError) {
-            console.error('Error fetching recipes:', recipesError);
-            return { success: false, error: 'Failed to fetch product recipes' };
-        }
-
-        // Step 2: Calculate required stock for each ingredient
-        const stockRequirements: Map<string, {
-            name: string;
-            required: number;
-            available: number
-        }> = new Map();
-
-        for (const item of items) {
-            const productRecipes = recipes?.filter(r => r.product_id === item.product.id) || [];
-
-            for (const recipe of productRecipes) {
-                const ingredient = recipe.ingredients as unknown as { id: string; name: string; current_stock: number };
-                if (!ingredient) continue;
-
-                const amountNeeded = recipe.amount_needed * item.quantity;
-                const existing = stockRequirements.get(ingredient.id);
-
-                if (existing) {
-                    existing.required += amountNeeded;
-                } else {
-                    stockRequirements.set(ingredient.id, {
-                        name: ingredient.name,
-                        required: amountNeeded,
-                        available: ingredient.current_stock,
-                    });
-                }
-            }
-        }
-
-        // Step 3: Check for insufficient stock
-        const insufficientStock: { ingredientName: string; required: number; available: number }[] = [];
-
-        for (const [, data] of stockRequirements) {
-            if (data.required > data.available) {
-                insufficientStock.push({
-                    ingredientName: data.name,
-                    required: data.required,
-                    available: data.available,
-                });
-            }
-        }
-
-        // If there's insufficient stock, return early with details
-        // Note: For MVP, we'll log a warning but still allow the order
-        // In production, you might want to block the order
-        if (insufficientStock.length > 0) {
-            console.warn('Warning: Insufficient stock for some ingredients:', insufficientStock);
-            // Uncomment the following to block orders with insufficient stock:
-            // return { success: false, error: 'Insufficient stock', insufficientStock };
-        }
-
-        // Step 4: Create the order
         const changeAmount = paymentReceived - total;
 
-        const { data: order, error: orderError } = await supabase
-            .from('orders')
-            .insert({
-                total,
-                payment_received: paymentReceived,
-                change_amount: changeAmount,
-                status: 'completed',
-            })
-            .select()
-            .single();
-
-        if (orderError) {
-            console.error('Error creating order:', orderError);
-            return { success: false, error: orderError.message };
-        }
-
-        // Step 5: Create order items
-        const orderItems = items.map((item) => ({
-            order_id: order.id,
+        // Format items for the RPC function
+        const rpcItems = items.map(item => ({
             product_id: item.product.id,
             product_name: item.product.name,
             quantity: item.quantity,
             unit_price: item.product.price,
-            subtotal: item.product.price * item.quantity,
         }));
 
-        const { error: itemsError } = await supabase
-            .from('order_items')
-            .insert(orderItems);
+        // Call the atomic transaction RPC function
+        const { data, error } = await supabase.rpc('process_order_transaction', {
+            p_items: rpcItems,
+            p_total: total,
+            p_payment_received: paymentReceived,
+            p_change_amount: changeAmount,
+        });
 
-        if (itemsError) {
-            console.error('Error creating order items:', itemsError);
-            // Attempt to rollback order
-            await supabase.from('orders').delete().eq('id', order.id);
-            return { success: false, error: itemsError.message };
+        if (error) {
+            console.error('Transaction RPC error:', error);
+
+            // Check if it's an insufficient ingredients error
+            if (error.message.includes('Insufficient ingredients')) {
+                // Parse the insufficient ingredients from the error message
+                try {
+                    const match = error.message.match(/Insufficient ingredients: (.+)/);
+                    if (match) {
+                        const insufficientData = JSON.parse(match[1]);
+                        return {
+                            success: false,
+                            error: 'Insufficient ingredients',
+                            insufficientIngredients: insufficientData,
+                        };
+                    }
+                } catch {
+                    // If parsing fails, just return the error message
+                }
+            }
+
+            return { success: false, error: error.message };
         }
 
-        // Step 6: Deduct ingredient stock atomically using RPC
-        // The database function handles the transaction
-        for (const item of items) {
-            const { error: stockError } = await supabase.rpc(
-                'deduct_ingredient_stock',
-                {
-                    p_product_id: item.product.id,
-                    p_quantity: item.quantity,
+        // Check the response from the RPC function
+        if (!data.success) {
+            // Handle insufficient ingredients error from RPC
+            if (data.error && data.error.includes('Insufficient ingredients')) {
+                try {
+                    const match = data.error.match(/Insufficient ingredients: (.+)/);
+                    if (match) {
+                        const insufficientData = JSON.parse(match[1]);
+                        return {
+                            success: false,
+                            error: 'Insufficient ingredients',
+                            insufficientIngredients: insufficientData,
+                        };
+                    }
+                } catch {
+                    // Parsing failed
                 }
-            );
-
-            if (stockError) {
-                console.error('Error deducting stock:', stockError);
-                // Log but don't fail - stock can be adjusted manually
             }
+            return { success: false, error: data.error || 'Transaction failed' };
         }
 
         return {
             success: true,
-            orderId: order.id,
-            orderNumber: order.order_number,
-            insufficientStock: insufficientStock.length > 0 ? insufficientStock : undefined,
+            orderId: data.order_id,
+            orderNumber: data.order_number,
         };
     } catch (error) {
         console.error('Unexpected error in processTransaction:', error);
