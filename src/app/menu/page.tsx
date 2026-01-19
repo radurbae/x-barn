@@ -357,9 +357,9 @@ export default function MenuPage() {
                                                             alt={product.name}
                                                             width={96}
                                                             height={96}
+                                                            unoptimized
                                                             className="h-full w-full object-cover"
-                                                        />
-                                                    ) : (
+                                                        />) : (
                                                         <Coffee className="h-10 w-10 text-slate-400 dark:text-slate-500" />
                                                     )}
                                                 </div>
