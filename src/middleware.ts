@@ -20,17 +20,19 @@ export async function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
+    // First check for demo-auth cookie (works for both demo and production)
+    const demoAuth = request.cookies.get('demo-auth');
+    if (demoAuth) {
+        return NextResponse.next();
+    }
+
     // Check if Supabase is configured
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseAnonKey) {
-        // Demo mode - check for demo auth cookie
-        const demoAuth = request.cookies.get('demo-auth');
-        if (!demoAuth) {
-            return NextResponse.redirect(new URL('/login', request.url));
-        }
-        return NextResponse.next();
+        // Demo mode without auth - redirect to login
+        return NextResponse.redirect(new URL('/login', request.url));
     }
 
     // Create Supabase client for middleware
@@ -79,3 +81,4 @@ export const config = {
         '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
     ],
 };
+
