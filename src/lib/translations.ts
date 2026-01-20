@@ -24,6 +24,9 @@ export const translations = {
         noData: 'Tidak ada data',
         search: 'Cari',
         all: 'Semua',
+        login: 'Masuk',
+        logout: 'Keluar',
+        downloadReport: 'Unduh Laporan',
 
         // POS Page
         searchProducts: 'Cari produk...',
@@ -177,6 +180,9 @@ export const translations = {
         noData: 'No data',
         search: 'Search',
         all: 'All',
+        login: 'Login',
+        logout: 'Logout',
+        downloadReport: 'Download Report',
 
         // POS Page
         searchProducts: 'Search products...',

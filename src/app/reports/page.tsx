@@ -12,12 +12,14 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     DollarSign,
     TrendingUp,
     ShoppingBag,
     Calendar,
     Coffee,
+    Download,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { formatTime } from '@/lib/format';
@@ -181,10 +183,50 @@ export default function ReportsPage() {
         }
     }
 
+    function downloadCSV() {
+        // Create CSV header
+        const headers = ['Order ID', 'Order #', 'Total', 'Date', 'Items'];
+
+        // Create CSV rows from recent orders
+        const rows = recentOrders.map(order => [
+            order.id,
+            order.order_number,
+            order.total,
+            new Date(order.created_at).toLocaleString(),
+            order.items_count,
+        ]);
+
+        // Combine headers and rows
+        const csvContent = [
+            headers.join(','),
+            ...rows.map(row => row.join(','))
+        ].join('\n');
+
+        // Create and download file
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `sales_report_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
     return (
         <PageLayout
             title={t('reports')}
             description={t('salesAnalytics')}
+            actions={
+                <Button
+                    onClick={downloadCSV}
+                    className="bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
+                >
+                    <Download className="mr-2 h-4 w-4" />
+                    {t('downloadReport')}
+                </Button>
+            }
         >
             {/* Stats Cards */}
             <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { supabase } from '@/lib/supabase';
 
 interface DailySalesState {
     todayTotal: number;
@@ -7,6 +8,8 @@ interface DailySalesState {
     lastResetDate: string;
     addSale: (amount: number) => void;
     resetIfNewDay: () => void;
+    fetchTodaySales: () => Promise<void>;
+    setTodaySales: (total: number, orders: number) => void;
 }
 
 function getTodayDateString() {
@@ -49,9 +52,44 @@ export const useDailySalesStore = create<DailySalesState>()(
                     });
                 }
             },
+
+            setTodaySales: (total: number, orders: number) => {
+                set({
+                    todayTotal: total,
+                    todayOrders: orders,
+                    lastResetDate: getTodayDateString(),
+                });
+            },
+
+            fetchTodaySales: async () => {
+                if (!supabase) return;
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                try {
+                    const { data, error } = await supabase
+                        .from('orders')
+                        .select('total')
+                        .gte('created_at', today.toISOString())
+                        .eq('status', 'completed');
+
+                    if (!error && data) {
+                        const total = data.reduce((sum, order) => sum + order.total, 0);
+                        set({
+                            todayTotal: total,
+                            todayOrders: data.length,
+                            lastResetDate: getTodayDateString(),
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error fetching today sales:', error);
+                }
+            },
         }),
         {
             name: 'daily-sales',
         }
     )
 );
+

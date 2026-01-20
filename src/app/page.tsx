@@ -66,15 +66,15 @@ export default function POSPage() {
           .order('category')
           .order('name');
 
-        if (error || !data || data.length === 0) {
-          // Use demo products if no data or error
-          setProducts(demoProducts);
+        if (error) {
+          console.error('Error fetching products:', error);
+          setProducts([]);
         } else {
-          setProducts(data);
+          setProducts(data || []);
         }
-      } catch {
-        // Use demo products on error
-        setProducts(demoProducts);
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        setProducts([]);
       } finally {
         setIsLoading(false);
       }

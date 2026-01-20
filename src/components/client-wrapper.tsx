@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSettingsStore } from '@/stores/settings-store';
+import { AuthProvider } from '@/components/auth-provider';
 
 export function ClientWrapper({ children }: { children: React.ReactNode }) {
     const { settings } = useSettingsStore();
@@ -25,5 +26,5 @@ export function ClientWrapper({ children }: { children: React.ReactNode }) {
         }
     }, [settings.darkMode, mounted]);
 
-    return <>{children}</>;
+    return <AuthProvider>{children}</AuthProvider>;
 }

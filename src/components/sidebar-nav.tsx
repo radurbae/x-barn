@@ -1,21 +1,25 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Coffee, Package, ClipboardList, BarChart3, Settings } from 'lucide-react';
+import { Coffee, Package, ClipboardList, BarChart3, Settings, LogOut } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useSettingsStore } from '@/stores/settings-store';
 import { useDailySalesStore } from '@/stores/daily-sales-store';
 import { useCurrency } from '@/hooks/use-currency';
 import { useTranslation } from '@/hooks/use-translation';
+import { useAuth } from '@/components/auth-provider';
+import { Button } from '@/components/ui/button';
 
 export function SidebarNav() {
     const pathname = usePathname();
+    const router = useRouter();
     const { settings } = useSettingsStore();
-    const { todayTotal, todayOrders, resetIfNewDay } = useDailySalesStore();
+    const { todayTotal, todayOrders, resetIfNewDay, fetchTodaySales } = useDailySalesStore();
     const { formatCurrency } = useCurrency();
     const { t } = useTranslation();
+    const { user, isAuthenticated, signOut } = useAuth();
 
     // Navigation items with translation keys
     const navItems = [
@@ -26,10 +30,16 @@ export function SidebarNav() {
         { href: '/settings', label: t('settings'), icon: Settings },
     ];
 
-    // Reset daily sales if it's a new day
+    // Reset daily sales if it's a new day and fetch live data
     useEffect(() => {
         resetIfNewDay();
-    }, [resetIfNewDay]);
+        fetchTodaySales();
+    }, [resetIfNewDay, fetchTodaySales]);
+
+    const handleLogout = async () => {
+        await signOut();
+        router.push('/login');
+    };
 
     return (
         <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800">
@@ -66,14 +76,32 @@ export function SidebarNav() {
                 })}
             </nav>
 
-            {/* Footer - Daily Sales */}
-            <div className="border-t border-slate-200 dark:border-slate-800 p-4">
+            {/* Footer - Daily Sales & Logout */}
+            <div className="border-t border-slate-200 dark:border-slate-800 p-4 space-y-3">
                 <div className="rounded-lg bg-slate-100 dark:bg-slate-800/50 p-4">
                     <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{t('todaySalesLabel')}</p>
                     <p className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">{formatCurrency(todayTotal)}</p>
                     <p className="text-xs text-slate-500">{todayOrders} {t('orders')}</p>
                 </div>
+
+                {isAuthenticated && (
+                    <Button
+                        variant="outline"
+                        className="w-full border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                        onClick={handleLogout}
+                    >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        {t('logout')}
+                    </Button>
+                )}
+
+                {isAuthenticated && user?.email && (
+                    <p className="text-xs text-center text-slate-500 truncate">
+                        {user.email}
+                    </p>
+                )}
             </div>
         </aside>
     );
 }
+

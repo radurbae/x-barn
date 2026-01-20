@@ -123,16 +123,20 @@ export default function MenuPage() {
                 .order('category')
                 .order('name');
 
-            if (error || !data) {
-                setProducts(demoProducts);
+            if (error) {
+                console.error('Error fetching products:', error);
+                setProducts([]);
             } else {
-                setProducts(data);
+                setProducts(data || []);
                 // Fetch recipes for all products
-                const recipes = await getRecipesForProducts(data.map(p => p.id));
-                setProductRecipes(recipes);
+                if (data && data.length > 0) {
+                    const recipes = await getRecipesForProducts(data.map(p => p.id));
+                    setProductRecipes(recipes);
+                }
             }
-        } catch {
-            setProducts(demoProducts);
+        } catch (err) {
+            console.error('Error fetching products:', err);
+            setProducts([]);
         } finally {
             setIsLoading(false);
         }

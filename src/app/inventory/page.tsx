@@ -83,13 +83,15 @@ export default function InventoryPage() {
                 .select('*')
                 .order('name');
 
-            if (error || !data) {
-                setIngredients(demoIngredients);
+            if (error) {
+                console.error('Error fetching ingredients:', error);
+                setIngredients([]);
             } else {
-                setIngredients(data);
+                setIngredients(data || []);
             }
-        } catch {
-            setIngredients(demoIngredients);
+        } catch (err) {
+            console.error('Error fetching ingredients:', err);
+            setIngredients([]);
         } finally {
             setIsLoading(false);
         }
