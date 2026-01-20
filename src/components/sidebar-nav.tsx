@@ -38,6 +38,8 @@ export function SidebarNav() {
 
     const handleLogout = async () => {
         await signOut();
+        // Clear demo-auth cookie
+        document.cookie = 'demo-auth=; path=/; max-age=0';
         router.push('/login');
     };
 

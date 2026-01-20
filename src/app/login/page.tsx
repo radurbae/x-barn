@@ -26,6 +26,8 @@ export default function LoginPage() {
         const result = await signIn(email, password);
 
         if (result.success) {
+            // Set demo-auth cookie for middleware
+            document.cookie = `demo-auth=${email}; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
             router.push('/');
             router.refresh();
         } else {
