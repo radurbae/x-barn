@@ -9,7 +9,6 @@ import { CheckoutDialog } from '@/components/checkout-dialog';
 import { Product, ProductCategory } from '@/lib/types';
 import { useCartStore } from '@/stores/cart-store';
 import { useDailySalesStore } from '@/stores/daily-sales-store';
-import { createOrder } from '@/app/actions/orders';
 import { supabase } from '@/lib/supabase';
 import { Coffee, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -96,23 +95,12 @@ export default function POSPage() {
   });
 
   // Handle checkout completion
-  const handleCheckoutComplete = async (paymentReceived: number) => {
+  const handleCheckoutComplete = async () => {
     const total = getTotal();
 
-    // Track the sale in daily sales store
+    // Track the sale in daily sales store (for sidebar display)
+    // Note: Order creation is already handled by processTransaction in checkout-dialog
     addSale(total);
-
-    // Only call createOrder if Supabase is configured
-    if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
-      try {
-        await createOrder({
-          items,
-          paymentReceived,
-        });
-      } catch (error) {
-        console.error('Error creating order:', error);
-      }
-    }
   };
 
   return (
