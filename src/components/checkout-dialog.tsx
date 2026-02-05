@@ -19,6 +19,7 @@ import { useCurrency } from '@/hooks/use-currency';
 import { useTranslation } from '@/hooks/use-translation';
 import { ReceiptModal } from '@/components/receipt-modal';
 import { processTransaction } from '@/app/actions/transaction';
+import { getCurrencyFractionDigits } from '@/lib/format';
 
 interface CheckoutDialogProps {
     open: boolean;
@@ -44,25 +45,36 @@ export function CheckoutDialog({
 }: CheckoutDialogProps) {
     const { items, getTotal, clearCart } = useCartStore();
     const { settings } = useSettingsStore();
-    const { formatCurrency, currency } = useCurrency();
+    const { formatCurrency, currency, convertFromBase, convertToBase } = useCurrency();
     const { t } = useTranslation();
     const [paymentInput, setPaymentInput] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
     const [completedOrder, setCompletedOrder] = useState<CompletedOrder | null>(null);
 
-    const subtotal = getTotal();
-    const taxAmount = settings.taxEnabled ? subtotal * (settings.taxRate / 100) : 0;
-    const total = subtotal + taxAmount;
-    const paymentAmount = parseFloat(paymentInput) || 0;
-    const change = paymentAmount - total;
-    const canPay = paymentAmount >= total;
+    const subtotalBase = getTotal();
+    const taxAmountBase = settings.taxEnabled ? subtotalBase * (settings.taxRate / 100) : 0;
+    const totalBase = subtotalBase + taxAmountBase;
+
+    const totalDisplay = convertFromBase(totalBase);
+
+    const paymentAmountDisplay = parseFloat(paymentInput) || 0;
+    const paymentAmountBase = convertToBase(paymentAmountDisplay);
+    const changeBase = paymentAmountBase - totalBase;
+    const canPay = paymentAmountBase >= totalBase;
 
     // Quick amount buttons based on currency
     const quickAmounts = currency === 'IDR'
         ? [10000, 20000, 50000, 100000]
         : [5, 10, 20, 50];
 
-    const currencySymbol = currency === 'IDR' ? 'Rp' : currency === 'USD' ? '$' : currency;
+    const currencySymbolMap: Record<string, string> = {
+        IDR: 'Rp',
+        USD: '$',
+        EUR: '€',
+        GBP: '£',
+        JPY: '¥',
+    };
+    const currencySymbol = currencySymbolMap[currency] || currency;
 
     const handleQuickAmount = (amount: number) => {
         setPaymentInput((prev) => {
@@ -72,7 +84,8 @@ export function CheckoutDialog({
     };
 
     const handleExactAmount = () => {
-        setPaymentInput(total.toString());
+        const digits = getCurrencyFractionDigits(currency).max;
+        setPaymentInput(totalDisplay.toFixed(digits));
     };
 
     const handlePayment = async () => {
@@ -84,10 +97,10 @@ export function CheckoutDialog({
             // Process transaction with inventory deduction
             const result = await processTransaction({
                 items,
-                subtotal,
-                taxAmount,
-                total,
-                paymentReceived: paymentAmount,
+                subtotal: subtotalBase,
+                taxAmount: taxAmountBase,
+                total: totalBase,
+                paymentReceived: paymentAmountBase,
             });
 
             if (!result.success) {
@@ -102,11 +115,11 @@ export function CheckoutDialog({
             setCompletedOrder({
                 orderNumber,
                 items: [...items],
-                subtotal,
-                taxAmount,
-                total,
-                paymentReceived: paymentAmount,
-                change,
+                subtotal: subtotalBase,
+                taxAmount: taxAmountBase,
+                total: totalBase,
+                paymentReceived: paymentAmountBase,
+                change: changeBase,
                 timestamp: new Date(),
             });
 
@@ -192,17 +205,17 @@ export function CheckoutDialog({
                         <div className="space-y-1">
                             <div className="flex justify-between text-sm">
                                 <span className="text-slate-500 dark:text-slate-400">{t('subtotal')}</span>
-                                <span className="text-slate-900 dark:text-white">{formatCurrency(subtotal)}</span>
+                                <span className="text-slate-900 dark:text-white">{formatCurrency(subtotalBase)}</span>
                             </div>
                             {settings.taxEnabled && (
                                 <div className="flex justify-between text-sm">
                                     <span className="text-slate-500 dark:text-slate-400">{t('tax')} ({settings.taxRate}%)</span>
-                                    <span className="text-slate-900 dark:text-white">{formatCurrency(taxAmount)}</span>
+                                    <span className="text-slate-900 dark:text-white">{formatCurrency(taxAmountBase)}</span>
                                 </div>
                             )}
                             <div className="flex justify-between text-lg font-bold pt-2">
                                 <span className="text-slate-900 dark:text-white">{t('total')}</span>
-                                <span className="text-amber-600 dark:text-amber-400">{formatCurrency(total)}</span>
+                                <span className="text-amber-600 dark:text-amber-400">{formatCurrency(totalBase)}</span>
                             </div>
                         </div>
                     </div>
@@ -214,7 +227,11 @@ export function CheckoutDialog({
                         </h3>
                         <div className="relative">
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-medium">{currencySymbol}</span>
+                            <label htmlFor="payment-amount" className="sr-only">
+                                {t('paymentAmount')}
+                            </label>
                             <Input
+                                id="payment-amount"
                                 type="number"
                                 step={currency === 'IDR' ? '1000' : '0.01'}
                                 value={paymentInput}
@@ -242,7 +259,7 @@ export function CheckoutDialog({
                                     onClick={() => handleQuickAmount(amount)}
                                     className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white"
                                 >
-                                    +{formatCurrency(amount)}
+                                    +{formatCurrency(amount, { convert: false, currency })}
                                 </Button>
                             ))}
                         </div>
@@ -262,11 +279,11 @@ export function CheckoutDialog({
                                 canPay ? 'text-emerald-400' : 'text-red-400'
                             )}
                         >
-                            {formatCurrency(change >= 0 ? change : 0)}
+                            {formatCurrency(changeBase >= 0 ? changeBase : 0)}
                         </p>
-                        {!canPay && paymentAmount > 0 && (
+                        {!canPay && paymentAmountDisplay > 0 && (
                             <p className="mt-1 text-xs text-red-400">
-                                {t('insufficient')} {formatCurrency(total - paymentAmount)}
+                                {t('insufficient')} {formatCurrency(totalBase - paymentAmountBase)}
                             </p>
                         )}
                     </div>

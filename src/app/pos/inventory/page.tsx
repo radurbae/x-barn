@@ -54,6 +54,7 @@ const demoIngredients: Ingredient[] = [
 export default function InventoryPage() {
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState('');
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingIngredient, setEditingIngredient] = useState<Ingredient | null>(null);
     const [formData, setFormData] = useState({
@@ -71,6 +72,7 @@ export default function InventoryPage() {
     }, []);
 
     async function fetchIngredients() {
+        setError('');
         if (!supabase) {
             setIngredients(demoIngredients);
             setIsLoading(false);
@@ -86,12 +88,14 @@ export default function InventoryPage() {
             if (error) {
                 console.error('Error fetching ingredients:', error);
                 setIngredients([]);
+                setError(t('loadError'));
             } else {
                 setIngredients(data || []);
             }
         } catch (err) {
             console.error('Error fetching ingredients:', err);
             setIngredients([]);
+            setError(t('loadError'));
         } finally {
             setIsLoading(false);
         }
@@ -163,6 +167,11 @@ export default function InventoryPage() {
                 </Button>
             }
         >
+            {error && (
+                <div className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400">
+                    {error}
+                </div>
+            )}
             {/* Stats Cards */}
             <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-4">

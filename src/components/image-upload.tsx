@@ -103,6 +103,7 @@ export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
                             src={value}
                             alt="Product image"
                             fill
+                            unoptimized
                             className="object-cover"
                         />
                     </div>
@@ -112,6 +113,7 @@ export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
                         size="icon"
                         className="absolute top-2 right-2 h-8 w-8"
                         onClick={handleRemove}
+                        aria-label="Remove image"
                     >
                         <X className="h-4 w-4" />
                     </Button>

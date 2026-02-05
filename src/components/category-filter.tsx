@@ -34,6 +34,8 @@ export function CategoryFilter({
                     <button
                         key={category.value}
                         onClick={() => onCategoryChange(category.value)}
+                        type="button"
+                        aria-pressed={isSelected}
                         className={cn(
                             'flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200',
                             isSelected

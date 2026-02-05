@@ -27,6 +27,7 @@ export const translations = {
         login: 'Masuk',
         logout: 'Keluar',
         downloadReport: 'Unduh Laporan',
+        loadError: 'Gagal memuat data. Periksa koneksi Anda.',
 
         // POS Page
         searchProducts: 'Cari produk...',
@@ -133,6 +134,11 @@ export const translations = {
         basicInfo: 'Informasi dasar toko',
         shopName: 'Nama Toko',
         currency: 'Mata Uang',
+        baseCurrencyNote: 'Harga disimpan dalam {{base}} dan dikonversi menggunakan kurs terbaru.',
+        ratesUpdating: 'Memperbarui kurs...',
+        ratesUpdated: 'Kurs diperbarui:',
+        ratesUpdatedUnknown: 'Kurs belum tersedia',
+        refreshRates: 'Segarkan kurs',
         taxSettings: 'Pengaturan Pajak',
         configureTax: 'Konfigurasi pajak penjualan',
         enableTax: 'Aktifkan Pajak',
@@ -183,6 +189,7 @@ export const translations = {
         login: 'Login',
         logout: 'Logout',
         downloadReport: 'Download Report',
+        loadError: 'Unable to load data. Please check your connection.',
 
         // POS Page
         searchProducts: 'Search products...',
@@ -289,6 +296,11 @@ export const translations = {
         basicInfo: 'Basic shop information',
         shopName: 'Shop Name',
         currency: 'Currency',
+        baseCurrencyNote: 'Prices are stored in {{base}} and converted using live rates.',
+        ratesUpdating: 'Updating rates...',
+        ratesUpdated: 'Rates updated:',
+        ratesUpdatedUnknown: 'Rates not available',
+        refreshRates: 'Refresh rates',
         taxSettings: 'Tax Settings',
         configureTax: 'Configure sales tax',
         enableTax: 'Enable Tax',

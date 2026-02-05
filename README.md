@@ -1,36 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Barn Coffee POS — Portfolio-Ready Case Study
 
-## Getting Started
+A barista-first point-of-sale product demo built with Next.js. It includes a fast cashier flow, inventory with recipe-based stock, and sales reporting — shaped as a realistic, end‑to‑end case study for portfolio review.
 
-First, run the development server:
+## Portfolio Highlights
+- End‑to‑end POS flows: cashier, inventory, menu, and reporting
+- Realistic data model (recipes, stock deductions, daily sales)
+- Bilingual UI (ID/EN) with currency‑aware formatting
+- Live exchange‑rate conversion (Frankfurter API)
+- Mobile‑friendly layout (drawer nav + cart on small screens)
+- Demo mode that works without backend setup
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## What’s Included
+- Cashier experience with product search, category filters, and checkout
+- Inventory tracking and low-stock alerts
+- Menu management with recipe ingredients
+- Sales reports (daily / weekly / monthly) + CSV export
+- Bilingual UI (ID / EN) with currency-aware formatting
+- Demo mode (works without Supabase)
+
+## Demo Mode
+The app works out of the box without any backend. Login accepts any email/password and uses in-memory + localStorage data for a smooth portfolio demo.
+
+## Screenshots
+![Case study banner](public/images/case-study.png)
+![POS screen](public/images/pos-screen.png)
+![Inventory screen](public/images/inventory-screen.png)
+
+## Logic & Data Flow
+```mermaid
+flowchart TD
+  A["UI (POS screens)"] --> B["Zustand stores"]
+  B --> C["Server actions"]
+  C --> D["Supabase (Postgres)"]
+  A --> E["/api/rates (Frankfurter)"]
+  E --> B
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Checkout Flow
+1. Cashier taps products to add items to cart (Zustand store).
+2. Totals are calculated in base currency (IDR).
+3. Display values are converted using live exchange rates.
+4. Payment is entered in selected currency and converted back to IDR for validation.
+5. Order and order_items are written via server actions; inventory is deducted.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Currency Conversion Logic
+- Base currency: IDR
+- Display: prices/totals are converted to selected currency using live rates.
+- Input: product prices and costs remain in IDR to avoid accidental conversions.
+- Rates: fetched from Frankfurter via `/api/rates` and cached in the client store.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Local Development
+```bash
+npm install
+npm run dev
+```
+Open `http://localhost:3000`.
 
-## Learn More
+## Supabase Setup (Optional)
+This app can be connected to Supabase for persistent data.
 
-To learn more about Next.js, take a look at the following resources:
+1. Create a Supabase project and open the SQL editor.
+2. Run `supabase/schema.sql`.
+3. Run `supabase/seed.sql`.
+4. Create `.env.local` (copy from `.env.example`):
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Routes
+- `/` → Portfolio landing page (case study)
+- `/login` → Demo login
+- `/pos` → Cashier screen
+- `/pos/inventory` → Inventory management
+- `/pos/menu` → Menu management
+- `/pos/reports` → Reports
+- `/pos/settings` → Settings
 
-## Deploy on Vercel
+## Portfolio Checklist
+- Landing page + case study narrative ✅
+- Live demo flow ✅
+- Responsive layout ✅
+- Accessible controls & form labels ✅
+- Test coverage (unit + basic E2E) ✅
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Tests
+```bash
+# unit tests
+npm run test
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# e2e tests
+npm run test:e2e
+```
+
+## Tech Stack
+- Next.js (App Router)
+- Supabase (Auth + Postgres)
+- Zustand
+- Tailwind CSS
+- Radix UI
+- Lucide Icons
+
+## Notes
+- Demo product images live in `public/images/products`.
+- The OpenGraph image is generated at build/runtime with `src/app/opengraph-image.tsx`.

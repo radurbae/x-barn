@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { translations, getLanguageFromCurrency } from '@/lib/translations';
+import { useCurrency } from '@/hooks/use-currency';
 
 // Draft settings type
 interface DraftSettings {
@@ -40,6 +41,7 @@ interface DraftSettings {
 
 export default function SettingsPage() {
     const { settings, updateSettings } = useSettingsStore();
+    const { baseCurrency, ratesMeta, refreshRates } = useCurrency();
     const [isSaving, setIsSaving] = useState(false);
     const [saveMessage, setSaveMessage] = useState('');
     const [hasChanges, setHasChanges] = useState(false);
@@ -202,6 +204,27 @@ export default function SettingsPage() {
                                         <SelectItem value="JPY">🇯🇵 JPY (¥) - English</SelectItem>
                                     </SelectContent>
                                 </Select>
+                                <p className="text-xs text-slate-500 dark:text-slate-400">
+                                    {t('baseCurrencyNote').replace('{{base}}', baseCurrency)}
+                                </p>
+                                <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                                    <span>
+                                        {ratesMeta.isLoading
+                                            ? t('ratesUpdating')
+                                            : ratesMeta.lastUpdated
+                                                ? `${t('ratesUpdated')} ${ratesMeta.lastUpdated}`
+                                                : t('ratesUpdatedUnknown')}
+                                    </span>
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => refreshRates({ force: true })}
+                                        className="h-7 px-2 text-xs text-amber-500 hover:text-amber-400"
+                                    >
+                                        {t('refreshRates')}
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>

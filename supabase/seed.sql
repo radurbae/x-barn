@@ -25,30 +25,30 @@ INSERT INTO ingredients (name, unit, current_stock, cost_per_unit, min_stock) VA
 -- =============================================
 INSERT INTO products (name, price, category, description, image_url) VALUES
   -- Coffee
-  ('Espresso', 3.50, 'Coffee', 'Rich, bold single shot of espresso', '/images/espresso.jpg'),
-  ('Americano', 4.00, 'Coffee', 'Espresso with hot water', '/images/americano.jpg'),
-  ('Latte', 5.00, 'Coffee', 'Espresso with steamed milk', '/images/latte.jpg'),
-  ('Cappuccino', 5.00, 'Coffee', 'Equal parts espresso, steamed milk, and foam', '/images/cappuccino.jpg'),
-  ('Mocha', 5.50, 'Coffee', 'Espresso with chocolate and steamed milk', '/images/mocha.jpg'),
-  ('Vanilla Latte', 5.50, 'Coffee', 'Latte with vanilla syrup', '/images/vanilla-latte.jpg'),
-  ('Caramel Macchiato', 6.00, 'Coffee', 'Vanilla latte with caramel drizzle', '/images/caramel-macchiato.jpg'),
-  ('Hazelnut Latte', 5.75, 'Coffee', 'Latte with hazelnut syrup', '/images/hazelnut-latte.jpg'),
+  ('Espresso', 3.50, 'Coffee', 'Rich, bold single shot of espresso', '/images/products/espresso.svg'),
+  ('Americano', 4.00, 'Coffee', 'Espresso with hot water', '/images/products/espresso.svg'),
+  ('Latte', 5.00, 'Coffee', 'Espresso with steamed milk', '/images/products/latte.svg'),
+  ('Cappuccino', 5.00, 'Coffee', 'Equal parts espresso, steamed milk, and foam', '/images/products/cappuccino.svg'),
+  ('Mocha', 5.50, 'Coffee', 'Espresso with chocolate and steamed milk', '/images/products/latte.svg'),
+  ('Vanilla Latte', 5.50, 'Coffee', 'Latte with vanilla syrup', '/images/products/latte.svg'),
+  ('Caramel Macchiato', 6.00, 'Coffee', 'Vanilla latte with caramel drizzle', '/images/products/latte.svg'),
+  ('Hazelnut Latte', 5.75, 'Coffee', 'Latte with hazelnut syrup', '/images/products/latte.svg'),
   
   -- Iced Drinks
-  ('Iced Latte', 5.50, 'Iced', 'Chilled espresso with cold milk over ice', '/images/iced-latte.jpg'),
-  ('Iced Americano', 4.50, 'Iced', 'Espresso with cold water over ice', '/images/iced-americano.jpg'),
-  ('Iced Mocha', 6.00, 'Iced', 'Chilled mocha over ice with whipped cream', '/images/iced-mocha.jpg'),
-  ('Cold Brew', 5.00, 'Iced', '12-hour steeped cold coffee', '/images/cold-brew.jpg'),
+  ('Iced Latte', 5.50, 'Iced', 'Chilled espresso with cold milk over ice', '/images/products/iced_latte.svg'),
+  ('Iced Americano', 4.50, 'Iced', 'Espresso with cold water over ice', '/images/products/iced_latte.svg'),
+  ('Iced Mocha', 6.00, 'Iced', 'Chilled mocha over ice with whipped cream', '/images/products/iced_latte.svg'),
+  ('Cold Brew', 5.00, 'Iced', '12-hour steeped cold coffee', '/images/products/cold_brew.svg'),
   
   -- Non-Coffee
-  ('Matcha Latte', 5.50, 'Non-Coffee', 'Japanese green tea with steamed milk', '/images/matcha-latte.jpg'),
-  ('Hot Chocolate', 4.50, 'Non-Coffee', 'Rich chocolate with steamed milk', '/images/hot-chocolate.jpg'),
-  ('Steamer', 3.50, 'Non-Coffee', 'Steamed milk with your choice of syrup', '/images/steamer.jpg'),
+  ('Matcha Latte', 5.50, 'Non-Coffee', 'Japanese green tea with steamed milk', '/images/products/matcha_latte.svg'),
+  ('Hot Chocolate', 4.50, 'Non-Coffee', 'Rich chocolate with steamed milk', '/images/products/matcha_latte.svg'),
+  ('Steamer', 3.50, 'Non-Coffee', 'Steamed milk with your choice of syrup', '/images/products/matcha_latte.svg'),
   
   -- Food
-  ('Butter Croissant', 4.00, 'Food', 'Flaky, buttery French croissant', '/images/croissant.jpg'),
-  ('Banana Bread', 4.50, 'Food', 'Homemade moist banana bread slice', '/images/banana-bread.jpg'),
-  ('Chocolate Muffin', 4.00, 'Food', 'Rich chocolate chip muffin', '/images/chocolate-muffin.jpg');
+  ('Butter Croissant', 4.00, 'Food', 'Flaky, buttery French croissant', '/images/products/croissant.svg'),
+  ('Banana Bread', 4.50, 'Food', 'Homemade moist banana bread slice', '/images/products/croissant.svg'),
+  ('Chocolate Muffin', 4.00, 'Food', 'Rich chocolate chip muffin', '/images/products/croissant.svg');
 
 -- =============================================
 -- SEED PRODUCT RECIPES

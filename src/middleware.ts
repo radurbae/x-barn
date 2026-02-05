@@ -5,8 +5,13 @@ import { createServerClient } from '@supabase/ssr';
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // Allow access to login page without auth
-    if (pathname === '/login') {
+    // Allow access to public pages without auth
+    if (
+        pathname === '/' ||
+        pathname === '/login' ||
+        pathname.startsWith('/opengraph-image') ||
+        pathname.startsWith('/twitter-image')
+    ) {
         return NextResponse.next();
     }
 
@@ -81,4 +86,3 @@ export const config = {
         '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
     ],
 };
-

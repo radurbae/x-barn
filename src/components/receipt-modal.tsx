@@ -99,6 +99,7 @@ export function ReceiptModal({
                         variant="ghost"
                         size="sm"
                         onClick={onClose}
+                        aria-label="Close receipt"
                         className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
                     >
                         <X className="h-4 w-4" />

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Coffee, Package, ClipboardList, BarChart3, Settings, LogOut } from 'lucide-react';
+import { Coffee, Package, ClipboardList, BarChart3, Settings, LogOut, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -12,7 +12,12 @@ import { useTranslation } from '@/hooks/use-translation';
 import { useAuth } from '@/components/auth-provider';
 import { Button } from '@/components/ui/button';
 
-export function SidebarNav() {
+interface SidebarNavProps {
+    className?: string;
+    onClose?: () => void;
+}
+
+export function SidebarNav({ className, onClose }: SidebarNavProps) {
     const pathname = usePathname();
     const router = useRouter();
     const { settings } = useSettingsStore();
@@ -23,11 +28,11 @@ export function SidebarNav() {
 
     // Navigation items with translation keys
     const navItems = [
-        { href: '/', label: t('cashier'), icon: Coffee },
-        { href: '/inventory', label: t('inventory'), icon: Package },
-        { href: '/menu', label: t('menu'), icon: ClipboardList },
-        { href: '/reports', label: t('reports'), icon: BarChart3 },
-        { href: '/settings', label: t('settings'), icon: Settings },
+        { href: '/pos', label: t('cashier'), icon: Coffee },
+        { href: '/pos/inventory', label: t('inventory'), icon: Package },
+        { href: '/pos/menu', label: t('menu'), icon: ClipboardList },
+        { href: '/pos/reports', label: t('reports'), icon: BarChart3 },
+        { href: '/pos/settings', label: t('settings'), icon: Settings },
     ];
 
     // Reset daily sales if it's a new day and fetch live data
@@ -44,7 +49,12 @@ export function SidebarNav() {
     };
 
     return (
-        <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800">
+        <aside
+            className={cn(
+                "flex h-full w-64 flex-col bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800",
+                className
+            )}
+        >
             {/* Logo */}
             <div className="flex h-16 items-center gap-3 border-b border-slate-200 dark:border-slate-800 px-6">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
@@ -54,6 +64,16 @@ export function SidebarNav() {
                     <h1 className="text-lg font-bold text-slate-900 dark:text-white">{settings.shopName}</h1>
                     <p className="text-xs text-slate-500 dark:text-slate-400">{t('posSystem')}</p>
                 </div>
+                {onClose && (
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        aria-label="Close menu"
+                        className="ml-auto flex h-8 w-8 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white lg:hidden"
+                    >
+                        <X className="h-4 w-4" />
+                    </button>
+                )}
             </div>
 
             {/* Navigation */}
@@ -106,4 +126,3 @@ export function SidebarNav() {
         </aside>
     );
 }
-

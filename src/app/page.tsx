@@ -1,191 +1,246 @@
-'use client';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import {
+  ArrowRight,
+  BarChart3,
+  Coffee,
+  Layers,
+  Package,
+  Receipt,
+  ShieldCheck,
+  Sparkles,
+  Zap,
+} from 'lucide-react';
 
-import { useState, useEffect } from 'react';
-import { SidebarNav } from '@/components/sidebar-nav';
-import { ProductCard } from '@/components/product-card';
-import { CartSidebar } from '@/components/cart-sidebar';
-import { CategoryFilter } from '@/components/category-filter';
-import { CheckoutDialog } from '@/components/checkout-dialog';
-import { Product, ProductCategory } from '@/lib/types';
-import { useCartStore } from '@/stores/cart-store';
-import { useDailySalesStore } from '@/stores/daily-sales-store';
-import { supabase } from '@/lib/supabase';
-import { Coffee, Search } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { useTranslation } from '@/hooks/use-translation';
-
-// Demo products for when Supabase is not configured
-const demoProducts: Product[] = [
-  { id: '1', name: 'Espresso', price: 25000, category: 'Coffee', image_url: '/images/products/espresso.png', description: 'Espresso shot kuat dan kaya rasa', is_available: true, created_at: '', updated_at: '' },
-  { id: '2', name: 'Americano', price: 28000, category: 'Coffee', image_url: '/images/products/espresso.png', description: 'Espresso dengan air panas', is_available: true, created_at: '', updated_at: '' },
-  { id: '3', name: 'Latte', price: 35000, category: 'Coffee', image_url: '/images/products/latte.png', description: 'Espresso dengan susu steamed', is_available: true, created_at: '', updated_at: '' },
-  { id: '4', name: 'Cappuccino', price: 35000, category: 'Coffee', image_url: '/images/products/cappuccino.png', description: 'Espresso, susu steamed, dan foam', is_available: true, created_at: '', updated_at: '' },
-  { id: '5', name: 'Mocha', price: 38000, category: 'Coffee', image_url: '/images/products/latte.png', description: 'Espresso dengan coklat dan susu steamed', is_available: true, created_at: '', updated_at: '' },
-  { id: '6', name: 'Vanilla Latte', price: 38000, category: 'Coffee', image_url: '/images/products/latte.png', description: 'Latte dengan sirup vanilla', is_available: true, created_at: '', updated_at: '' },
-  { id: '7', name: 'Caramel Macchiato', price: 42000, category: 'Coffee', image_url: '/images/products/cappuccino.png', description: 'Vanilla latte dengan saus caramel', is_available: true, created_at: '', updated_at: '' },
-  { id: '8', name: 'Iced Latte', price: 38000, category: 'Iced', image_url: '/images/products/iced_latte.png', description: 'Espresso dingin dengan susu dan es', is_available: true, created_at: '', updated_at: '' },
-  { id: '9', name: 'Iced Americano', price: 30000, category: 'Iced', image_url: '/images/products/cold_brew.png', description: 'Espresso dengan air dingin dan es', is_available: true, created_at: '', updated_at: '' },
-  { id: '10', name: 'Cold Brew', price: 35000, category: 'Iced', image_url: '/images/products/cold_brew.png', description: 'Kopi seduh dingin 12 jam', is_available: true, created_at: '', updated_at: '' },
-  { id: '11', name: 'Matcha Latte', price: 38000, category: 'Non-Coffee', image_url: '/images/products/matcha_latte.png', description: 'Teh hijau Jepang dengan susu steamed', is_available: true, created_at: '', updated_at: '' },
-  { id: '12', name: 'Hot Chocolate', price: 32000, category: 'Non-Coffee', image_url: '/images/products/matcha_latte.png', description: 'Coklat kaya dengan susu steamed', is_available: true, created_at: '', updated_at: '' },
-  { id: '13', name: 'Butter Croissant', price: 28000, category: 'Food', image_url: '/images/products/croissant.png', description: 'Croissant renyah dengan mentega', is_available: true, created_at: '', updated_at: '' },
-  { id: '14', name: 'Banana Bread', price: 32000, category: 'Food', image_url: '/images/products/croissant.png', description: 'Roti pisang buatan sendiri', is_available: true, created_at: '', updated_at: '' },
-  { id: '15', name: 'Chocolate Muffin', price: 28000, category: 'Food', image_url: '/images/products/croissant.png', description: 'Muffin coklat chip lembut', is_available: true, created_at: '', updated_at: '' },
+const highlights = [
+  {
+    title: 'Fast checkout flow',
+    description:
+      'Optimized product search, category filtering, and cart controls built for speed on busy shifts.',
+    icon: Zap,
+  },
+  {
+    title: 'Inventory + recipes',
+    description:
+      'Track ingredient stock and tie recipes to products for tighter cost control.',
+    icon: Package,
+  },
+  {
+    title: 'Sales visibility',
+    description:
+      'Daily, weekly, and monthly sales summaries with top product insights.',
+    icon: BarChart3,
+  },
 ];
 
-export default function POSPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<ProductCategory>('All');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+const stack = [
+  'Next.js (App Router)',
+  'Supabase (Auth + Postgres)',
+  'Zustand state management',
+  'Tailwind CSS',
+  'Radix UI primitives',
+];
 
-  const { items, getTotal } = useCartStore();
-  const { addSale } = useDailySalesStore();
-  const { t, language } = useTranslation();
-
-  // Get locale based on language
-  const dateLocale = language === 'id' ? 'id-ID' : 'en-US';
-
-  // Fetch products
-  useEffect(() => {
-    async function fetchProducts() {
-      // If supabase is not configured, use demo products
-      if (!supabase) {
-        setProducts(demoProducts);
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .eq('is_available', true)
-          .order('category')
-          .order('name');
-
-        if (error) {
-          console.error('Error fetching products:', error);
-          setProducts([]);
-        } else {
-          setProducts(data || []);
-        }
-      } catch (err) {
-        console.error('Error fetching products:', err);
-        setProducts([]);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchProducts();
-  }, []);
-
-  // Filter products
-  const filteredProducts = products.filter((product) => {
-    const matchesCategory =
-      selectedCategory === 'All' || product.category === selectedCategory;
-    const matchesSearch =
-      searchQuery === '' ||
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.description?.toLowerCase().includes(searchQuery.toLowerCase());
-
-    return matchesCategory && matchesSearch;
-  });
-
-  // Handle checkout completion
-  const handleCheckoutComplete = async () => {
-    const total = getTotal();
-
-    // Track the sale in daily sales store (for sidebar display)
-    // Note: Order creation is already handled by processTransaction in checkout-dialog
-    addSale(total);
-  };
-
+export default function HomePage() {
   return (
-    <div className="flex min-h-screen">
-      {/* Sidebar Navigation */}
-      <SidebarNav />
+    <div className="min-h-screen bg-slate-950 text-white">
+      <div className="relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute -top-40 left-1/2 h-[500px] w-[700px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(251,146,60,0.25),transparent_60%)]" />
+          <div className="absolute -right-40 top-40 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(56,189,248,0.18),transparent_60%)]" />
+        </div>
 
-      {/* Main Content Area */}
-      <main className="ml-64 mr-80 flex flex-1 flex-col">
-        {/* Header */}
-        {/* Header */}
-        <header className="sticky top-0 z-30 border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 px-6 py-4 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:supports-[backdrop-filter]:bg-slate-900/80">
-          <div className="flex items-center justify-between gap-6">
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{t('cashier')}</h1>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                {new Date().toLocaleDateString(dateLocale, {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </p>
+        <header className="relative mx-auto flex max-w-6xl items-center justify-between px-6 pt-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600">
+              <Coffee className="h-5 w-5 text-white" />
             </div>
-
-            {/* Search */}
-            <div className="relative w-full max-w-md">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
-              <Input
-                type="text"
-                placeholder={t('searchProducts')}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-10 border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 pl-10 text-slate-900 dark:text-white placeholder:text-slate-500 focus:border-amber-500 focus:ring-amber-500"
-              />
+            <div>
+              <p className="text-sm font-semibold text-white">Barn Coffee POS</p>
+              <p className="text-xs text-slate-400">Portfolio Case Study</p>
             </div>
           </div>
-
-          {/* Category Filter */}
-          <div className="mt-4">
-            <CategoryFilter
-              selectedCategory={selectedCategory}
-              onCategoryChange={setSelectedCategory}
-            />
+          <div className="hidden items-center gap-3 sm:flex">
+            <Button asChild variant="ghost" className="text-slate-200">
+              <Link href="#case-study">Case Study</Link>
+            </Button>
+            <Button asChild variant="outline" className="border-slate-700 text-slate-100">
+              <Link href="/login">Launch Demo</Link>
+            </Button>
           </div>
         </header>
 
-        {/* Product Grid */}
-        <div className="flex-1 overflow-auto p-6">
-          {isLoading ? (
-            <div className="flex h-64 items-center justify-center">
-              <div className="flex flex-col items-center gap-4">
-                <div className="h-10 w-10 animate-spin rounded-full border-4 border-amber-500/20 border-t-amber-500" />
-                <p className="text-slate-400">{t('loadingProducts')}</p>
+        <section className="relative mx-auto grid max-w-6xl gap-10 px-6 pb-24 pt-16 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="space-y-6">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.2em] text-amber-200">
+              <Sparkles className="h-3 w-3" />
+              Built for modern coffee teams
+            </div>
+            <h1 className="text-4xl font-semibold leading-tight text-white sm:text-5xl">
+              A barista-first POS experience that keeps every shift smooth.
+            </h1>
+            <p className="text-lg text-slate-300">
+              Barn Coffee POS is a portfolio product simulating a full coffee shop flow: fast checkout, live inventory, recipe-driven stock, and clear reporting. It’s designed as a real-world operations dashboard, not just a UI mock.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Button asChild className="bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600">
+                <Link href="/login">
+                  Launch Demo
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="border-slate-700 text-slate-100">
+                <Link href="/pos">Go to App</Link>
+              </Button>
+            </div>
+            <div className="grid gap-4 pt-6 sm:grid-cols-3">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <p className="text-xs text-slate-400">Key Focus</p>
+                <p className="text-lg font-semibold">Checkout speed</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <p className="text-xs text-slate-400">Data</p>
+                <p className="text-lg font-semibold">Inventory + Recipes</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <p className="text-xs text-slate-400">Insights</p>
+                <p className="text-lg font-semibold">Daily sales</p>
               </div>
             </div>
-          ) : filteredProducts.length === 0 ? (
-            <div className="flex h-64 flex-col items-center justify-center text-center">
-              <Coffee className="mb-4 h-16 w-16 text-slate-300 dark:text-slate-600" />
-              <h3 className="text-lg font-medium text-slate-900 dark:text-white">{t('noProductsFound')}</h3>
-              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                {t('tryAdjusting')}
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          )}
-        </div>
-      </main>
+          </div>
 
-      {/* Cart Sidebar */}
-      <div className="fixed right-0 top-0 z-40 h-screen">
-        <CartSidebar onCheckout={() => setIsCheckoutOpen(true)} />
+          <div className="relative">
+            <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-amber-500/20 via-slate-900/40 to-cyan-500/10 blur-2xl" />
+            <div className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-2xl">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Live Preview</p>
+                  <p className="mt-2 text-lg font-semibold">Cashier Dashboard</p>
+                </div>
+                <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200">
+                  Demo Mode
+                </div>
+              </div>
+              <div className="mt-6 space-y-4">
+                <div className="grid grid-cols-2 gap-3">
+                  {['Espresso', 'Iced Latte', 'Matcha'].map((item) => (
+                    <div
+                      key={item}
+                      className="rounded-2xl border border-white/5 bg-white/5 p-3"
+                    >
+                      <p className="text-sm font-medium text-white">{item}</p>
+                      <p className="text-xs text-slate-400">Tap to add</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="rounded-2xl border border-white/5 bg-white/5 p-4">
+                  <div className="flex items-center justify-between text-sm text-slate-300">
+                    <span>Cart total</span>
+                    <span className="font-semibold text-amber-300">Rp 185.000</span>
+                  </div>
+                  <div className="mt-3 h-2 rounded-full bg-white/10">
+                    <div className="h-2 w-2/3 rounded-full bg-gradient-to-r from-amber-500 to-orange-500" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
 
-      {/* Checkout Dialog */}
-      <CheckoutDialog
-        open={isCheckoutOpen}
-        onOpenChange={setIsCheckoutOpen}
-        onComplete={handleCheckoutComplete}
-      />
+      <section className="mx-auto max-w-6xl px-6 pb-20">
+        <div className="grid gap-6 lg:grid-cols-3">
+          {highlights.map((item) => (
+            <div
+              key={item.title}
+              className="rounded-2xl border border-white/10 bg-white/5 p-6"
+            >
+              <item.icon className="h-6 w-6 text-amber-300" />
+              <h3 className="mt-4 text-lg font-semibold">{item.title}</h3>
+              <p className="mt-2 text-sm text-slate-300">{item.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="case-study" className="mx-auto max-w-6xl px-6 pb-20">
+        <div className="grid gap-10 lg:grid-cols-[0.6fr_1fr]">
+          <div className="space-y-4">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.2em] text-amber-200">
+              <Layers className="h-3 w-3" />
+              Case Study
+            </div>
+            <h2 className="text-3xl font-semibold">Why this project exists</h2>
+            <p className="text-slate-300">
+              Coffee shops need a clean, fast POS that keeps baristas in flow and gives managers clear visibility into costs and sales. This project demonstrates product thinking, data modeling, and UI polish in a realistic operational setting.
+            </p>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <p className="text-xs text-slate-400">Demo credentials</p>
+              <p className="text-sm text-slate-200">Use any email + password to sign in.</p>
+            </div>
+          </div>
+          <div className="space-y-5">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+              <div className="flex items-center gap-3">
+                <ShieldCheck className="h-5 w-5 text-emerald-300" />
+                <h3 className="text-lg font-semibold">Project outcomes</h3>
+              </div>
+              <ul className="mt-4 space-y-2 text-sm text-slate-300">
+                <li>Designed end-to-end POS flows: cashier, inventory, menu, and reporting.</li>
+                <li>Modeled real operations with recipes, stock deductions, and daily sales tracking.</li>
+                <li>Built bilingual UI support (ID/EN) with currency-aware formatting.</li>
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+              <div className="flex items-center gap-3">
+                <Receipt className="h-5 w-5 text-amber-300" />
+                <h3 className="text-lg font-semibold">What to review in the demo</h3>
+              </div>
+              <ul className="mt-4 space-y-2 text-sm text-slate-300">
+                <li>Quick add-to-cart flows with instant totals and tax calculation.</li>
+                <li>Inventory thresholds with low-stock warnings and valuation.</li>
+                <li>Reporting view with recent orders, top products, and export.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-6 pb-24">
+        <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-white/0 p-8">
+          <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
+            <div>
+              <h2 className="text-3xl font-semibold">Built with a modern product stack</h2>
+              <p className="mt-3 text-slate-300">
+                The architecture focuses on fast iteration, secure data access, and a clean UI system that scales across multiple operational screens.
+              </p>
+              <ul className="mt-6 space-y-2 text-sm text-slate-300">
+                {stack.map((item) => (
+                  <li key={item} className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="flex flex-col justify-between gap-6 rounded-2xl border border-white/10 bg-slate-900/70 p-6">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Ready to explore</p>
+                <p className="mt-2 text-lg font-semibold">Walk through the full POS flow</p>
+                <p className="mt-2 text-sm text-slate-300">
+                  Launch the demo to explore cashier, inventory, menu setup, and reporting with realistic data.
+                </p>
+              </div>
+              <Button asChild className="bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600">
+                <Link href="/login">
+                  Launch Demo
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

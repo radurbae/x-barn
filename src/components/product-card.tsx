@@ -17,6 +17,9 @@ export function ProductCard({ product }: ProductCardProps) {
     const addItem = useCartStore((state) => state.addItem);
     const { formatCurrency } = useCurrency();
     const { t } = useTranslation();
+    const isDataUrl = product.image_url?.startsWith('data:') ?? false;
+    const isSvg = product.image_url?.endsWith('.svg') ?? false;
+    const shouldUnoptimize = isDataUrl || isSvg;
 
     const handleAdd = () => {
         addItem(product);
@@ -58,7 +61,8 @@ export function ProductCard({ product }: ProductCardProps) {
                         src={product.image_url}
                         alt={product.name}
                         fill
-                        unoptimized
+                        sizes="(min-width: 1280px) 160px, (min-width: 1024px) 140px, 120px"
+                        unoptimized={shouldUnoptimize}
                         className="object-cover transition-transform group-hover:scale-105"
                     />
                 ) : (

@@ -28,7 +28,7 @@ export default function LoginPage() {
         if (result.success) {
             // Set demo-auth cookie for middleware
             document.cookie = `demo-auth=${email}; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
-            router.push('/');
+            router.push('/pos');
             router.refresh();
         } else {
             setError(result.error || 'Login failed');
@@ -102,6 +102,12 @@ export default function LoginPage() {
                 <p className="text-center text-sm text-slate-500">
                     Demo mode: Use any email/password to login
                 </p>
+                <a
+                    href="/"
+                    className="block text-center text-xs text-slate-500 underline-offset-4 hover:text-slate-300 hover:underline"
+                >
+                    Back to case study
+                </a>
             </div>
         </div>
     );

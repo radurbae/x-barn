@@ -74,6 +74,7 @@ export default function ReportsPage() {
     const [recentOrders, setRecentOrders] = useState<OrderSummary[]>(demoOrders);
     const [topProducts, setTopProducts] = useState<TopProduct[]>(demoTopProducts);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState('');
     const { formatCurrency } = useCurrency();
     const { t } = useTranslation();
 
@@ -82,6 +83,7 @@ export default function ReportsPage() {
     }, []);
 
     async function fetchReportData() {
+        setError('');
         if (!supabase) {
             setIsLoading(false);
             return;
@@ -97,87 +99,83 @@ export default function ReportsPage() {
             const monthAgo = new Date(today);
             monthAgo.setDate(monthAgo.getDate() - 30);
 
-            const { data: todayData } = await supabase
-                .from('orders')
-                .select('total')
-                .gte('created_at', today.toISOString())
-                .eq('status', 'completed');
-
-            const { data: weekData } = await supabase
-                .from('orders')
-                .select('total')
-                .gte('created_at', weekAgo.toISOString())
-                .eq('status', 'completed');
-
-            const { data: monthData } = await supabase
-                .from('orders')
-                .select('total')
-                .gte('created_at', monthAgo.toISOString())
-                .eq('status', 'completed');
-
-            if (todayData && weekData && monthData) {
-                setStats({
-                    today: {
-                        total: todayData.reduce((sum, o) => sum + o.total, 0),
-                        orders: todayData.length,
-                    },
-                    week: {
-                        total: weekData.reduce((sum, o) => sum + o.total, 0),
-                        orders: weekData.length,
-                    },
-                    month: {
-                        total: monthData.reduce((sum, o) => sum + o.total, 0),
-                        orders: monthData.length,
-                    },
-                });
-            }
-
-            const { data: orders } = await supabase
+            const { data: orders, error: ordersError } = await supabase
                 .from('orders')
                 .select('id, order_number, total, created_at')
                 .eq('status', 'completed')
-                .order('created_at', { ascending: false })
-                .limit(10);
+                .gte('created_at', monthAgo.toISOString())
+                .order('created_at', { ascending: false });
 
-            if (orders) {
-                const ordersWithItems = await Promise.all(
-                    orders.map(async (order) => {
-                        const { count } = await supabase!
-                            .from('order_items')
-                            .select('*', { count: 'exact', head: true })
-                            .eq('order_id', order.id);
-                        return { ...order, items_count: count || 0 };
-                    })
-                );
-                setRecentOrders(ordersWithItems);
+            if (ordersError) {
+                throw ordersError;
             }
 
-            const { data: topItems } = await supabase
-                .from('order_items')
-                .select('product_name, quantity, subtotal')
-                .gte('created_at', monthAgo.toISOString());
+            const allOrders = orders || [];
 
-            if (topItems) {
-                const productMap = new Map<string, { quantity: number; revenue: number }>();
-                topItems.forEach((item) => {
-                    const existing = productMap.get(item.product_name) || { quantity: 0, revenue: 0 };
-                    productMap.set(item.product_name, {
-                        quantity: existing.quantity + item.quantity,
-                        revenue: existing.revenue + item.subtotal,
-                    });
-                });
+            const totalByRange = (start: Date) => {
+                const startTime = start.getTime();
+                const filtered = allOrders.filter((order) => new Date(order.created_at).getTime() >= startTime);
+                return {
+                    total: filtered.reduce((sum, order) => sum + order.total, 0),
+                    orders: filtered.length,
+                };
+            };
 
-                const sorted = Array.from(productMap.entries())
-                    .map(([name, data]) => ({ name, ...data }))
-                    .sort((a, b) => b.revenue - a.revenue)
-                    .slice(0, 5);
+            setStats({
+                today: totalByRange(today),
+                week: totalByRange(weekAgo),
+                month: {
+                    total: allOrders.reduce((sum, order) => sum + order.total, 0),
+                    orders: allOrders.length,
+                },
+            });
 
-                if (sorted.length > 0) {
-                    setTopProducts(sorted);
+            const orderIds = allOrders.map((order) => order.id);
+            let items: { order_id: string; product_name: string; quantity: number; subtotal: number }[] = [];
+
+            if (orderIds.length > 0) {
+                const { data: orderItems, error: itemsError } = await supabase
+                    .from('order_items')
+                    .select('order_id, product_name, quantity, subtotal')
+                    .in('order_id', orderIds);
+
+                if (itemsError) {
+                    throw itemsError;
                 }
+
+                items = orderItems || [];
             }
+
+            const itemCounts = new Map<string, number>();
+            items.forEach((item) => {
+                itemCounts.set(item.order_id, (itemCounts.get(item.order_id) || 0) + 1);
+            });
+
+            const recent = allOrders.slice(0, 10).map((order) => ({
+                ...order,
+                items_count: itemCounts.get(order.id) || 0,
+            }));
+
+            setRecentOrders(recent);
+
+            const productMap = new Map<string, { quantity: number; revenue: number }>();
+            items.forEach((item) => {
+                const existing = productMap.get(item.product_name) || { quantity: 0, revenue: 0 };
+                productMap.set(item.product_name, {
+                    quantity: existing.quantity + item.quantity,
+                    revenue: existing.revenue + item.subtotal,
+                });
+            });
+
+            const sorted = Array.from(productMap.entries())
+                .map(([name, data]) => ({ name, ...data }))
+                .sort((a, b) => b.revenue - a.revenue)
+                .slice(0, 5);
+
+            setTopProducts(sorted);
         } catch (error) {
             console.error('Error fetching report data:', error);
+            setError(t('loadError'));
         } finally {
             setIsLoading(false);
         }
@@ -228,6 +226,11 @@ export default function ReportsPage() {
                 </Button>
             }
         >
+            {error && (
+                <div className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400">
+                    {error}
+                </div>
+            )}
             {/* Stats Cards */}
             <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-4">

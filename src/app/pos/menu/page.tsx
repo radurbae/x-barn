@@ -44,13 +44,13 @@ import {
 
 // Demo products
 const demoProducts: Product[] = [
-    { id: '1', name: 'Espresso', price: 25000, category: 'Coffee', image_url: '/images/products/espresso.png', description: 'Espresso shot kuat', is_available: true, created_at: '', updated_at: '' },
-    { id: '2', name: 'Latte', price: 35000, category: 'Coffee', image_url: '/images/products/latte.png', description: 'Espresso dengan susu steamed', is_available: true, created_at: '', updated_at: '' },
-    { id: '3', name: 'Cappuccino', price: 35000, category: 'Coffee', image_url: '/images/products/cappuccino.png', description: 'Espresso, susu, foam', is_available: true, created_at: '', updated_at: '' },
-    { id: '4', name: 'Iced Latte', price: 38000, category: 'Iced', image_url: '/images/products/iced_latte.png', description: 'Espresso dingin dengan susu', is_available: true, created_at: '', updated_at: '' },
-    { id: '5', name: 'Cold Brew', price: 35000, category: 'Iced', image_url: '/images/products/cold_brew.png', description: 'Kopi seduh dingin 12 jam', is_available: false, created_at: '', updated_at: '' },
-    { id: '6', name: 'Matcha Latte', price: 38000, category: 'Non-Coffee', image_url: '/images/products/matcha_latte.png', description: 'Teh hijau Jepang dengan susu', is_available: true, created_at: '', updated_at: '' },
-    { id: '7', name: 'Butter Croissant', price: 28000, category: 'Food', image_url: '/images/products/croissant.png', description: 'Croissant renyah', is_available: true, created_at: '', updated_at: '' },
+    { id: '1', name: 'Espresso', price: 25000, category: 'Coffee', image_url: '/images/products/espresso.svg', description: 'Espresso shot kuat', is_available: true, created_at: '', updated_at: '' },
+    { id: '2', name: 'Latte', price: 35000, category: 'Coffee', image_url: '/images/products/latte.svg', description: 'Espresso dengan susu steamed', is_available: true, created_at: '', updated_at: '' },
+    { id: '3', name: 'Cappuccino', price: 35000, category: 'Coffee', image_url: '/images/products/cappuccino.svg', description: 'Espresso, susu, foam', is_available: true, created_at: '', updated_at: '' },
+    { id: '4', name: 'Iced Latte', price: 38000, category: 'Iced', image_url: '/images/products/iced_latte.svg', description: 'Espresso dingin dengan susu', is_available: true, created_at: '', updated_at: '' },
+    { id: '5', name: 'Cold Brew', price: 35000, category: 'Iced', image_url: '/images/products/cold_brew.svg', description: 'Kopi seduh dingin 12 jam', is_available: false, created_at: '', updated_at: '' },
+    { id: '6', name: 'Matcha Latte', price: 38000, category: 'Non-Coffee', image_url: '/images/products/matcha_latte.svg', description: 'Teh hijau Jepang dengan susu', is_available: true, created_at: '', updated_at: '' },
+    { id: '7', name: 'Butter Croissant', price: 28000, category: 'Food', image_url: '/images/products/croissant.svg', description: 'Croissant renyah', is_available: true, created_at: '', updated_at: '' },
 ];
 
 const categories = ['Coffee', 'Iced', 'Non-Coffee', 'Food'];
@@ -72,6 +72,7 @@ interface RecipeWithIngredient {
 export default function MenuPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState('');
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
     const [formData, setFormData] = useState({
@@ -105,11 +106,17 @@ export default function MenuPage() {
     }, []);
 
     async function fetchIngredients() {
-        const ingredients = await getAllIngredients();
-        setAllIngredients(ingredients);
+        try {
+            const ingredients = await getAllIngredients();
+            setAllIngredients(ingredients);
+        } catch (err) {
+            console.error('Error fetching ingredients:', err);
+            setError(t('loadError'));
+        }
     }
 
     async function fetchProducts() {
+        setError('');
         if (!supabase) {
             setProducts(demoProducts);
             setIsLoading(false);
@@ -126,6 +133,7 @@ export default function MenuPage() {
             if (error) {
                 console.error('Error fetching products:', error);
                 setProducts([]);
+                setError(t('loadError'));
             } else {
                 setProducts(data || []);
                 // Fetch recipes for all products
@@ -137,6 +145,7 @@ export default function MenuPage() {
         } catch (err) {
             console.error('Error fetching products:', err);
             setProducts([]);
+            setError(t('loadError'));
         } finally {
             setIsLoading(false);
         }
@@ -276,6 +285,11 @@ export default function MenuPage() {
                 </Button>
             }
         >
+            {error && (
+                <div className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400">
+                    {error}
+                </div>
+            )}
             {/* Stats */}
             <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 p-4">
@@ -361,7 +375,10 @@ export default function MenuPage() {
                                                             alt={product.name}
                                                             width={96}
                                                             height={96}
-                                                            unoptimized
+                                                            unoptimized={
+                                                                product.image_url.startsWith('data:') ||
+                                                                product.image_url.endsWith('.svg')
+                                                            }
                                                             className="h-full w-full object-cover"
                                                         />) : (
                                                         <Coffee className="h-10 w-10 text-slate-400 dark:text-slate-500" />

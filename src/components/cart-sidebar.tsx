@@ -5,16 +5,18 @@ import { useSettingsStore } from '@/stores/settings-store';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { ShoppingCart, Plus, Minus, Trash2, Receipt } from 'lucide-react';
+import { ShoppingCart, Plus, Minus, Trash2, Receipt, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCurrency } from '@/hooks/use-currency';
 import { useTranslation } from '@/hooks/use-translation';
 
 interface CartSidebarProps {
     onCheckout: () => void;
+    className?: string;
+    onClose?: () => void;
 }
 
-export function CartSidebar({ onCheckout }: CartSidebarProps) {
+export function CartSidebar({ onCheckout, className, onClose }: CartSidebarProps) {
     const { items, updateQuantity, removeItem, getTotal, getItemCount, clearCart } =
         useCartStore();
     const { settings } = useSettingsStore();
@@ -27,7 +29,12 @@ export function CartSidebar({ onCheckout }: CartSidebarProps) {
     const itemCount = getItemCount();
 
     return (
-        <aside className="flex h-full w-80 flex-col border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <aside
+            className={cn(
+                "flex h-full w-80 flex-col border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900",
+                className
+            )}
+        >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 px-4 py-4">
                 <div className="flex items-center gap-3">
@@ -41,16 +48,30 @@ export function CartSidebar({ onCheckout }: CartSidebarProps) {
                         </p>
                     </div>
                 </div>
-                {items.length > 0 && (
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={clearCart}
-                        className="text-slate-400 hover:text-red-500 dark:hover:text-red-400"
-                    >
-                        <Trash2 className="h-4 w-4" />
-                    </Button>
-                )}
+                <div className="flex items-center gap-1">
+                    {items.length > 0 && (
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={clearCart}
+                            aria-label="Clear cart"
+                            className="text-slate-400 hover:text-red-500 dark:hover:text-red-400"
+                        >
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    )}
+                    {onClose && (
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={onClose}
+                            aria-label="Close cart"
+                            className="text-slate-400 hover:text-slate-700 dark:hover:text-white lg:hidden"
+                        >
+                            <X className="h-4 w-4" />
+                        </Button>
+                    )}
+                </div>
             </div>
 
             {/* Cart Items */}
@@ -87,6 +108,7 @@ export function CartSidebar({ onCheckout }: CartSidebarProps) {
                                             onClick={() =>
                                                 updateQuantity(item.product.id, item.quantity - 1)
                                             }
+                                            aria-label={`Decrease ${item.product.name}`}
                                             className="flex h-7 w-7 items-center justify-center rounded-md bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors hover:bg-slate-300 dark:hover:bg-slate-600 hover:text-slate-900 dark:hover:text-white"
                                         >
                                             <Minus className="h-3 w-3" />
@@ -98,6 +120,7 @@ export function CartSidebar({ onCheckout }: CartSidebarProps) {
                                             onClick={() =>
                                                 updateQuantity(item.product.id, item.quantity + 1)
                                             }
+                                            aria-label={`Increase ${item.product.name}`}
                                             className="flex h-7 w-7 items-center justify-center rounded-md bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors hover:bg-slate-300 dark:hover:bg-slate-600 hover:text-slate-900 dark:hover:text-white"
                                         >
                                             <Plus className="h-3 w-3" />
@@ -108,6 +131,7 @@ export function CartSidebar({ onCheckout }: CartSidebarProps) {
                                 <div className="mt-2 flex items-center justify-between">
                                     <button
                                         onClick={() => removeItem(item.product.id)}
+                                        aria-label={`Remove ${item.product.name}`}
                                         className="text-xs text-slate-400 dark:text-slate-500 transition-colors hover:text-red-500 dark:hover:text-red-400"
                                     >
                                         {t('remove')}

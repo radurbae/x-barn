@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="800" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="800" y2="800" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f0c36a" />
+      <stop offset="1" stop-color="#9b5b24" />
+    </linearGradient>
+    <linearGradient id="pastry" x1="260" y1="320" x2="540" y2="520" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff1c9" />
+      <stop offset="1" stop-color="#d08b3e" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="800" rx="120" fill="url(#bg)" />
+  <circle cx="620" cy="200" r="90" fill="rgba(255,255,255,0.15)" />
+  <g>
+    <ellipse cx="400" cy="430" rx="210" ry="120" fill="url(#pastry)" />
+    <ellipse cx="310" cy="400" rx="130" ry="90" fill="#f2c783" />
+    <ellipse cx="490" cy="400" rx="130" ry="90" fill="#e1a85c" />
+    <ellipse cx="250" cy="390" rx="80" ry="60" fill="#f7d69a" />
+    <ellipse cx="550" cy="390" rx="80" ry="60" fill="#d99647" />
+  </g>
+  <text x="80" y="690" font-family="'Segoe UI', Arial, sans-serif" font-size="52" font-weight="600" fill="rgba(255,255,255,0.85)">Croissant</text>
+</svg>
