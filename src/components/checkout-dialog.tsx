@@ -124,7 +124,7 @@ export function CheckoutDialog({
             });
 
             // Call complete handler
-            onComplete(paymentAmount);
+            onComplete(paymentAmountBase);
 
             // Clear cart
             clearCart();
