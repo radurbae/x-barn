@@ -27,7 +27,7 @@ export default function OpenGraphImage() {
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div
             style={{
-              display: "inline-flex",
+              display: "flex",
               alignItems: "center",
               gap: "12px",
               padding: "10px 16px",
