@@ -8,13 +8,18 @@ interface Props {
 const { links } = Astro.props;
 ---
 
-<header>
-  <nav aria-label="Navigasi utama">
-    <a href="#beranda">Kopi Senja</a>
-    <ul>
+<header class="sticky top-0 z-40 border-b border-[var(--border)]/80 bg-white/85 backdrop-blur">
+  <nav
+    class="container-shell flex flex-wrap items-center justify-between gap-4 py-4"
+    aria-label="Navigasi utama"
+  >
+    <a href="#beranda" class="text-lg font-semibold tracking-tight text-[var(--text)] sm:text-xl">
+      Kopi Senja
+    </a>
+    <ul class="flex flex-wrap items-center gap-4 sm:gap-6">
       {links.map((link) => (
         <li>
-          <a href={link.href}>{link.label}</a>
+          <a class="nav-link" href={link.href}>{link.label}</a>
         </li>
       ))}
     </ul>

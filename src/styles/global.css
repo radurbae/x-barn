@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f5f5f4;
+  --surface: #ffffff;
+  --surface-soft: #f8fafc;
+  --text: #0f172a;
+  --muted: #475569;
+  --accent: #0f766e;
+  --accent-strong: #115e59;
+  --highlight: #ecfeff;
+  --border: #dbe3ea;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(circle at 10% 10%, rgba(15, 118, 110, 0.08), transparent 40%),
+      radial-gradient(circle at 90% 0%, rgba(148, 163, 184, 0.2), transparent 35%);
+    color: var(--text);
+    font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+    line-height: 1.65;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 0;
+    color: var(--text);
+    font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    margin: 0;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--accent) 25%, white);
+    color: var(--text);
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 999px;
+  }
+}
+
+@layer components {
+  .container-shell {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-shell {
+    @apply py-16 sm:py-20;
+  }
+
+  .section-title {
+    @apply text-3xl font-semibold sm:text-4xl;
+  }
+
+  .section-copy {
+    @apply mt-4 max-w-2xl text-base sm:text-lg;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em];
+    border-color: var(--border);
+    color: var(--accent);
+    background-color: var(--surface);
+  }
+
+  .surface-card {
+    @apply rounded-2xl border bg-white p-6 shadow-sm;
+    border-color: var(--border);
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold text-white transition sm:text-base;
+    background-color: var(--accent);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--accent-strong);
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-full border px-5 py-3 text-sm font-semibold transition sm:text-base;
+    border-color: var(--border);
+    color: var(--text);
+    background-color: var(--surface);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .nav-link {
+    @apply text-sm font-medium transition sm:text-base;
+    color: var(--muted);
+  }
+
+  .nav-link:hover {
+    color: var(--text);
+  }
+}

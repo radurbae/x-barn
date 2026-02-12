@@ -14,26 +14,45 @@ const rupiah = new Intl.NumberFormat("id-ID", {
 });
 ---
 
-<section id="menu" aria-labelledby="judul-menu">
-  <h2 id="judul-menu">Menu Andalan</h2>
-  <p>Beberapa menu favorit pelanggan yang bisa Anda nikmati setiap hari.</p>
-  <ul>
-    {items.map((item) => (
-      <li>
-        <article>
-          <img
-            src={item.image}
-            alt={`Foto ${item.name}`}
-            width="320"
-            height="210"
-            loading="lazy"
-          />
-          <p>{item.tag}</p>
-          <h3>{item.name}</h3>
-          <p>{item.description}</p>
-          <p>{rupiah.format(item.price)}</p>
-        </article>
-      </li>
-    ))}
-  </ul>
+<section
+  id="menu"
+  class="section-shell border-y border-[var(--border)]/70 bg-white/70"
+  aria-labelledby="judul-menu"
+>
+  <div class="container-shell">
+    <div class="max-w-2xl">
+      <p class="eyebrow">Pilihan favorit</p>
+      <h2 id="judul-menu" class="section-title mt-4">Menu Andalan</h2>
+      <p class="section-copy">Beberapa menu favorit pelanggan yang bisa Anda nikmati setiap hari.</p>
+    </div>
+
+    <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {items.map((item) => (
+        <li>
+          <article
+            class="surface-card flex h-full flex-col overflow-hidden p-0 transition duration-300 hover:-translate-y-1 hover:shadow-md"
+          >
+            <img
+              src={item.image}
+              alt={`Foto ${item.name}`}
+              width="320"
+              height="210"
+              loading="lazy"
+              class="h-52 w-full object-cover"
+            />
+            <div class="flex h-full flex-col p-6">
+              <p
+                class="w-fit rounded-full bg-[var(--highlight)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.1em] text-[var(--accent)]"
+              >
+                {item.tag}
+              </p>
+              <h3 class="mt-4 text-2xl font-semibold text-[var(--text)]">{item.name}</h3>
+              <p class="mt-3 flex-1 text-sm sm:text-base">{item.description}</p>
+              <p class="mt-6 text-lg font-semibold text-[var(--text)]">{rupiah.format(item.price)}</p>
+            </div>
+          </article>
+        </li>
+      ))}
+    </ul>
+  </div>
 </section>

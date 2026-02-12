@@ -1,12 +1,42 @@
-<section id="beranda" aria-labelledby="judul-utama">
-  <p>Kedai kopi lokal untuk ritme kerja dan jeda harian Anda.</p>
-  <h1 id="judul-utama">Racikan Kopi Harian untuk Energi yang Konsisten</h1>
-  <p>
-    Nikmati biji kopi pilihan, diseduh segar setiap hari oleh barista berpengalaman.
-    Tempat nyaman untuk rapat santai, kerja fokus, atau bertemu teman.
-  </p>
-  <p>
-    <a href="#menu">Lihat Menu</a>
-    <a href="#kontak">Reservasi Meja</a>
-  </p>
+<section id="beranda" class="section-shell pt-20 sm:pt-24" aria-labelledby="judul-utama">
+  <div class="container-shell grid items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+    <div>
+      <p class="eyebrow">Seduhan harian terbaik</p>
+      <h1 id="judul-utama" class="mt-5 text-4xl font-semibold sm:text-5xl lg:text-6xl">
+        Racikan Kopi Harian untuk Energi yang Konsisten
+      </h1>
+      <p class="section-copy">
+        Nikmati biji kopi pilihan, diseduh segar setiap hari oleh barista berpengalaman.
+        Tempat nyaman untuk rapat santai, kerja fokus, atau bertemu teman.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a class="btn-primary" href="#menu">Lihat Menu</a>
+        <a class="btn-secondary" href="#kontak">Reservasi Meja</a>
+      </div>
+    </div>
+
+    <aside class="surface-card space-y-5">
+      <img
+        src="https://picsum.photos/seed/kopisenja-hero/900/640"
+        alt="Barista sedang menyiapkan kopi di Kopi Senja"
+        width="900"
+        height="640"
+        class="h-56 w-full rounded-xl object-cover sm:h-64"
+      />
+      <dl class="grid grid-cols-2 gap-4">
+        <div>
+          <dt class="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+            Biji Pilihan
+          </dt>
+          <dd class="mt-1 text-xl font-semibold text-[var(--text)]">Single origin</dd>
+        </div>
+        <div>
+          <dt class="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+            Jam Buka
+          </dt>
+          <dd class="mt-1 text-xl font-semibold text-[var(--text)]">08.00 - 22.00</dd>
+        </div>
+      </dl>
+    </aside>
+  </div>
 </section>

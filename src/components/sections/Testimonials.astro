@@ -10,22 +10,33 @@ const { items } = Astro.props;
 const stars = (count: number) => "★".repeat(count) + "☆".repeat(5 - count);
 ---
 
-<section id="testimoni" aria-labelledby="judul-testimoni">
-  <h2 id="judul-testimoni">Apa Kata Pelanggan</h2>
-  <ul>
-    {items.map((item) => (
-      <li>
-        <article>
-          <p aria-label={`Rating ${item.rating} dari 5`}>{stars(item.rating)}</p>
-          <blockquote>
-            <p>{item.quote}</p>
-          </blockquote>
-          <footer>
-            <strong>{item.name}</strong>
-            <p>{item.role}</p>
-          </footer>
-        </article>
-      </li>
-    ))}
-  </ul>
+<section id="testimoni" class="section-shell bg-[var(--surface-soft)]/80" aria-labelledby="judul-testimoni">
+  <div class="container-shell">
+    <div class="max-w-2xl">
+      <p class="eyebrow">Ulasan nyata</p>
+      <h2 id="judul-testimoni" class="section-title mt-4">Apa Kata Pelanggan</h2>
+      <p class="section-copy">
+        Pendapat pelanggan yang rutin berkunjung untuk kopi pagi, rapat santai, dan waktu jeda.
+      </p>
+    </div>
+
+    <ul class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {items.map((item) => (
+        <li>
+          <article class="surface-card flex h-full flex-col">
+            <p class="text-lg tracking-wide text-amber-500" aria-label={`Rating ${item.rating} dari 5`}>
+              {stars(item.rating)}
+            </p>
+            <blockquote class="mt-4">
+              <p class="text-sm sm:text-base">{item.quote}</p>
+            </blockquote>
+            <footer class="mt-6 border-t border-[var(--border)] pt-4">
+              <strong class="text-[var(--text)]">{item.name}</strong>
+              <p class="mt-1 text-sm">{item.role}</p>
+            </footer>
+          </article>
+        </li>
+      ))}
+    </ul>
+  </div>
 </section>
