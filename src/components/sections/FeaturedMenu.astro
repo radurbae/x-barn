@@ -1,0 +1,39 @@
+---
+import type { MenuItem } from "../../types/landing";
+
+interface Props {
+  items: MenuItem[];
+}
+
+const { items } = Astro.props;
+
+const rupiah = new Intl.NumberFormat("id-ID", {
+  style: "currency",
+  currency: "IDR",
+  maximumFractionDigits: 0,
+});
+---
+
+<section id="menu" aria-labelledby="judul-menu">
+  <h2 id="judul-menu">Menu Andalan</h2>
+  <p>Beberapa menu favorit pelanggan yang bisa Anda nikmati setiap hari.</p>
+  <ul>
+    {items.map((item) => (
+      <li>
+        <article>
+          <img
+            src={item.image}
+            alt={`Foto ${item.name}`}
+            width="320"
+            height="210"
+            loading="lazy"
+          />
+          <p>{item.tag}</p>
+          <h3>{item.name}</h3>
+          <p>{item.description}</p>
+          <p>{rupiah.format(item.price)}</p>
+        </article>
+      </li>
+    ))}
+  </ul>
+</section>
