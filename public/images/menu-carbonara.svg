@@ -1,0 +1,27 @@
+<svg width="640" height="420" viewBox="0 0 640 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgCarbonara" x1="0" y1="0" x2="640" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FDF8F1"/>
+      <stop offset="1" stop-color="#EFDCC3"/>
+    </linearGradient>
+    <linearGradient id="pastaTone" x1="320" y1="170" x2="320" y2="284" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F4D8A2"/>
+      <stop offset="1" stop-color="#D9A564"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="640" height="420" fill="url(#bgCarbonara)"/>
+  <ellipse cx="320" cy="300" rx="202" ry="40" fill="#D7BD9E"/>
+  <ellipse cx="320" cy="280" rx="182" ry="34" fill="#F9F4ED"/>
+
+  <circle cx="320" cy="226" r="110" fill="url(#pastaTone)"/>
+  <path d="M250 210C270 182 302 176 336 186C366 194 392 212 402 238" stroke="#F8E7C8" stroke-width="14" stroke-linecap="round"/>
+  <path d="M236 240C268 266 312 274 360 266C388 262 412 248 422 232" stroke="#F8E7C8" stroke-width="14" stroke-linecap="round"/>
+  <path d="M268 198L384 252" stroke="#F7E0BA" stroke-width="12" stroke-linecap="round"/>
+
+  <circle cx="280" cy="208" r="10" fill="#B35F39"/>
+  <circle cx="352" cy="238" r="9" fill="#B35F39"/>
+  <circle cx="336" cy="198" r="8" fill="#B35F39"/>
+
+  <text x="38" y="364" fill="#8A6036" font-family="Arial, sans-serif" font-size="30" font-weight="700">Spaghetti Carbonara</text>
+</svg>

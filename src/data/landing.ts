@@ -4,63 +4,63 @@ export const navLinks: NavLink[] = [
   { label: "Beranda", href: "#beranda" },
   { label: "Menu", href: "#menu" },
   { label: "Tentang", href: "#tentang" },
-  { label: "Testimoni", href: "#testimoni" },
+  { label: "Ulasan", href: "#testimoni" },
   { label: "Kontak", href: "#kontak" },
 ];
 
 export const menuItems: MenuItem[] = [
   {
-    id: "espresso-klasik",
-    name: "Espresso Klasik",
+    id: "chicken-nanban-ricebowl",
+    name: "Chicken Nanban RiceBowl",
     description:
-      "Rasa pekat dengan karakter cokelat pahit yang tegas, disajikan hangat.",
-    price: 28000,
-    image: "https://picsum.photos/seed/espresso/640/420",
-    tag: "Andalan",
+      "Rice bowl dengan chicken crispy dan saus nanban manis-gurih.",
+    price: 48125,
+    image: "/images/menu-chicken-nanban.svg",
+    tag: "Rice Bowl",
   },
   {
-    id: "latte-senja",
-    name: "Latte Senja",
+    id: "spaghetti-carbonara",
+    name: "Spaghetti Carbonara",
     description:
-      "Perpaduan espresso dan susu steam dengan tekstur lembut untuk sore santai.",
-    price: 34000,
-    image: "https://picsum.photos/seed/latte/640/420",
-    tag: "Favorit",
+      "Pasta creamy favorit dengan porsi pas untuk nongkrong santai.",
+    price: 55000,
+    image: "/images/menu-carbonara.svg",
+    tag: "Western",
   },
   {
-    id: "kopi-gula-aren",
-    name: "Kopi Gula Aren",
+    id: "nasi-goreng-seafood",
+    name: "Nasi Goreng Seafood",
     description:
-      "Aroma kopi nusantara dengan manis alami gula aren yang seimbang.",
-    price: 32000,
-    image: "https://picsum.photos/seed/gulaaren/640/420",
-    tag: "Lokal",
+      "Pilihan menu nusantara dengan bumbu kuat dan topping seafood lengkap.",
+    price: 68750,
+    image: "/images/menu-nasi-goreng.svg",
+    tag: "Nusantara",
   },
 ];
 
 export const testimonials: Testimonial[] = [
   {
-    id: "nadia",
-    name: "Nadia Putri",
-    role: "Desainer Produk",
+    id: "ulasan-24-jam",
+    name: "Pengunjung Malam",
+    role: "Ringkasan ulasan publik",
     quote:
-      "Tempatnya tenang untuk kerja fokus, dan rasa kopinya konsisten setiap datang.",
+      "Tempatnya enak buat nongkrong panjang karena operasional 24 jam.",
     rating: 5,
   },
   {
-    id: "bagas",
-    name: "Bagas Pratama",
-    role: "Pengusaha Kuliner",
+    id: "ulasan-rooftop",
+    name: "Penikmat Rooftop",
+    role: "Ringkasan ulasan publik",
     quote:
-      "Latte di sini punya balance yang pas. Pelayanan cepat dan ramah.",
+      "Area rooftop dan live music bikin suasana malam lebih seru.",
     rating: 5,
   },
   {
-    id: "rani",
-    name: "Rani Amelia",
-    role: "Kreator Konten",
+    id: "ulasan-keluarga",
+    name: "Pengunjung Akhir Pekan",
+    role: "Ringkasan ulasan publik",
     quote:
-      "Lokasinya strategis, pilihan menu tidak berlebihan, tapi semuanya enak.",
+      "Pilihan menu lokal dan western-nya beragam, cocok untuk datang bareng keluarga.",
     rating: 4,
   },
 ];

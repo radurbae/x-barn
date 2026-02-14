@@ -10,29 +10,31 @@ const { items } = Astro.props;
 const stars = (count: number) => "★".repeat(count) + "☆".repeat(5 - count);
 ---
 
-<section id="testimoni" class="section-shell bg-[var(--surface-soft)]/80" aria-labelledby="judul-testimoni">
+<section id="testimoni" class="section-shell bg-[var(--dark)]" aria-labelledby="judul-testimoni">
   <div class="container-shell">
     <div class="max-w-2xl">
-      <p class="eyebrow">Ulasan nyata</p>
-      <h2 id="judul-testimoni" class="section-title mt-4">Apa Kata Pelanggan</h2>
-      <p class="section-copy">
-        Pendapat pelanggan yang rutin berkunjung untuk kopi pagi, rapat santai, dan waktu jeda.
+      <p class="hero-eyebrow">Ulasan pengunjung</p>
+      <h2 id="judul-testimoni" class="section-title mt-4 text-white">Kesan Pengunjung Warunk WOW KWB</h2>
+      <div class="section-divider mt-5"></div>
+      <p class="section-copy text-white/85">
+        Ringkasan ulasan publik yang menyoroti jam operasional, suasana, dan variasi menu.
       </p>
     </div>
 
-    <ul class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <ul class="mt-12 grid gap-7 md:grid-cols-2 lg:grid-cols-3">
       {items.map((item) => (
         <li>
-          <article class="surface-card flex h-full flex-col">
-            <p class="text-lg tracking-wide text-amber-500" aria-label={`Rating ${item.rating} dari 5`}>
+          <article class="flex h-full flex-col rounded-[28px] border border-[var(--accent)]/45 bg-black/35 p-6 backdrop-blur">
+            <p class="text-lg tracking-[0.18em] text-[var(--brand-yellow)]" aria-label={`Rating ${item.rating} dari 5`}>
               {stars(item.rating)}
             </p>
-            <blockquote class="mt-4">
-              <p class="text-sm sm:text-base">{item.quote}</p>
+            <blockquote class="mt-4 flex-1">
+              <p class="text-2xl leading-none text-[var(--accent)]">“</p>
+              <p class="mt-2 text-sm text-white/90 sm:text-base">{item.quote}</p>
             </blockquote>
-            <footer class="mt-6 border-t border-[var(--border)] pt-4">
-              <strong class="text-[var(--text)]">{item.name}</strong>
-              <p class="mt-1 text-sm">{item.role}</p>
+            <footer class="mt-6 border-t border-[var(--accent)]/35 pt-4">
+              <strong class="text-white">{item.name}</strong>
+              <p class="mt-1 text-sm text-white/80">{item.role}</p>
             </footer>
           </article>
         </li>

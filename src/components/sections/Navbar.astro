@@ -8,20 +8,31 @@ interface Props {
 const { links } = Astro.props;
 ---
 
-<header class="sticky top-0 z-40 border-b border-[var(--border)]/80 bg-white/85 backdrop-blur">
-  <nav
-    class="container-shell flex flex-wrap items-center justify-between gap-4 py-4"
-    aria-label="Navigasi utama"
-  >
-    <a href="#beranda" class="text-lg font-semibold tracking-tight text-[var(--text)] sm:text-xl">
-      Kopi Senja
-    </a>
-    <ul class="flex flex-wrap items-center gap-4 sm:gap-6">
-      {links.map((link) => (
-        <li>
-          <a class="nav-link" href={link.href}>{link.label}</a>
-        </li>
-      ))}
-    </ul>
+<header class="fixed left-0 right-0 top-0 z-50 bg-[var(--dark)]/96 py-4 backdrop-blur-sm">
+  <nav class="container-shell" aria-label="Navigasi utama">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <a href="#beranda" class="inline-flex items-center gap-3">
+        <img
+          src="/images/logo-wow-kwb.jpg"
+          alt="Logo Warunk WOW KWB"
+          width="154"
+          height="147"
+          class="h-11 w-auto rounded-lg bg-black/35 p-1 sm:h-12"
+        />
+      </a>
+      <ul class="flex flex-wrap items-center gap-1 sm:gap-2">
+        {links.map((link) => (
+          <li>
+            <a class="nav-link" href={link.href}>{link.label}</a>
+          </li>
+        ))}
+      </ul>
+      <a
+        class="hidden rounded-full border border-[var(--accent)]/75 px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[var(--accent)] transition hover:bg-[var(--accent)] hover:text-black sm:inline-flex"
+        href="#kontak"
+      >
+        Reservasi
+      </a>
+    </div>
   </nav>
 </header>

@@ -7,8 +7,8 @@ interface Props {
 }
 
 const {
-  title = "Kopi Senja | Kedai Kopi Lokal",
-  description = "Halaman promosi kedai kopi dengan menu pilihan dan suasana nyaman.",
+  title = "Warunk WOW KWB | Kafe 24 Jam",
+  description = "Landing page Warunk WOW KWB dengan info menu, suasana, dan lokasi.",
 } = Astro.props;
 ---
 
@@ -21,8 +21,10 @@ const {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@400;500;600;700&display=swap"
     />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>{title}</title>
     <meta name="description" content={description} />
   </head>

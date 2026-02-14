@@ -1,0 +1,28 @@
+<svg width="640" height="420" viewBox="0 0 640 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgNasi" x1="0" y1="0" x2="640" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF9F2"/>
+      <stop offset="1" stop-color="#EFE2CF"/>
+    </linearGradient>
+    <linearGradient id="riceTone" x1="320" y1="170" x2="320" y2="286" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D3934D"/>
+      <stop offset="1" stop-color="#9D5E2F"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="640" height="420" fill="url(#bgNasi)"/>
+  <ellipse cx="320" cy="302" rx="208" ry="42" fill="#D7C19F"/>
+  <ellipse cx="320" cy="280" rx="188" ry="35" fill="#FAF6F1"/>
+
+  <ellipse cx="320" cy="228" rx="132" ry="94" fill="url(#riceTone)"/>
+  <circle cx="268" cy="216" r="12" fill="#F2D7A9"/>
+  <circle cx="346" cy="240" r="11" fill="#F2D7A9"/>
+  <circle cx="372" cy="208" r="10" fill="#F2D7A9"/>
+  <circle cx="302" cy="260" r="9" fill="#F2D7A9"/>
+  <circle cx="394" cy="244" r="9" fill="#F2D7A9"/>
+
+  <path d="M214 210C230 182 258 168 286 168C312 168 336 178 352 194" stroke="#5D7A4D" stroke-width="8" stroke-linecap="round"/>
+  <path d="M242 252C270 278 322 284 374 266" stroke="#5D7A4D" stroke-width="8" stroke-linecap="round"/>
+
+  <text x="38" y="364" fill="#7A4C27" font-family="Arial, sans-serif" font-size="30" font-weight="700">Nasi Goreng Seafood</text>
+</svg>

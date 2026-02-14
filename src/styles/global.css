@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #f5f5f4;
+  --bg: #f3f3f3;
   --surface: #ffffff;
-  --surface-soft: #f8fafc;
-  --text: #0f172a;
-  --muted: #475569;
-  --accent: #0f766e;
-  --accent-strong: #115e59;
-  --highlight: #ecfeff;
-  --border: #dbe3ea;
+  --surface-soft: #fafafa;
+  --text: #121212;
+  --muted: #5d5d5d;
+  --accent: #ffc21a;
+  --accent-strong: #e0aa00;
+  --accent-soft: #fff2c2;
+  --brand-yellow: #ffc21a;
+  --border: #e6e6e6;
+  --dark: #0a0a0a;
 }
 
 @layer base {
@@ -25,12 +27,9 @@
     margin: 0;
     min-height: 100vh;
     background-color: var(--bg);
-    background-image:
-      radial-gradient(circle at 10% 10%, rgba(15, 118, 110, 0.08), transparent 40%),
-      radial-gradient(circle at 90% 0%, rgba(148, 163, 184, 0.2), transparent 35%);
     color: var(--text);
-    font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
-    line-height: 1.65;
+    font-family: "Manrope", "Segoe UI", sans-serif;
+    line-height: 1.7;
   }
 
   h1,
@@ -39,15 +38,17 @@
   h4 {
     margin: 0;
     color: var(--text);
-    font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
+    font-family: "Archivo Black", "Arial Black", sans-serif;
+    line-height: 1.02;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
     text-wrap: balance;
   }
 
   p {
     margin: 0;
     color: var(--muted);
+    line-height: 1.74;
     text-wrap: pretty;
   }
 
@@ -63,8 +64,8 @@
   }
 
   ::selection {
-    background-color: color-mix(in oklab, var(--accent) 25%, white);
-    color: var(--text);
+    background-color: rgba(255, 194, 26, 0.35);
+    color: #151515;
   }
 
   a:focus-visible,
@@ -77,36 +78,37 @@
 
 @layer components {
   .container-shell {
-    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-7 lg:px-10;
   }
 
   .section-shell {
-    @apply py-16 sm:py-20;
+    @apply py-16 sm:py-20 lg:py-24;
   }
 
   .section-title {
-    @apply text-3xl font-semibold sm:text-4xl;
+    @apply text-4xl sm:text-5xl;
   }
 
   .section-copy {
-    @apply mt-4 max-w-2xl text-base sm:text-lg;
+    @apply mt-5 max-w-2xl text-base sm:text-lg;
   }
 
   .eyebrow {
-    @apply inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em];
-    border-color: var(--border);
+    @apply inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em];
+    border-color: rgba(255, 194, 26, 0.45);
     color: var(--accent);
-    background-color: var(--surface);
+    background-color: var(--accent-soft);
   }
 
   .surface-card {
-    @apply rounded-2xl border bg-white p-6 shadow-sm;
+    @apply rounded-[28px] border bg-[var(--surface)] p-6 shadow-lg shadow-black/6 sm:p-7;
     border-color: var(--border);
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold text-white transition sm:text-base;
+    @apply inline-flex items-center justify-center rounded-full px-5 py-3 text-xs font-semibold uppercase tracking-[0.12em] transition sm:text-sm;
     background-color: var(--accent);
+    color: #121212;
   }
 
   .btn-primary:hover {
@@ -114,23 +116,110 @@
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-full border px-5 py-3 text-sm font-semibold transition sm:text-base;
-    border-color: var(--border);
+    @apply inline-flex items-center justify-center rounded-full border px-5 py-3 text-xs font-semibold uppercase tracking-[0.12em] transition sm:text-sm;
+    border-color: rgba(18, 18, 18, 0.28);
     color: var(--text);
-    background-color: var(--surface);
+    background-color: transparent;
   }
 
   .btn-secondary:hover {
     border-color: var(--accent);
-    color: var(--accent);
+    color: var(--accent-strong);
   }
 
   .nav-link {
-    @apply text-sm font-medium transition sm:text-base;
-    color: var(--muted);
+    @apply rounded-full px-3 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.12em] transition;
+    color: #fffaf0;
   }
 
   .nav-link:hover {
-    color: var(--text);
+    background-color: var(--accent);
+    color: #121212;
+  }
+
+  .info-tile {
+    @apply rounded-2xl border p-4;
+    border-color: rgba(255, 194, 26, 0.5);
+    background-color: rgba(255, 194, 26, 0.12);
+  }
+
+  .menu-image {
+    @apply h-56 w-full object-cover transition duration-500;
+    filter: saturate(1.05) contrast(1.04);
+  }
+
+  .menu-card:hover .menu-image {
+    transform: scale(1.03);
+  }
+
+  .section-divider {
+    @apply h-px w-24;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  .hero-shell {
+    @apply relative overflow-hidden;
+    background-color: var(--dark);
+    color: white;
+    border-bottom-left-radius: 80px;
+    border-bottom-right-radius: 80px;
+  }
+
+  .hero-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 85% 20%, rgba(255, 194, 26, 0.25), transparent 38%),
+      radial-gradient(circle at 18% 0%, rgba(255, 194, 26, 0.18), transparent 34%);
+    pointer-events: none;
+  }
+
+  .hero-shell h1,
+  .hero-shell p,
+  .hero-shell dt,
+  .hero-shell dd {
+    color: #ffffff;
+  }
+
+  .hero-shell .btn-primary {
+    background-color: var(--accent);
+    color: #131313;
+  }
+
+  .hero-shell .btn-primary:hover {
+    background-color: var(--accent-strong);
+  }
+
+  .hero-shell .btn-secondary {
+    border-color: rgba(255, 194, 26, 0.8);
+    color: var(--accent);
+  }
+
+  .hero-shell .btn-secondary:hover {
+    border-color: var(--accent);
+    background-color: rgba(255, 194, 26, 0.15);
+    color: #fff7df;
+  }
+
+  .hero-eyebrow {
+    @apply inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em];
+    border-color: rgba(255, 194, 26, 0.75);
+    color: var(--accent);
+    background-color: rgba(255, 194, 26, 0.15);
+  }
+
+  .hero-curve {
+    @apply absolute left-0 right-0;
+    bottom: -1px;
+    height: 84px;
+    background-color: var(--surface);
+    border-top-left-radius: 100% 100%;
+    border-top-right-radius: 100% 100%;
+  }
+
+  .hero-meta-dot {
+    @apply h-2 w-2 rounded-full;
+    background-color: var(--brand-yellow);
   }
 }
